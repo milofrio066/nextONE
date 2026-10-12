@@ -1,4 +1,24 @@
-# nextONE · piloto con backend real
+# nextONE · diseño y colaboración v0.3
+
+## Actualizar el piloto que ya está publicado
+
+1. En Supabase SQL Editor ejecutar **solo** `supabase/migrations/003_projects.sql` una vez. No volver a ejecutar `INSTALAR_NEXTONE.sql`, 001 ni 002 en el proyecto existente. La migración agrega equipos, tareas y conversación privada; conserva usuarios, eventos, comentarios, votos e invitaciones.
+2. Extraer el paquete y subir la carpeta `nextONE-piloto-backend` a la raíz del repositorio GitHub existente, reemplazando los archivos de esa misma carpeta. Root Directory de Vercel continúa siendo `nextONE-piloto-backend`.
+3. Esperar el despliegue Ready y recargar la página. Las dos variables de Supabase ya configuradas permanecen iguales. No agregar secretos al frontend.
+4. Probar con administrador y un miembro: crear proyecto con plantilla, agregar un rol con cupo, postular al miembro, aprobarlo, asignar tarea, enviar mensaje privado y documentar un avance.
+
+## Cambios de esta versión
+
+- Identidad visual azul/cian/violeta basada en el logo suministrado; tarjetas con portadas, buscador, navegación móvil y modos claro/oscuro.
+- Valoración “señal de impacto” con cinco estados visuales y etiquetas; preserva la escala, los votos existentes y las métricas. Se puede cambiar o retirar una respuesta.
+- 27 plantillas editables: tres por cada tipo de contenido (incluidas soluciones). Studio ofrece selección, personalización y vista previa para eventos, webinars, speakers, recursos, cases, proyectos, avances y publicaciones. Las soluciones ofrecen una selección de estructura en el formulario de entrega del case.
+- Studio usa texto y formularios seguros; no admite HTML arbitrario, scripts ni embeds libres. Es un editor de plantillas de contenido, no un editor libre de animaciones como Genially.
+- Comunidad con conversaciones, temas, búsqueda, directorio de miembros/habilidades y oportunidades de colaboración.
+- Proyectos orientados a negocio o semilleros: definición de roles/cupos, solicitudes, aprobación por el líder, tablero de tareas, responsables, fechas, avances y conversación privada.
+- El servidor impide la autoaprobación, superar los cupos y consultar tareas/chat de otros equipos. Salidas con motivo y decisiones registradas. No hay Realtime ni servicios de pago nuevos; el chat se actualiza al enviar o pulsar Actualizar conversación.
+- Verificación local en Chrome contra PostgreSQL de prueba y comprobación de pantallas de 320, 390, 768, 1024 y 1440 píxeles. La prueba de sesión usa un adaptador local; OAuth alojado requiere comprobación con cuentas reales después de publicar.
+
+## Arquitectura del piloto
 
 Web de comunidad enfocada en eventos, webinars, aprendizaje y builder cases. Frontend React + TypeScript + Vite. Backend Supabase (Auth, PostgreSQL, RPC y Row Level Security). Sin datos ficticios en la web publicada y sin claves secretas en el navegador.
 
@@ -19,7 +39,7 @@ Web de comunidad enfocada en eventos, webinars, aprendizaje y builder cases. Fro
 
 Proyecto: `aswvchwbuhazabbblbqs`.
 
-En un proyecto NUEVO, ejecutar `supabase/INSTALAR_NEXTONE.sql` una sola vez en SQL Editor. Es la combinación de las migraciones 001 y 002. No ejecutarlas otra vez si ya se instaló el archivo combinado. No pegar claves secretas en ningún archivo del frontend.
+En un proyecto NUEVO, ejecutar `supabase/INSTALAR_NEXTONE.sql` una sola vez y después `supabase/migrations/003_projects.sql` una sola vez en SQL Editor. Es la combinación de las migraciones 001 y 002. No ejecutarlas otra vez si ya se instaló el archivo combinado. No pegar claves secretas en ningún archivo del frontend.
 
 ### URLs de autenticación
 
