@@ -1,75 +1,71 @@
-# nextONE — piloto personal
+# nextONE · comunidad interactiva
 
-«El próximo número 1». Comunidad tecnológica para encontrar equipo, construir proyectos y aprender colaborando. Iniciativa independiente; ninguna alianza o participación real de Makers está confirmada por este MVP.
+Aplicación consolidada React 19 + TypeScript + Vite + Supabase. La aplicación productiva está ahora en la raíz de este proyecto. La demo antigua se conserva en un ZIP independiente y no interviene en el despliegue.
 
-## Qué es esta entrega
+## Puesta en marcha
 
-Una demo web interactiva para presentar el viernes **9 de octubre de 2026**. React, TypeScript y Vite. Se puede alojar como sitio estático en Vercel sin Supabase. Los ejemplos son ficticios y los cambios se guardan en el navegador con localStorage.
-
-**No es una plataforma multiusuario ni un sistema de autenticación.** El selector DEMO permite recorrer roles. Todas las personas que abren la demo pueden cambiar de rol y restablecer sus datos. No ingresar hojas de vida, correos o información privada real. Los controles de acceso son una demostración de interfaz, no protección de datos frente a quien inspeccione el navegador.
-
-## Funciones operativas en la demo
-
-- Crear y revocar invitaciones con cupo y vencimiento. Invitaciones del fundador, mentores y cohortes Makers admiten directamente; solicitudes ordinarias requieren revisión. Conservar referente y origen.
-- Registrar solicitudes y aprobarlas/rechazarlas desde administración.
-- Editar perfiles técnicos y disponibilidad.
-- Crear proyectos, solicitar ingreso, aprobar/rechazar integrantes, publicar avances y marcar finalización.
-- Tareas diarias/semanales/mensuales, cambio de estado, documentación editable por líder y lectura por equipo.
-- Conversaciones por canales del equipo y foro comunitario, persistentes solo en este navegador.
-- Retos, soluciones y conversión de propuesta seleccionada a proyecto con creador destacado.
-- Proponer recursos, revisión editorial, inscripción y registro de asistencia por el mentor.
-- Reportes, resolución con justificación, suspensión/restablecimiento y bitácora.
-- Español e inglés en interfaz, temas claro/oscuro y tres colores de acento. Contenido aportado por usuarios y ejemplos no se traduce automáticamente.
-
-## Funciones demostrativas o pendientes
-
-- Copilot: reglas locales y similitud de palabras. No usa un modelo de IA, no analiza CV y no emite aprobación real de IA.
-- Recomendación de talento: coincidencia de etiquetas de habilidades.
-- Voz integrada, permisos granulares por rol, suspensión temporal automática, administradores delegados y subida de imágenes/archivos: pendientes.
-- Videos y reuniones: enlaces externos. No hay grabación ni alojamiento de videos.
-- Invitaciones compartidas: no sincronizan usos o solicitudes entre navegadores. El backend futuro deberá validar y consumir cupos mediante transacciones.
-- La biblioteca contiene enlaces externos; las fuentes web requieren conexión. Las tipografías tienen fallback local.
-
-## Ejecutar
-
-Con Node.js 22 o superior y pnpm:
+Node.js 22 o superior. Desde esta carpeta:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
+cp .env.example .env.local
 pnpm dev
+pnpm check:types
 pnpm test
 pnpm build
-pnpm preview
 ```
 
-`pnpm-workspace.yaml` permite el script de instalación de esbuild. El lockfile registra las versiones instaladas.
+En Windows, copia .env.example a .env.local con tu explorador o PowerShell. Completa VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY con los valores públicos de tu proyecto. No uses service_role ni un secreto OAuth. Google aparece cuando VITE_GOOGLE_LOGIN_ENABLED=true y el proveedor está habilitado en Supabase.
 
-## Publicar en Vercel
+## Supabase
 
-1. Crear un repositorio de GitHub con **el contenido de la carpeta nextone**, sin node_modules ni dist.
-2. Importarlo en Vercel, con preset Vite. Si el repositorio incluye esta carpeta dentro de otra, seleccionar `nextone` como Root Directory.
-3. Usar instalación `pnpm install --frozen-lockfile`, build `pnpm build`, salida `dist`. No necesita variables de entorno.
-4. Compartir la URL asignada `*.vercel.app`. No hace falta dominio propio.
-5. Mantener visible el aviso de demo. El plan Hobby exige uso personal no comercial; revisar condiciones antes de convertirlo en programa de una organización.
+Si tu base ya tiene las migraciones 001, 002 y 003, esta actualización no requiere SQL adicional. No vuelvas a ejecutar los instaladores sobre tablas existentes.
 
-## Guion de presentación — 7 minutos
+Para una base nueva, ejecuta supabase/INSTALAR_NEXTONE.sql una vez y después supabase/migrations/003_projects.sql una vez; el instalador ya incluye 001 y 002. Como alternativa, ejecuta 001, 002 y 003 en orden, sin ejecutar el instalador combinado. Después de registrarse, una persona queda pendiente o entra mediante invitación; utiliza supabase/activate-admin.sql con el correo correcto para el primer administrador.
 
-1. Inicio: explicar el problema, el propósito de nextONE y la meta de 30 miembros. Las cifras en pantalla corresponden a los ejemplos existentes.
-2. Invitaciones: mostrar cupos por mentor y cohorte, y la diferencia entre ingreso directo y revisión.
-3. Proyectos: crear una propuesta y ejecutar la revisión del Copilot. Aclarar que es una demostración del flujo de IA.
-4. Cambiar a un miembro, solicitar ingreso; volver al líder y aprobar. Mostrar tareas, conversación y documentación.
-5. Retos: seleccionar una solución y convertirla en proyecto.
-6. Aprendizaje: mostrar recurso, inscripción y revisión editorial.
-7. Administración: procedencia y moderación. Cerrar proponiendo validar el piloto con Daniel y una primera cohorte.
+En Authentication → Providers, conserva GitHub y Google y habilita Email con Confirm email activado. Configura un SMTP propio y revisa la entrega de correos de confirmación y recuperación.
 
-## Próxima etapa: backend real
+Site URL: https://nextone-opal.vercel.app
 
-Supabase para usuarios, PostgreSQL, almacenamiento y políticas RLS. Requiere cuenta propia. El backend deberá controlar roles, invitaciones de un solo uso o cupos, procedencia, permisos por canal, privacidad de CV, moderación y auditoría; no se pueden trasladar los controles del navegador como si fueran seguridad real. Configurar correo de autenticación o proveedor OAuth antes de invitar usuarios reales. Mantener CV privados y solicitar consentimiento antes de enviarlos a un proveedor de IA.
+Redirect URLs autorizadas:
 
-El objetivo de costo cero corresponde a esta demo estática. No garantiza que IA, voz, correo y operación multiusuario futura permanezcan gratis.
+- https://nextone-opal.vercel.app
+- https://nextone-opal.vercel.app/?recovery=1
+- http://127.0.0.1:5173
+- http://127.0.0.1:5173/?recovery=1
+- http://127.0.0.1:4173
+- http://127.0.0.1:4173/?recovery=1
+
+Si usas localhost o un dominio propio, añade sus URL exactas. Los callbacks de los proveedores OAuth siguen siendo https://TU_PROYECTO.supabase.co/auth/v1/callback. Credenciales de proveedores y SMTP se configuran únicamente en Supabase.
+
+El cliente mantiene PKCE. La confirmación y recuperación deben probarse abriendo el enlace en el mismo navegador desde el que se solicitó. El estado de recuperación se conserva en la URL y el cambio de contraseña requiere una sesión autenticada; el parámetro no concede una sesión ni evita la autorización de Supabase.
+
+## GitHub y Vercel
+
+Sube el contenido de esta carpeta como raíz del repositorio, sustituyendo la estructura antigua después de revisar el diff. No copies solamente archivos nuevos sobre las copias antiguas: quedarían duplicados. Conserva el ZIP de la demo como respaldo independiente.
+
+En el proyecto existente de Vercel cambia Root Directory de nextONE-piloto-backend a la raíz (vacío o ./). Framework: Vite; build: pnpm build; salida: dist. Define las variables de .env.example para cada entorno que uses. Vercel conserva los encabezados de seguridad de vercel.json.
+
+Una vez desplegado, prueba con cuentas reales GitHub, Google (si habilitado), registro por correo, confirmación, ingreso y recuperación. La instalación y pruebas locales no verifican tus credenciales ni la entrega real de SMTP. No se ejecutó push ni despliegue desde esta tarea.
+
+## Contenido interactivo
+
+Nueve tipos: eventos, webinars, recursos, speakers, builder cases, soluciones, proyectos, avances y publicaciones. Cada tipo conserva sus tres estructuras originales y añade cinco nuevas, con objetivos y bloques propios: diapositivas, línea de tiempo, mapa explorable, tarjetas y checklist. Total: 45 nuevas y 27 conservadas.
+
+Studio permite modificar nombres y contenidos de bloques, añadir hasta doce, eliminar, ordenar, cambiar formato y probar la experiencia antes de guardar. Las soluciones utilizan las mismas cinco plantillas mediante el formulario de entrega de un builder case, conforme al flujo original; allí se usa el mismo editor por bloques con vista previa. Los miembros conservan los permisos de creación originales.
+
+Las experiencias se guardan en content.body con una cabecera y separador de bloques. El contenido antiguo conserva su renderizado. No se agrega HTML arbitrario, scripts ni nuevas dependencias de animación. Los checklists reflejan progreso personal durante la visita, no se guardan como logros ni afectan estadísticas. Los cinco diseños se adaptan a móviles y respetan el modo claro/oscuro y la preferencia de movimiento reducido. Es un editor de recorridos estructurados inspirado en presentaciones interactivas; no implementa un lienzo libre de Genially ni edición de video.
+
+## Indicadores
+
+Filtros de sección y título, selección de métrica y orden; comparaciones por contenido, inscripciones/asistencia/accesos y reacciones. Tarjetas de resultados, media ponderada de utilidad, tasa de asistencia y exportación CSV filtrada. Mantiene la tabla detallada y permisos de content_metrics.
+
+Los clics no representan asistencia ni permanencia. La utilidad es una percepción. Los participantes son únicos dentro de cada contenido y no se suman como personas únicas de la comunidad. Los datos son acumulados: no hay series temporales ni un filtro de fecha inventado.
 
 ## Verificación
 
-Pruebas unitarias: admisión directa por origen, revisión ordinaria, límites y revocación, duplicados, expiración, acceso de equipos, suspensión, similitud y enlaces seguros.
+pnpm test ejecuta Vitest y las suites de PostgreSQL/RLS con PGlite. pnpm check:types verifica TypeScript; pnpm build genera producción. El proyecto original no incluye una configuración de ESLint: no se afirma haber ejecutado lint.
 
-`scripts/browser-check.cjs` usa Playwright disponible en el entorno de desarrollo (no dependencia de producción). Verifica el recorrido interactivo en Chromium y guarda capturas en `artifacts`. Puede ejecutarse con `NEXTONE_PLAYWRIGHT` apuntando al paquete Playwright instalado y con el preview en puerto 4173.
+Las suites de navegador usan Chrome instalado y Playwright. Para repetirlas, construye temporalmente con VITE_SUPABASE_URL=https://nextone-test.supabase.co, VITE_SUPABASE_PUBLISHABLE_KEY=test-public-key y VITE_GOOGLE_LOGIN_ENABLED=true; ejecuta pnpm preview en otra terminal. Después ejecuta node scripts/pilot-browser-check.mjs y node scripts/email-browser-check.mjs. Todas las respuestas HTTP de Supabase son adaptadores de prueba; la suite de participación ejecuta las RPC contra PostgreSQL/PGlite con RLS real. No uses los valores de prueba para producción.
+
+Referencias de configuración: [Supabase Auth](https://supabase.com/docs/guides/auth/passwords), [Vercel Root Directory](https://vercel.com/docs/project-configuration/general-settings).
