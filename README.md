@@ -1,4 +1,6 @@
-# nextONE · comunidad interactiva
+# nextONE 0.5 · comunidad interactiva
+
+Nuevo diseño Next Era con Home, tarjetas con profundidad, directorio y analíticas visuales. Consulta DISENO_V05.md para los cambios y la actualización sobre tu despliegue existente.
 
 Aplicación consolidada React 19 + TypeScript + Vite + Supabase. La aplicación productiva está ahora en la raíz de este proyecto. La demo antigua se conserva en un ZIP independiente y no interviene en el despliegue.
 

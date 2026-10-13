@@ -21,3 +21,7 @@ Supabase Auth HTTP, sesiones y entrega de correo están simulados en las pruebas
 Se inspeccionó la web pública nextone-opal.vercel.app sin modificarla. Su pantalla de ingreso actual muestra GitHub, sin correo ni Google visible. Se descargó el repositorio público para compararlo con los adjuntos; no se hizo push, commit remoto ni despliegue.
 
 En este entorno pnpm 11 intenta reinstalar al ejecutar scripts si cambia el almacén local. Los comandos build y test se ejecutaron con --config.verify-deps-before-run=false tras instalar y comprobar el lockfile. La compilación y las pruebas también se ejecutaron directamente con sus herramientas. No es un cambio al código ni una omisión de pruebas.
+
+## Rediseño 0.5
+
+TypeScript y build final correctos. Las 14 pruebas unitarias, comprobaciones de PostgreSQL/RLS, suite de proyectos y pruebas de navegador/correo pasaron. Se añadieron verificaciones de Home, perfiles expandibles, selección de columnas y adaptación móvil, con capturas revisadas en ambos temas. Auth HTTP utiliza respuestas simuladas; no se probó SMTP/OAuth alojado ni se publicó esta versión.
