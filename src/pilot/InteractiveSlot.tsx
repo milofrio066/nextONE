@@ -30,7 +30,7 @@ export default function InteractiveSlot({ item, canEdit, userId }: { item: { id:
     <>
       {error && <div role="alert" className="pilot-alert">{error} <button type="button" onClick={() => void load()}>Reintentar</button></div>}
       {row && <InteractivePage key={`${userId}:${item.id}`} data={row.data} pageKey={`${userId}:${item.id}`} />}
-      {!error && canEdit && item.kind !== 'update' && (
+      {!error && canEdit && (
         <button type="button" className="secondary ix-open" onClick={() => setDesigning(true)}><Sparkles size={16} /> {row ? 'Editar diseño interactivo' : 'Crear diseño interactivo'}</button>
       )}
       {designing && (

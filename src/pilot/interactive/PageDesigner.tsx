@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { ArrowDown, ArrowRight, ArrowUp, Check, ChevronDown, Copy, Eye, Pencil, Plus, Trash2, WandSparkles, X } from 'lucide-react';
 import { rpc } from '../backend';
 import type { Kind } from '../types';
@@ -68,11 +69,13 @@ function FieldEditor({ spec, value, onChange }: { spec: FieldSpec; value: unknow
   }
 }
 
-export default function PageDesigner({ item, initial, close, saved }: {
+export default function PageDesigner({ item, initial, close, saved, savePage, metadata }: {
   item: { id: string; kind: Kind; title: string };
   initial: { template_id: string; data: unknown } | null;
   close: () => void;
   saved: () => void;
+  savePage?: (template: string, data: PageData) => Promise<void>;
+  metadata?: ReactNode;
 }) {
   const [data, setData] = useState<PageData | null>(initial ? normalize(initial.data) : null);
   const [tpl, setTpl] = useState(initial?.template_id || 'blank');
@@ -126,7 +129,7 @@ export default function PageDesigner({ item, initial, close, saved }: {
     if (!out.blocks.length) { setError('Agrega al menos un bloque.'); return; }
     if (JSON.stringify(out).length > 55000) { setError('La página es muy grande. Quita algunos bloques o textos.'); return; }
     setBusy(true); setError('');
-    try { await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); saved(); }
+    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); saved(); }
     catch (e) { setError((e as { message?: string })?.message || 'No se pudo guardar.'); setBusy(false); }
   }
   async function remove() {
@@ -144,6 +147,7 @@ export default function PageDesigner({ item, initial, close, saved }: {
           <button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={close}><X /></button>
         </header>
 
+        {metadata&&<details className="composer-settings" open={!data}><summary>Datos de publicación · título, descripción y vinculación</summary>{metadata}</details>}
         {!data ? (
           <div className="studio-body">
             <h3 className="ix-lead">Elige una plantilla interactiva</h3>
@@ -167,6 +171,7 @@ export default function PageDesigner({ item, initial, close, saved }: {
               <div className="ix-swatches" role="radiogroup" aria-label="Color de acento">
                 {ACCENTS.map(([hex, name]) => <button key={hex} type="button" role="radio" aria-checked={data.accent === hex} aria-label={name} className={data.accent === hex ? 'on' : ''} style={{ background: hex }} onClick={() => patch(d => ({ ...d, accent: hex }))} />)}
               </div>
+              <label className="ix-custom-color">Color personalizado<input type="color" aria-label="Color de acento personalizado" value={data.accent} onChange={e=>patch(d=>({...d,accent:e.target.value}))}/></label>
               <div className="ix-pane-switch" role="group" aria-label="Vista">
                 <button type="button" className={pane === 'edit' ? 'on' : ''} aria-pressed={pane === 'edit'} onClick={() => setPane('edit')}><Pencil size={14} /> Editar</button>
                 <button type="button" className={pane === 'view' ? 'on' : ''} aria-pressed={pane === 'view'} onClick={() => setPane('view')}><Eye size={14} /> Vista previa</button>
@@ -209,7 +214,7 @@ export default function PageDesigner({ item, initial, close, saved }: {
         {error && <div className="pilot-alert" role="alert">{error}</div>}
         {data && (
           <footer className="studio-footer">
-            {initial ? <button type="button" className="secondary" disabled={busy} onClick={remove}><Trash2 size={15} /> Quitar diseño</button> : <button type="button" className="secondary" disabled={busy} onClick={close}>Cancelar</button>}
+            {initial && !savePage ? <button type="button" className="secondary" disabled={busy} onClick={remove}><Trash2 size={15} /> Quitar diseño</button> : <button type="button" className="secondary" disabled={busy} onClick={close}>Cancelar</button>}
             <button type="button" className="primary" disabled={busy} onClick={save}>{busy ? 'Guardando…' : 'Guardar diseño'} <Check size={16} /></button>
           </footer>
         )}

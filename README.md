@@ -1,8 +1,7 @@
-# nextONE 0.6 · comunidad interactiva
+# nextONE 0.7 · creación y evaluación unificadas
 
-40 plantillas interactivas adicionales integradas. Para actualizar una base existente, sigue ACTUALIZAR_V06.md; la integración aplica únicamente la nueva migración 004.
+45 plantillas interactivas, lienzo en blanco, evaluación oficial de organizadores y eliminación protegida. Sigue ACTUALIZAR_V07.md para actualizar; tu integración aplica la nueva migración 005. No vuelvas a ejecutar el instalador en una base existente.
 
-Nuevo diseño Next Era con Home, tarjetas con profundidad, directorio y analíticas visuales. Consulta DISENO_V05.md para los cambios y la actualización sobre tu despliegue existente.
 
 Aplicación consolidada React 19 + TypeScript + Vite + Supabase. La aplicación productiva está ahora en la raíz de este proyecto. La demo antigua se conserva en un ZIP independiente y no interviene en el despliegue.
 

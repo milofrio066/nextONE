@@ -4,7 +4,7 @@ import { CATALOG, pageTemplates } from './catalog';
 import { DEF, DEFS } from './schema';
 import InteractivePage, { normalize } from './InteractivePage';
 
-const KINDS = ['event', 'webinar', 'resource', 'speaker', 'case', 'solution', 'project', 'post'] as const;
+const KINDS = ['event', 'webinar', 'resource', 'speaker', 'case', 'solution', 'project', 'post', 'update'] as const;
 
 describe('plantillas interactivas', () => {
   it('hay exactamente 5 plantillas por sección y los ids son únicos', () => {

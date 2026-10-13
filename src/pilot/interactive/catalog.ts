@@ -321,5 +321,8 @@ export const CATALOG: PageTemplate[] = [
   ])
 ];
 
+// Avances comparten el motor, con cinco puntos de partida propios.
+CATALOG.push(...CATALOG.filter(t => t.kind === 'project').map((t,i) => ({...t,id:'update-'+i,kind:'update' as Kind,name:['Avance de sprint','Hitos y resultados','Experimento validado','Riesgos y decisiones','Próximos pasos'][i],description:'Presenta el avance de tu proyecto y personaliza todos sus bloques.'})));
+
 export const pageTemplates = (kind: Kind) => CATALOG.filter(t => t.kind === kind);
 export const templateById = (id: string) => CATALOG.find(t => t.id === id);

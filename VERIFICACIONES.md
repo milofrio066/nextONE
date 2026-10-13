@@ -29,3 +29,7 @@ TypeScript y build final correctos. Las 14 pruebas unitarias, comprobaciones de 
 ## Integración 0.6
 
 TypeScript estricto y build correctos. 18 pruebas unitarias pasan (incluidas 40 plantillas nuevas y 22 bloques); suites originales de PostgreSQL/RLS y proyectos correctas, y nueva suite de páginas correcta, con rechazo de JSON sin blocks. Navegador Chrome: crear/duplicar/eliminar/guardar diseño, acento, progreso de checklist tras recarga, editor 390/1440 y regresión de la plataforma hasta 320 px. Correo probado con HTTP Auth simulado. No se probó ni migró Supabase alojado, SMTP u OAuth reales. No hay ESLint configurado.
+
+## Versión 0.7
+
+TypeScript, build y 18 pruebas unitarias correctos. Suites PostgreSQL/RLS originales, páginas y proyectos correctas; nueva suite unified-check verifica los nueve tipos, guardado atómico y rollback, autoridad del evento, asignación/revocación de organizadores, revisión oficial con voto comunitario previo, versiones de evaluación, permisos y ocultamiento tras eliminar. Navegador y correo correctos: ver ACTUALIZAR_V07.md para alcance y límites.
