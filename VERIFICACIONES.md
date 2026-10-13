@@ -25,3 +25,7 @@ En este entorno pnpm 11 intenta reinstalar al ejecutar scripts si cambia el alma
 ## Rediseño 0.5
 
 TypeScript y build final correctos. Las 14 pruebas unitarias, comprobaciones de PostgreSQL/RLS, suite de proyectos y pruebas de navegador/correo pasaron. Se añadieron verificaciones de Home, perfiles expandibles, selección de columnas y adaptación móvil, con capturas revisadas en ambos temas. Auth HTTP utiliza respuestas simuladas; no se probó SMTP/OAuth alojado ni se publicó esta versión.
+
+## Integración 0.6
+
+TypeScript estricto y build correctos. 18 pruebas unitarias pasan (incluidas 40 plantillas nuevas y 22 bloques); suites originales de PostgreSQL/RLS y proyectos correctas, y nueva suite de páginas correcta, con rechazo de JSON sin blocks. Navegador Chrome: crear/duplicar/eliminar/guardar diseño, acento, progreso de checklist tras recarga, editor 390/1440 y regresión de la plataforma hasta 320 px. Correo probado con HTTP Auth simulado. No se probó ni migró Supabase alojado, SMTP u OAuth reales. No hay ESLint configurado.

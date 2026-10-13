@@ -1,4 +1,6 @@
-# nextONE 0.5 · comunidad interactiva
+# nextONE 0.6 · comunidad interactiva
+
+40 plantillas interactivas adicionales integradas. Para actualizar una base existente, sigue ACTUALIZAR_V06.md; la integración aplica únicamente la nueva migración 004.
 
 Nuevo diseño Next Era con Home, tarjetas con profundidad, directorio y analíticas visuales. Consulta DISENO_V05.md para los cambios y la actualización sobre tu despliegue existente.
 
@@ -69,5 +71,5 @@ Los clics no representan asistencia ni permanencia. La utilidad es una percepci�
 pnpm test ejecuta Vitest y las suites de PostgreSQL/RLS con PGlite. pnpm check:types verifica TypeScript; pnpm build genera producción. El proyecto original no incluye una configuración de ESLint: no se afirma haber ejecutado lint.
 
 Las suites de navegador usan Chrome instalado y Playwright. Para repetirlas, construye temporalmente con VITE_SUPABASE_URL=https://nextone-test.supabase.co, VITE_SUPABASE_PUBLISHABLE_KEY=test-public-key y VITE_GOOGLE_LOGIN_ENABLED=true; ejecuta pnpm preview en otra terminal. Después ejecuta node scripts/pilot-browser-check.mjs y node scripts/email-browser-check.mjs. Todas las respuestas HTTP de Supabase son adaptadores de prueba; la suite de participación ejecuta las RPC contra PostgreSQL/PGlite con RLS real. No uses los valores de prueba para producción.
-Historial de migraciones 001, 002 y 003 sincronizado.
+
 Referencias de configuración: [Supabase Auth](https://supabase.com/docs/guides/auth/passwords), [Vercel Root Directory](https://vercel.com/docs/project-configuration/general-settings).
