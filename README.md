@@ -1,3 +1,5 @@
+> Versión 0.8: utiliza ACTUALIZAR_V08.md. Si ya tienes 001–006, aplica únicamente 007 y 008, en orden.
+
 # nextONE · Makers
 
 Catálogo existente conservado, lienzo en blanco, evaluación oficial, borradores recuperables, historial de participación y progreso sincronizado. **Consulta ACTUALIZAR_MAKERS.md antes de actualizar.** Sobre una base con 001–005 se aplica únicamente 006_makers.sql. El catálogo de esta revisión contiene 45 composiciones interactivas; la cifra de 47 funcionales confirmada por el propietario puede incluir otras estructuras. No se eliminó ninguna plantilla.

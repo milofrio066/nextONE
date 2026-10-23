@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ArrowDown, ArrowRight, ArrowUp, Check, ChevronDown, Copy, Eye, Pencil, Plus, Trash2, WandSparkles, X } from 'lucide-react';
-import { rpc } from '../backend';
+import {backend, rpc } from '../backend';
 import {formSnapshot,readDraft,removeDraft,writeDraft} from '../drafts';
 import type {Draft} from '../drafts';
 import type { Kind } from '../types';
@@ -93,7 +93,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
   const options = pageTemplates(item.kind);
   const [meta,setMeta]=useState<Record<string,string>>({});
   const [recoverable,setRecoverable]=useState<Draft<PageData>|null>(()=>draftKey?readDraft<PageData>(draftKey):null);
-  const [draftWarning,setDraftWarning]=useState('');
+  const [draftWarning,setDraftWarning]=useState(''),[saveNotice,setSaveNotice]=useState('');
   const [draftReady,setDraftReady]=useState(false);const baseline=useRef('');const dirty=useRef(false);const currentClose=useRef(close);
   const metadataForm=()=>panel.current?.querySelector<HTMLFormElement>('.composer-metadata')||null;
   currentClose.current=()=>{if(!dirty.current||confirm('Hay cambios sin publicar. ¿Cerrar y conservar el borrador local para retomarlo?'))close();};
@@ -101,7 +101,9 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
   useEffect(()=>{if(draftReady)setMeta(formSnapshot(metadataForm()));},[metadata]);
   useEffect(()=>{if(!draftReady||!baseline.current)return;dirty.current=JSON.stringify({data,tpl,meta})!==baseline.current;if(draftKey&&dirty.current&&!writeDraft(draftKey,{v:1,data,tpl,metadata:meta,savedAt:new Date().toISOString()}))setDraftWarning('No se pudo guardar el borrador en este navegador. Mantén el editor abierto hasta publicar.');},[data,tpl,meta,draftKey,draftReady]);
   useEffect(()=>{const guard=(e:BeforeUnloadEvent)=>{if(dirty.current){e.preventDefault();e.returnValue='';}};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[]);
-  const clearDraft=()=>{dirty.current=false;if(draftKey)removeDraft(draftKey);};
+  const clearDraft=()=>{dirty.current=false;if(draftKey){removeDraft(draftKey);void rpc('save_editor_draft',{p_key:draftKey,p_snapshot:null}).catch(()=>setDraftWarning('Publicado; no se pudo retirar el borrador remoto.'));}};
+  useEffect(()=>{if(!draftKey||!backend)return;let alive=true;void backend.from('editor_drafts').select('snapshot').eq('draft_key',draftKey).maybeSingle().then(({data,error})=>{if(alive&&!error&&data&&!dirty.current&&!readDraft(draftKey))setRecoverable(data.snapshot as Draft<PageData>);});return()=>{alive=false;};},[draftKey]);
+  async function saveDraft(){if(!draftKey)return;setBusy(true);setError('');const snapshot:Draft<PageData>={v:1,data,tpl,metadata:formSnapshot(metadataForm()),savedAt:new Date().toISOString()};const local=writeDraft(draftKey,snapshot);try{await rpc('save_editor_draft',{p_key:draftKey,p_snapshot:snapshot});setSaveNotice('Borrador guardado. Puedes continuar.');}catch(e){setError((local?'Guardado en este navegador; no se sincronizó. ':'')+(e as Error).message);}finally{setBusy(false);}}
   function recover(){if(!recoverable)return;setData(recoverable.data?normalize(recoverable.data):null);setTpl(recoverable.tpl);setMeta(recoverable.metadata);restoreMetadata?.(recoverable.metadata);setRecoverable(null);}
 
 
@@ -140,13 +142,13 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
     setAdding(false);
   }
 
-  async function save() {
+  async function save(keepOpen=false) {
     if (!data) return;
     const out = clean({ ...data, blocks: data.blocks }) as PageData;
     if (!out.blocks.length) { setError('Agrega al menos un bloque.'); return; }
     if (JSON.stringify(out).length > 55000) { setError('La página es muy grande. Quita algunos bloques o textos.'); return; }
     setBusy(true); setError('');
-    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); clearDraft(); saved(); }
+    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); clearDraft();baseline.current=JSON.stringify({data,tpl,meta:formSnapshot(metadataForm())});if(keepOpen){setSaveNotice('Cambios guardados.');setBusy(false);}else saved(); }
     catch (e) { setError((e as { message?: string })?.message || 'No se pudo guardar.'); setBusy(false); }
   }
   async function remove() {
@@ -161,7 +163,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
       <div ref={panel} onChangeCapture={()=>setMeta(formSnapshot(metadataForm()))} tabIndex={-1} className="studio ix-designer" role="dialog" aria-modal="true" aria-label="Diseño interactivo">
         <header className="studio-header">
           <div><span className="eyebrow"><WandSparkles size={14} /> DISEÑO INTERACTIVO · {KIND_NAMES[item.kind] || ''}</span><h2>{item.title}</h2></div>
-          <button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
+          <div className="save-actions">{draftKey&&<button type="button" className="secondary" disabled={busy} onClick={()=>void saveDraft()}>Guardar borrador</button>}<button type="button" className="primary" disabled={busy||!data} onClick={()=>void save(true)}>Guardar cambios</button></div><button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
         </header>
 
         {recoverable&&<div className="pilot-notice"><p>Hay un borrador local del {new Date(recoverable.savedAt).toLocaleString('es-CO')}.</p><button type="button" className="secondary" onClick={recover}>Recuperar borrador</button><button type="button" className="secondary" onClick={()=>{if(confirm('¿Descartar este borrador local?')){if(draftKey)removeDraft(draftKey);setRecoverable(null);}}}>Descartar borrador</button></div>}{draftWarning&&<p role="alert">{draftWarning}</p>}
@@ -229,11 +231,11 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
           </>
         )}
 
-        {error && <div className="pilot-alert" role="alert">{error}</div>}
+        {saveNotice&&<p className="pilot-notice" role="status">{saveNotice}</p>}{error && <div className="pilot-alert" role="alert">{error}</div>}
         {data && (
           <footer className="studio-footer">
             {initial && !savePage ? <button type="button" className="secondary" disabled={busy} onClick={remove}><Trash2 size={15} /> Quitar diseño</button> : <button type="button" className="secondary" disabled={busy} onClick={()=>currentClose.current()}>Cancelar</button>}
-            <button type="button" className="primary" disabled={busy} onClick={save}>{busy ? 'Guardando…' : 'Guardar diseño'} <Check size={16} /></button>
+            <button type="button" className="primary" disabled={busy} onClick={()=>void save()}>{busy ? 'Guardando…' : 'Guardar y cerrar'} <Check size={16} /></button>
           </footer>
         )}
       </div>

@@ -1,0 +1,55 @@
+import {PGlite} from '@electric-sql/pglite';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,raw_user_meta_data jsonb default '{}');create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('test.uid',true),'')::uuid$$;grant usage on schema public,auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text);alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,delete on storage.objects to authenticated;`);
+for(const f of ['001_pilot.sql','002_hardening.sql','003_projects.sql','004_interactive_pages.sql','005_unified_content.sql','006_makers.sql','007_workspace.sql','008_evidence_storage.sql'])await db.exec(await fs.readFile(new URL('../supabase/migrations/'+f,import.meta.url),'utf8'));
+const [admin,student,evaluator,outsider,teammate]=Array.from({length:5},(_,i)=>`00000000-0000-4000-8000-00000000000${i+1}`);
+for(const id of [admin,student,evaluator,outsider,teammate])await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,id+'@test.example']);
+await db.exec("update public.profiles set status='active'");await db.query("update public.profiles set role='admin' where id=$1",[admin]);
+async function as(id,sql,args=[]){await db.query("select set_config('test.uid',$1,false)",[id]);await db.exec('set role authenticated');try{return(await db.query(sql,args)).rows;}finally{await db.exec('reset role');}}
+async function call(id,name,args=[]){return(await as(id,`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) value`,args))[0]?.value;}
+const create=(id,kind,title,parent=null)=>call(id,'save_content',[null,kind,title,'Descripción válida',null,parent,['event','webinar'].includes(kind)?new Date(Date.now()-3600000):null,['event','webinar','case'].includes(kind)?new Date(Date.now()+3600000):null,20,true,null]);
+try{
+ await call(student,'save_identity',['Nombre elegido','Maker 🚀','Mi experiencia','Diseño',['Producto']]);
+ await assert.rejects(()=>call(student,'save_profile',['Cambio no autorizado','Bio','Skills']),/solicitud/);
+ await call(student,'request_name',['Nombre aprobado','Necesito corregir mis apellidos']);const req=(await as(student,'select id from public.name_requests'))[0].id;
+ await assert.rejects(()=>call(outsider,'review_name',[req,true]),/administración/);await call(admin,'review_name',[req,true]);
+ assert.equal((await as(student,'select name from public.profiles where id=$1',[student]))[0].name,'Nombre aprobado');
+ await assert.rejects(()=>call(student,'save_profile',['Otro cambio','Bio','Skills']),/solicitud/);
+ await call(student,'save_identity',['Nombre aprobado','🌱 Otro apodo','Bio','Skills',[]]);
+ const project=await create(student,'project','Proyecto de investigación');
+ await assert.rejects(()=>call(student,'configure_project',[project,'semillero',student,{}]),/diferente/);
+ await call(student,'configure_project',[project,'semillero',evaluator,{v1:'Entrevistas y primera hipótesis'}]);
+ await assert.rejects(()=>call(outsider,'configure_project',[project,'project',outsider,{}]),/responsable/);
+ await call(student,'add_project_role',[project,'Investigación',2]);const role=(await as(student,'select id from public.project_roles where project_id=$1',[project]))[0].id;
+ await assert.rejects(()=>call(evaluator,'apply_project',[project,role,'Quiero participar en el proyecto']),/evaluador/);
+ await call(teammate,'apply_project',[project,role,'Quiero aportar al proyecto']);await call(student,'review_project_member',[project,teammate,true,'Aporte aprobado']);
+ await call(evaluator,'add_project_review',[project,'Feedback privado con evidencia suficiente']);
+ assert.equal((await as(outsider,'select * from public.project_reviews')).length,0);assert.equal((await as(teammate,'select * from public.project_reviews')).length,1);
+ await assert.rejects(()=>call(teammate,'add_project_review',[project,'No soy evaluador asignado']),/evaluador/);
+ await call(teammate,'add_evidence',[project,'Documento de avance','https://example.com/avance',null]);
+ assert.equal((await as(evaluator,'select * from public.project_evidence')).length,1);assert.equal((await as(outsider,'select * from public.project_evidence')).length,0);
+ const path=`${project}/${teammate}/00000000-0000-4000-8000-000000000099.pdf`;
+ await as(teammate,"insert into storage.objects(bucket_id,name) values('project-evidence',$1)",[path]);
+ assert.equal((await as(evaluator,'select * from storage.objects')).length,1);assert.equal((await as(outsider,'select * from storage.objects')).length,0);
+ await assert.rejects(()=>as(outsider,"insert into storage.objects(bucket_id,name) values('project-evidence',$1)",[path]),/row-level/);
+ await assert.rejects(()=>as(teammate,"insert into storage.objects(bucket_id,name) values('project-evidence',$1)",[`${project}/${teammate}/bad.html`]),/row-level/);
+ await call(student,'send_room_message',[null,'Hola Makers, comparto mi aprendizaje']);await assert.rejects(()=>call(student,'send_room_message',[null,'Eres un idiota!']),/ofensivas/);
+ const event=await create(admin,'event','Encuentro con chat');await call(student,'send_room_message',[event,'¿Dónde puedo consultar la agenda?']);
+ await db.query("update public.content set ends_at=now()-interval '25 hours',starts_at=now()-interval '27 hours' where id=$1",[event]);
+ assert.equal(await call(student,'room_open',[event]),false);await assert.rejects(()=>call(student,'send_room_message',[event,'Mensaje fuera de plazo']),/cerrado/);
+ assert.equal((await as(student,'select * from public.room_messages where content_id=$1',[event])).length,0);
+ await call(student,'save_editor_draft',['event:new',{title:'Borrador incompleto'}]);assert.equal((await as(outsider,'select * from public.editor_drafts')).length,0);await call(student,'save_editor_draft',['event:new',null]);
+ const parent=await create(admin,'event','Evento con vínculos'),child=await create(student,'post','Publicación vinculada',parent);
+ await assert.rejects(()=>call(admin,'delete_content',[parent]),/vinculadas/);await assert.rejects(()=>call(outsider,'detach_content',[child]),/autor/);await call(student,'detach_content',[child]);await call(admin,'delete_content',[parent]);
+ const challenge=await create(admin,'case','Reto demostrable',project);await call(student,'start_case',[challenge]);
+ await assert.rejects(()=>call(student,'submit_solution',[challenge,'Solución vacía','Descripción',null]),/demostración/);
+ const solution=await call(student,'submit_solution',[challenge,'Demostración real','Descripción','https://example.com/demo']);
+ await assert.rejects(()=>call(outsider,'highlight_solution',[solution,true]),/responsable/);await call(evaluator,'highlight_solution',[solution,true]);
+ assert.equal((await as(student,'select featured from public.content where id=$1',[solution]))[0].featured,true);
+ await assert.rejects(()=>as(student,'update public.profiles set role=\'admin\' where id=$1',[student]),/permission denied/);
+ await assert.rejects(()=>call(student,'check_language',['texto']),/permission denied/);
+ for(let i=0;i<8;i++)await call(student,'reserve_ai_request');await assert.rejects(()=>call(student,'reserve_ai_request'),/Límite/);
+ console.log('PASS workspace: nombres/aprobación, apodos, evaluador independiente, feedback privado, evidencias/Storage RLS, moderación, chat temporal, borradores, desvinculación, demos, destacados, permisos y cuota IA.');
+}finally{await db.close();}
