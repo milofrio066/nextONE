@@ -142,13 +142,16 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
     setAdding(false);
   }
 
+  // Sin diseño previo, los datos de publicación (vínculos, fechas, título) se guardan igual con un aviso mínimo.
+  const fallbackPage = (): PageData => ({ v: 1, accent: ACCENTS[0][0], blocks: [{ id: uid(), type: 'callout', props: { tone: 'info', title: item.title.slice(0, 100) || 'Información', body: 'Este contenido aún no tiene un diseño interactivo. Puedes añadirlo desde Editar.' } }] });
   async function save(keepOpen=false) {
-    if (!data) return;
-    const out = clean({ ...data, blocks: data.blocks }) as PageData;
+    const source = data ?? (savePage ? fallbackPage() : null);
+    if (!source) return;
+    const out = clean({ ...source, blocks: source.blocks }) as PageData;
     if (!out.blocks.length) { setError('Agrega al menos un bloque.'); return; }
     if (JSON.stringify(out).length > 55000) { setError('La página es muy grande. Quita algunos bloques o textos.'); return; }
     setBusy(true); setError('');
-    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); clearDraft();baseline.current=JSON.stringify({data,tpl,meta:formSnapshot(metadataForm())});if(keepOpen){setSaveNotice('Cambios guardados.');setBusy(false);}else saved(); }
+    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); clearDraft();if(!data)setData(normalize(out));baseline.current=JSON.stringify({data:data??out,tpl,meta:formSnapshot(metadataForm())});if(keepOpen){setSaveNotice('Cambios guardados.');setBusy(false);}else saved(); }
     catch (e) { setError((e as { message?: string })?.message || 'No se pudo guardar.'); setBusy(false); }
   }
   async function remove() {
@@ -163,7 +166,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
       <div ref={panel} onChangeCapture={()=>setMeta(formSnapshot(metadataForm()))} tabIndex={-1} className="studio ix-designer" role="dialog" aria-modal="true" aria-label="Diseño interactivo">
         <header className="studio-header">
           <div><span className="eyebrow"><WandSparkles size={14} /> DISEÑO INTERACTIVO · {KIND_NAMES[item.kind] || ''}</span><h2>{item.title}</h2></div>
-          <div className="save-actions">{draftKey&&<button type="button" className="secondary" disabled={busy} onClick={()=>void saveDraft()}>Guardar borrador</button>}<button type="button" className="primary" disabled={busy||!data} onClick={()=>void save(true)}>Guardar cambios</button></div><button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
+          <div className="save-actions">{draftKey&&<button type="button" className="secondary" disabled={busy} onClick={()=>void saveDraft()}>Guardar borrador</button>}<button type="button" className="primary" disabled={busy||(!data&&!savePage)} onClick={()=>void save(true)}>Guardar cambios</button></div><button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
         </header>
 
         {recoverable&&<div className="pilot-notice"><p>Hay un borrador local del {new Date(recoverable.savedAt).toLocaleString('es-CO')}.</p><button type="button" className="secondary" onClick={recover}>Recuperar borrador</button><button type="button" className="secondary" onClick={()=>{if(confirm('¿Descartar este borrador local?')){if(draftKey)removeDraft(draftKey);setRecoverable(null);}}}>Descartar borrador</button></div>}{draftWarning&&<p role="alert">{draftWarning}</p>}

@@ -1,5 +1,6 @@
 export type Kind = 'event'|'webinar'|'resource'|'speaker'|'case'|'solution'|'project'|'update'|'post';
-export type Profile = {id:string;name:string;bio:string;skills:string;role:'admin'|'organizer'|'mentor'|'member';status:'pending'|'active'|'suspended';source:string;nickname?:string;name_changes?:number;interests?:string[];cohort?:string;created_at:string};
+export type ProfileTheme = {template:'neon'|'aurora'|'ember'|'mono'|'custom';accent:string;headline:string;quote:string;links:{label:string;url:string}[]};
+export type Profile = {id:string;theme?:Partial<ProfileTheme>;name:string;bio:string;skills:string;role:'admin'|'organizer'|'mentor'|'member';status:'pending'|'active'|'suspended';source:string;nickname?:string;name_changes?:number;interests?:string[];cohort?:string;created_at:string};
 export type Content = {id:string;kind:Kind;title:string;body:string;url:string|null;owner_id:string;parent_id:string|null;starts_at:string|null;ends_at:string|null;capacity:number|null;published:boolean;evaluator_id?:string|null;project_type?:'project'|'semillero';project_plan?:Record<string,string>;featured?:boolean;topics?:string[];methodology?:string;audience?:string;created_at:string};
 export type Feedback = {content_id:string;user_id:string;reaction:-1|1|null;rating:number|null;updated_at:string};
 export type Comment = {id:string;content_id:string;author_id:string;body:string;created_at:string};
