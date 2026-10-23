@@ -1,3 +1,5 @@
+> Documento histórico. Para esta entrega utiliza ACTUALIZAR_MAKERS.md; sus instrucciones de migración y validación prevalecen.
+
 # Verificaciones · 13 octubre 2026
 
 ## Resultado

@@ -1,3 +1,5 @@
+> Documento histórico. Para esta entrega utiliza ACTUALIZAR_MAKERS.md; sus instrucciones de migración y validación prevalecen.
+
 # nextONE 0.7 · creación unificada, evaluación y eliminación
 
 ## Actualizar tu web existente

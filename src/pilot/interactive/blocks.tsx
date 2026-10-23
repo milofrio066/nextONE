@@ -1,3 +1,4 @@
+import {useProgress} from './Progress';
 import { useEffect, useState } from 'react';
 import type { ComponentType } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, CheckCircle2, ChevronDown, Info, RotateCcw, Sparkles, Star, TriangleAlert } from 'lucide-react';
@@ -181,6 +182,8 @@ function Agenda({ p, id }: B) {
 function Checklist({ p, id }: B) {
   const items = strs(p.items, 20);
   const [done, setDone] = useLocal<number[]>(id, []);
+  const sync=useProgress(id);const remote=JSON.stringify(sync.saved?.done);
+  useEffect(()=>{if(sync.ready&&sync.enabled)setDone(sync.saved?.done||[]);},[sync.ready,remote]);
   const ok = done.filter(i => i < items.length);
   const pct = items.length ? Math.round((ok.length / items.length) * 100) : 0;
   return (
@@ -193,10 +196,10 @@ function Checklist({ p, id }: B) {
         </svg>
         <div><Title p={p} /><small>{pct === 100 && items.length ? '¡Todo listo! 🎉' : `${ok.length} de ${items.length} completados`}</small></div>
       </div>
-      <ul>
+      {sync.notice}<ul>
         {items.map((t, i) => {
           const on = ok.includes(i);
-          return <li key={i}><button type="button" role="checkbox" aria-checked={on} className={on ? 'on' : ''} onClick={() => setDone(on ? ok.filter(x => x !== i) : [...ok, i])}><span>{on && <Check size={14} />}</span>{t}</button></li>;
+          return <li key={i}><button type="button" role="checkbox" aria-checked={on} className={on ? 'on' : ''} disabled={!sync.ready||sync.busy} onClick={() => {const next=on ? ok.filter(x => x !== i) : [...ok, i];setDone(next);void sync.save('checklist',{done:next});}}><span>{on && <Check size={14} />}</span>{t}</button></li>;
         })}
       </ul>
     </div>
@@ -204,22 +207,24 @@ function Checklist({ p, id }: B) {
 }
 
 /* ── Quiz ────────────────────────────────────────────────── */
-function Quiz({ p }: B) {
+function Quiz({ p,id }: B) {
   const qs = arr(p.items, 10).map(q => ({ q: s(q.q, 240), opts: strs(q.options, 6), ans: n(q.answer, 1, 6, 1) - 1, exp: s(q.explain, 300) })).filter(q => q.q && q.opts.length > 1);
   const [i, setI] = useState(0);
   const [pick, setPick] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [fin, setFin] = useState(false);
+  const sync=useProgress(id),[answers,setAnswers]=useState<number[]>([]);const remote=JSON.stringify(sync.saved);
+  useEffect(()=>{if(sync.saved?.answers){setAnswers(sync.saved.answers);setScore(sync.saved.score||0);setFin(true);}},[remote]);
   if (!qs.length) return <div className="ix-card ix-muted">Agrega preguntas con al menos dos opciones.</div>;
   const q = qs[Math.min(i, qs.length - 1)];
-  const reset = () => { setI(0); setPick(null); setScore(0); setFin(false); };
+  const reset = () => { setI(0); setPick(null); setScore(0); setAnswers([]); setFin(false); };
   if (fin) {
     const pct = Math.round((score / qs.length) * 100);
     return (
       <div className="ix-card ix-fade ix-quiz-end">
-        <Title p={p} />
+        <Title p={p} />{sync.notice}
         <p className="ix-big">{score}/{qs.length}</p>
-        <p>{pct >= 80 ? '¡Excelente! Dominas el tema.' : pct >= 50 ? 'Buen avance. Repasa y vuelve a intentarlo.' : 'Es un buen punto de partida. Revisa el contenido e inténtalo de nuevo.'}</p>
+        <p>{pct >= 80 ? '¡Excelente resultado en este ejercicio!' : pct >= 50 ? 'Buen avance. Repasa y vuelve a intentarlo.' : 'Es un buen punto de partida. Revisa el contenido e inténtalo de nuevo.'}</p>
         <button type="button" className="ix-btn ghost" onClick={reset}><RotateCcw size={16} /> Reintentar</button>
       </div>
     );
@@ -231,14 +236,14 @@ function Quiz({ p }: B) {
       <h4>{q.q}</h4>
       <div className="ix-opts">
         {q.opts.map((o, k) => (
-          <button key={k} type="button" disabled={pick !== null} className={pick === null ? '' : k === q.ans ? 'right' : k === pick ? 'wrong' : ''}
-            onClick={() => { setPick(k); if (k === q.ans) setScore(score + 1); }}>{o}</button>
+          <button key={k} type="button" disabled={pick !== null||!sync.ready||sync.busy} className={pick === null ? '' : k === q.ans ? 'right' : k === pick ? 'wrong' : ''}
+            onClick={() => { setPick(k);setAnswers(old=>[...old.slice(0,i),k]); if (k === q.ans) setScore(score + 1); }}>{o}</button>
         ))}
       </div>
       {pick !== null && (
         <div className="ix-fade">
           <p className="ix-feedback">{pick === q.ans ? '✅ ¡Correcto!' : '❌ Casi.'} {q.exp}</p>
-          <button type="button" className="ix-btn" onClick={() => { if (i + 1 >= qs.length) setFin(true); else { setI(i + 1); setPick(null); } }}>{i + 1 >= qs.length ? 'Ver resultado' : 'Siguiente'} <ArrowRight size={16} /></button>
+          <button type="button" className="ix-btn" onClick={() => { if (i + 1 >= qs.length){setFin(true);void sync.save('quiz',{answers});} else { setI(i + 1); setPick(null); } }}>{i + 1 >= qs.length ? 'Ver resultado' : 'Siguiente'} <ArrowRight size={16} /></button>
         </div>
       )}
     </div>

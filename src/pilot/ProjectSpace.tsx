@@ -1,5 +1,6 @@
 import { useEffect,useState } from 'react';
 import { Users,Flag,CheckCircle2,Plus,Target,MessageSquare,Send } from 'lucide-react';
+import {readRows} from './data';
 import {backend,rpc} from './backend';
 import type {Content,Profile} from './types';
 type Role={id:string;project_id:string;name:string;slots:number};
@@ -10,7 +11,7 @@ type Action=(work:()=>Promise<unknown>,message?:string)=>Promise<void>;
 export default function ProjectSpace({item,profile,people,act,busy,refreshKey,onAdvance}:{onAdvance:()=>void;item:Content;profile:Profile;people:Profile[];act:Action;busy:boolean;refreshKey:number}){
  const [roles,setRoles]=useState<Role[]>([]),[members,setMembers]=useState<Member[]>([]),[tasks,setTasks]=useState<Task[]>([]),[tab,setTab]=useState('overview'),[error,setError]=useState(''),[messages,setMessages]=useState<Message[]>([]),[message,setMessage]=useState('');
  const leader=item.owner_id===profile.id||profile.role==='admin',mine=members.find(m=>m.user_id===profile.id),inside=leader||mine?.status==='active';
- async function refresh(){const client=backend;if(!client)return;const [r,m,t,ch]=await Promise.all(['project_roles','project_members','project_tasks','project_messages'].map(table=>client.from(table).select('*').eq('project_id',item.id)));for(const result of [r,m,t,ch])if(result.error)throw result.error;setRoles(r.data as Role[]);setMembers(m.data as Member[]);setTasks(t.data as Task[]);setMessages((ch.data as Message[]).sort((a,b)=>a.created_at.localeCompare(b.created_at)));setError('');}
+ async function refresh(){const client=backend;if(!client)return;const [r,m,t,ch]=await Promise.all(['project_roles','project_members','project_tasks','project_messages'].map(table=>readRows(table,{project_id:item.id})));setRoles(r as Role[]);setMembers(m as Member[]);setTasks(t as Task[]);setMessages((ch as Message[]).sort((a,b)=>a.created_at.localeCompare(b.created_at)));setError('');}
  useEffect(()=>{void refresh().catch(()=>setError(profile.role==='admin'?'Instala 003_projects.sql en Supabase para activar equipos y tareas.':'El espacio de equipo aún no está habilitado. Contacta al administrador.'));},[item.id,refreshKey]);
  const run=(name:string,args:Record<string,unknown>,message='Guardado')=>void act(async()=>{await rpc(name,args);await refresh();},message);
  const name=(id:string|null)=>people.find(p=>p.id===id)?.name||'Sin asignar';

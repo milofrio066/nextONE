@@ -1,13 +1,13 @@
-# nextONE 0.7 · creación y evaluación unificadas
+# nextONE · Makers
 
-45 plantillas interactivas, lienzo en blanco, evaluación oficial de organizadores y eliminación protegida. Sigue ACTUALIZAR_V07.md para actualizar; tu integración aplica la nueva migración 005. No vuelvas a ejecutar el instalador en una base existente.
+Catálogo existente conservado, lienzo en blanco, evaluación oficial, borradores recuperables, historial de participación y progreso sincronizado. **Consulta ACTUALIZAR_MAKERS.md antes de actualizar.** Sobre una base con 001–005 se aplica únicamente 006_makers.sql. El catálogo de esta revisión contiene 45 composiciones interactivas; la cifra de 47 funcionales confirmada por el propietario puede incluir otras estructuras. No se eliminó ninguna plantilla.
 
 
 Aplicación consolidada React 19 + TypeScript + Vite + Supabase. La aplicación productiva está ahora en la raíz de este proyecto. La demo antigua se conserva en un ZIP independiente y no interviene en el despliegue.
 
 ## Puesta en marcha
 
-Node.js 22 o superior. Desde esta carpeta:
+Node.js 24 y pnpm 11.25.0. Desde esta carpeta:
 
 ```sh
 pnpm install --frozen-lockfile
@@ -22,9 +22,9 @@ En Windows, copia .env.example a .env.local con tu explorador o PowerShell. Comp
 
 ## Supabase
 
-Si tu base ya tiene las migraciones 001, 002 y 003, esta actualización no requiere SQL adicional. No vuelvas a ejecutar los instaladores sobre tablas existentes.
+Si tu base tiene 001–005, aplica solo supabase/migrations/006_makers.sql. Si falta alguna, aplica las pendientes en orden. No vuelvas a ejecutar los instaladores sobre tablas existentes.
 
-Para una base nueva, ejecuta supabase/INSTALAR_NEXTONE.sql una vez y después supabase/migrations/003_projects.sql una vez; el instalador ya incluye 001 y 002. Como alternativa, ejecuta 001, 002 y 003 en orden, sin ejecutar el instalador combinado. Después de registrarse, una persona queda pendiente o entra mediante invitación; utiliza supabase/activate-admin.sql con el correo correcto para el primer administrador.
+Para una base nueva, ejecuta supabase/migrations/001_pilot.sql, 002_hardening.sql, 003_projects.sql, 004_interactive_pages.sql, 005_unified_content.sql y 006_makers.sql, una vez cada una y en ese orden. No combines esta ruta con el instalador combinado. Después del registro, usa supabase/activate-admin.sql con el correo correcto para activar al primer administrador.
 
 En Authentication → Providers, conserva GitHub y Google y habilita Email con Confirm email activado. Configura un SMTP propio y revisa la entrega de correos de confirmación y recuperación.
 
@@ -53,22 +53,22 @@ Una vez desplegado, prueba con cuentas reales GitHub, Google (si habilitado), re
 
 ## Contenido interactivo
 
-Nueve tipos: eventos, webinars, recursos, speakers, builder cases, soluciones, proyectos, avances y publicaciones. Cada tipo conserva sus tres estructuras originales y añade cinco nuevas, con objetivos y bloques propios: diapositivas, línea de tiempo, mapa explorable, tarjetas y checklist. Total: 45 nuevas y 27 conservadas.
+Nueve tipos: eventos, webinars, recursos, speakers, builder cases, soluciones, proyectos, avances y publicaciones. Cada tipo conserva sus tres estructuras originales y añade cinco nuevas, con objetivos y bloques propios: diapositivas, línea de tiempo, mapa explorable, tarjetas y checklist. El catálogo de páginas contiene 45 composiciones, con estructuras heredadas conservadas.
 
 Studio permite modificar nombres y contenidos de bloques, añadir hasta doce, eliminar, ordenar, cambiar formato y probar la experiencia antes de guardar. Las soluciones utilizan las mismas cinco plantillas mediante el formulario de entrega de un builder case, conforme al flujo original; allí se usa el mismo editor por bloques con vista previa. Los miembros conservan los permisos de creación originales.
 
-Las experiencias se guardan en content.body con una cabecera y separador de bloques. El contenido antiguo conserva su renderizado. No se agrega HTML arbitrario, scripts ni nuevas dependencias de animación. Los checklists reflejan progreso personal durante la visita, no se guardan como logros ni afectan estadísticas. Los cinco diseños se adaptan a móviles y respetan el modo claro/oscuro y la preferencia de movimiento reducido. Es un editor de recorridos estructurados inspirado en presentaciones interactivas; no implementa un lienzo libre de Genially ni edición de video.
+Las experiencias se guardan en content.body con una cabecera y separador de bloques. El contenido antiguo conserva su renderizado. No se agrega HTML arbitrario, scripts ni nuevas dependencias de animación. Los checklists del nuevo motor sincronizan progreso con la cuenta y registran finalización por revisión; los de las estructuras heredadas conservan su comportamiento. No se presentan como certificaciones ni logros de aprendizaje. Los cinco diseños se adaptan a móviles y respetan el modo claro/oscuro y la preferencia de movimiento reducido. Es un editor de recorridos estructurados inspirado en presentaciones interactivas; no implementa un lienzo libre de Genially ni edición de video.
 
 ## Indicadores
 
 Filtros de sección y título, selección de métrica y orden; comparaciones por contenido, inscripciones/asistencia/accesos y reacciones. Tarjetas de resultados, media ponderada de utilidad, tasa de asistencia y exportación CSV filtrada. Mantiene la tabla detallada y permisos de content_metrics.
 
-Los clics no representan asistencia ni permanencia. La utilidad es una percepción. Los participantes son únicos dentro de cada contenido y no se suman como personas únicas de la comunidad. Los datos son acumulados: no hay series temporales ni un filtro de fecha inventado.
+Los clics no representan asistencia ni permanencia. La utilidad es una percepción. Los participantes son únicos dentro de cada contenido y no se suman como personas únicas de la comunidad. Los acumulados anteriores se mantienen separados del nuevo historial por períodos; este empieza con las acciones posteriores a 006, sin reconstruir el pasado.
 
 ## Verificación
 
 pnpm test ejecuta Vitest y las suites de PostgreSQL/RLS con PGlite. pnpm check:types verifica TypeScript; pnpm build genera producción. El proyecto original no incluye una configuración de ESLint: no se afirma haber ejecutado lint.
 
-Las suites de navegador usan Chrome instalado y Playwright. Para repetirlas, construye temporalmente con VITE_SUPABASE_URL=https://nextone-test.supabase.co, VITE_SUPABASE_PUBLISHABLE_KEY=test-public-key y VITE_GOOGLE_LOGIN_ENABLED=true; ejecuta pnpm preview en otra terminal. Después ejecuta node scripts/pilot-browser-check.mjs y node scripts/email-browser-check.mjs. Todas las respuestas HTTP de Supabase son adaptadores de prueba; la suite de participación ejecuta las RPC contra PostgreSQL/PGlite con RLS real. No uses los valores de prueba para producción.
+Las suites de navegador usan Chrome instalado y Playwright. Para repetirlas, construye temporalmente con VITE_SUPABASE_URL=https://nextone-test.supabase.co, VITE_SUPABASE_PUBLISHABLE_KEY=test-public-key y VITE_GOOGLE_LOGIN_ENABLED=true; los adaptadores sirven dist directamente. Después ejecuta node scripts/pilot-browser-check.mjs y node scripts/email-browser-check.mjs. Todas las respuestas HTTP de Supabase son adaptadores de prueba; la suite de participación ejecuta las RPC contra PostgreSQL/PGlite con RLS real. No uses los valores de prueba para producción.
 
 Referencias de configuración: [Supabase Auth](https://supabase.com/docs/guides/auth/passwords), [Vercel Root Directory](https://vercel.com/docs/project-configuration/general-settings).

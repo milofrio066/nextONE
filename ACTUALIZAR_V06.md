@@ -1,3 +1,5 @@
+> Documento histórico. Para esta entrega utiliza ACTUALIZAR_MAKERS.md; sus instrucciones de migración y validación prevalecen.
+
 # nextONE 0.6 · plantillas interactivas integradas
 
 ## Cómo actualizar el proyecto existente

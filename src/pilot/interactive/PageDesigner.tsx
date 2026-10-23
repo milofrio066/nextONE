@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ArrowDown, ArrowRight, ArrowUp, Check, ChevronDown, Copy, Eye, Pencil, Plus, Trash2, WandSparkles, X } from 'lucide-react';
 import { rpc } from '../backend';
+import {formSnapshot,readDraft,removeDraft,writeDraft} from '../drafts';
+import type {Draft} from '../drafts';
 import type { Kind } from '../types';
 import InteractivePage, { normalize } from './InteractivePage';
 import { pageTemplates, templateById } from './catalog';
@@ -69,13 +71,15 @@ function FieldEditor({ spec, value, onChange }: { spec: FieldSpec; value: unknow
   }
 }
 
-export default function PageDesigner({ item, initial, close, saved, savePage, metadata }: {
+export default function PageDesigner({ item, initial, close, saved, savePage, metadata, draftKey, restoreMetadata }: {
   item: { id: string; kind: Kind; title: string };
   initial: { template_id: string; data: unknown } | null;
   close: () => void;
   saved: () => void;
   savePage?: (template: string, data: PageData) => Promise<void>;
   metadata?: ReactNode;
+  draftKey?:string;
+  restoreMetadata?:(values:Record<string,string>)=>void;
 }) {
   const [data, setData] = useState<PageData | null>(initial ? normalize(initial.data) : null);
   const [tpl, setTpl] = useState(initial?.template_id || 'blank');
@@ -87,6 +91,19 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
   const busyRef = useRef(busy); busyRef.current = busy;
   const panel = useRef<HTMLDivElement>(null);
   const options = pageTemplates(item.kind);
+  const [meta,setMeta]=useState<Record<string,string>>({});
+  const [recoverable,setRecoverable]=useState<Draft<PageData>|null>(()=>draftKey?readDraft<PageData>(draftKey):null);
+  const [draftWarning,setDraftWarning]=useState('');
+  const [draftReady,setDraftReady]=useState(false);const baseline=useRef('');const dirty=useRef(false);const currentClose=useRef(close);
+  const metadataForm=()=>panel.current?.querySelector<HTMLFormElement>('.composer-metadata')||null;
+  currentClose.current=()=>{if(!dirty.current||confirm('Hay cambios sin publicar. ¿Cerrar y conservar el borrador local para retomarlo?'))close();};
+  useEffect(()=>{const m=formSnapshot(metadataForm());setMeta(m);baseline.current=JSON.stringify({data,tpl,meta:m});setDraftReady(true);},[]);
+  useEffect(()=>{if(draftReady)setMeta(formSnapshot(metadataForm()));},[metadata]);
+  useEffect(()=>{if(!draftReady||!baseline.current)return;dirty.current=JSON.stringify({data,tpl,meta})!==baseline.current;if(draftKey&&dirty.current&&!writeDraft(draftKey,{v:1,data,tpl,metadata:meta,savedAt:new Date().toISOString()}))setDraftWarning('No se pudo guardar el borrador en este navegador. Mantén el editor abierto hasta publicar.');},[data,tpl,meta,draftKey,draftReady]);
+  useEffect(()=>{const guard=(e:BeforeUnloadEvent)=>{if(dirty.current){e.preventDefault();e.returnValue='';}};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[]);
+  const clearDraft=()=>{dirty.current=false;if(draftKey)removeDraft(draftKey);};
+  function recover(){if(!recoverable)return;setData(recoverable.data?normalize(recoverable.data):null);setTpl(recoverable.tpl);setMeta(recoverable.metadata);restoreMetadata?.(recoverable.metadata);setRecoverable(null);}
+
 
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
@@ -94,7 +111,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const key = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !busyRef.current) close();
+      if (e.key === 'Escape' && !busyRef.current) currentClose.current();
       if (e.key !== 'Tab') return;
       const controls = Array.from(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input, textarea, select, a[href], [tabindex="0"]') || []).filter(el => el.getClientRects().length > 0);
       const first = controls[0], last = controls[controls.length - 1];
@@ -129,7 +146,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
     if (!out.blocks.length) { setError('Agrega al menos un bloque.'); return; }
     if (JSON.stringify(out).length > 55000) { setError('La página es muy grande. Quita algunos bloques o textos.'); return; }
     setBusy(true); setError('');
-    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); saved(); }
+    try { if(savePage) await savePage(tpl,out); else await rpc('save_content_page', { p_content: item.id, p_template: tpl, p_data: out }); clearDraft(); saved(); }
     catch (e) { setError((e as { message?: string })?.message || 'No se pudo guardar.'); setBusy(false); }
   }
   async function remove() {
@@ -141,12 +158,13 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
 
   return (
     <div className="modal-backdrop studio-backdrop">
-      <div ref={panel} tabIndex={-1} className="studio ix-designer" role="dialog" aria-modal="true" aria-label="Diseño interactivo">
+      <div ref={panel} onChangeCapture={()=>setMeta(formSnapshot(metadataForm()))} tabIndex={-1} className="studio ix-designer" role="dialog" aria-modal="true" aria-label="Diseño interactivo">
         <header className="studio-header">
           <div><span className="eyebrow"><WandSparkles size={14} /> DISEÑO INTERACTIVO · {KIND_NAMES[item.kind] || ''}</span><h2>{item.title}</h2></div>
-          <button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={close}><X /></button>
+          <button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
         </header>
 
+        {recoverable&&<div className="pilot-notice"><p>Hay un borrador local del {new Date(recoverable.savedAt).toLocaleString('es-CO')}.</p><button type="button" className="secondary" onClick={recover}>Recuperar borrador</button><button type="button" className="secondary" onClick={()=>{if(confirm('¿Descartar este borrador local?')){if(draftKey)removeDraft(draftKey);setRecoverable(null);}}}>Descartar borrador</button></div>}{draftWarning&&<p role="alert">{draftWarning}</p>}
         {metadata&&<details className="composer-settings" open={!data}><summary>Datos de publicación · título, descripción y vinculación</summary>{metadata}</details>}
         {!data ? (
           <div className="studio-body">
@@ -214,7 +232,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
         {error && <div className="pilot-alert" role="alert">{error}</div>}
         {data && (
           <footer className="studio-footer">
-            {initial && !savePage ? <button type="button" className="secondary" disabled={busy} onClick={remove}><Trash2 size={15} /> Quitar diseño</button> : <button type="button" className="secondary" disabled={busy} onClick={close}>Cancelar</button>}
+            {initial && !savePage ? <button type="button" className="secondary" disabled={busy} onClick={remove}><Trash2 size={15} /> Quitar diseño</button> : <button type="button" className="secondary" disabled={busy} onClick={()=>currentClose.current()}>Cancelar</button>}
             <button type="button" className="primary" disabled={busy} onClick={save}>{busy ? 'Guardando…' : 'Guardar diseño'} <Check size={16} /></button>
           </footer>
         )}
