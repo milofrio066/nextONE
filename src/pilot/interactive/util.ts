@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { urlAllowed } from '../types';
+import { normalizeWebUrl } from '../webLinks';
 
 /* Los datos vienen de la base de datos: se tratan siempre como no confiables. */
 export const s = (v: unknown, max = 400) => (typeof v === 'string' ? v.slice(0, max) : typeof v === 'number' ? String(v) : '');
@@ -11,10 +11,7 @@ export const arr = (v: unknown, max = 24): Record<string, unknown>[] =>
   Array.isArray(v) ? (v.slice(0, max).filter(x => x && typeof x === 'object') as Record<string, unknown>[]) : [];
 export const strs = (v: unknown, max = 24): string[] =>
   Array.isArray(v) ? v.slice(0, max).map(x => s(x, 240).trim()).filter(Boolean) : [];
-export const safeUrl = (v: unknown) => {
-  const u = s(v, 500).trim();
-  return u && urlAllowed(u) ? u : '';
-};
+export const safeUrl = (v: unknown) => normalizeWebUrl(v);
 export const uid = () => Math.random().toString(36).slice(2, 10);
 export const fmt = (x: number) => x.toLocaleString('es-CO', { maximumFractionDigits: 1 });
 export const initials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]?.toUpperCase()).join('') || '·';

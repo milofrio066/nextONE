@@ -1,6 +1,9 @@
+# nextONE 0.10 · botones y perfiles
+
+Para actualizar tu versión existente sigue ACTUALIZAR_V010.md. Esta entrega añade la migración 010, sin modificar 001–009. Incluye corrección de enlaces de plantillas, fuentes y colores por sección, botones de redes, avatar animado y selector Unicode con búsqueda.
+
 > Versión 0.8: utiliza ACTUALIZAR_V08.md. Si ya tienes 001–006, aplica únicamente 007 y 008, en orden.
 
-# nextONE · Makers
 
 Catálogo existente conservado, lienzo en blanco, evaluación oficial, borradores recuperables, historial de participación y progreso sincronizado. **Consulta ACTUALIZAR_MAKERS.md antes de actualizar.** Sobre una base con 001–005 se aplica únicamente 006_makers.sql. El catálogo de esta revisión contiene 45 composiciones interactivas; la cifra de 47 funcionales confirmada por el propietario puede incluir otras estructuras. No se eliminó ninguna plantilla.
 

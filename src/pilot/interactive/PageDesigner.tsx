@@ -1,3 +1,4 @@
+import { normalizeWebUrl, normalizePageLinks } from '../webLinks';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ArrowDown, ArrowRight, ArrowUp, Check, ChevronDown, Copy, Eye, Pencil, Plus, Trash2, WandSparkles, X } from 'lucide-react';
@@ -42,7 +43,7 @@ function FieldEditor({ spec, value, onChange }: { spec: FieldSpec; value: unknow
   switch (spec.type) {
     case 'text': return <label className="ix-f"><span>{spec.label}</span><input value={s(value, max)} maxLength={max} onChange={e => onChange(e.target.value)} />{help}</label>;
     case 'textarea': return <label className="ix-f"><span>{spec.label}</span><textarea rows={3} value={s(value, max)} maxLength={max} onChange={e => onChange(e.target.value)} />{help}</label>;
-    case 'url': return <label className="ix-f"><span>{spec.label}</span><input type="url" placeholder="https://" value={s(value, 500)} onChange={e => onChange(e.target.value)} />{help}</label>;
+    case 'url': return <label className="ix-f"><span>{spec.label}</span><input type="text" aria-label={spec.label} inputMode="url" placeholder="linkedin.com/in/tu-perfil o https://…" value={s(value, 500)} aria-invalid={!!s(value)&&!normalizeWebUrl(value)} onBlur={()=>{const url=normalizeWebUrl(value);if(url)onChange(url);}} onChange={e => onChange(e.target.value)} />{help}</label>;
     case 'number': return <label className="ix-f"><span>{spec.label}</span><input type="number" step="any" value={typeof value === 'number' || typeof value === 'string' ? value : ''} onChange={e => onChange(e.target.value === '' ? '' : Number(e.target.value))} />{help}</label>;
     case 'datetime': return <label className="ix-f"><span>{spec.label}</span><input type="datetime-local" value={toLocal(value)} onChange={e => onChange(e.target.value ? new Date(e.target.value).toISOString() : '')} />{help}</label>;
     case 'select': return <label className="ix-f"><span>{spec.label}</span><select value={s(value)} onChange={e => onChange(e.target.value)}>{(spec.options || []).map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></label>;
@@ -147,7 +148,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
   async function save(keepOpen=false) {
     const source = data ?? (savePage ? fallbackPage() : null);
     if (!source) return;
-    const out = clean({ ...source, blocks: source.blocks }) as PageData;
+    let out:PageData;try{out=normalizePageLinks(clean({ ...source, blocks: source.blocks })) as PageData;}catch(e){setError((e as Error).message);return;}
     if (!out.blocks.length) { setError('Agrega al menos un bloque.'); return; }
     if (JSON.stringify(out).length > 55000) { setError('La página es muy grande. Quita algunos bloques o textos.'); return; }
     setBusy(true); setError('');

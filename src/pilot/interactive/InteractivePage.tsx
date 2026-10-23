@@ -1,3 +1,4 @@
+import { contrastInk } from '../webLinks';
 import { BlockView } from './blocks';
 import { DEF } from './schema';
 import type { Block, BlockType, PageData } from './types';
@@ -20,7 +21,7 @@ export default function InteractivePage({ data, pageKey, preview = false }: { da
   const page = normalize(data);
   return (
     <PageCtx.Provider value={{ key: pageKey, preview }}>
-      <div className="ix-page" style={{ ['--ix' as string]: page.accent }}>
+      <div className="ix-page" style={{ ['--ix' as string]: page.accent, ['--ix-ink' as string]:contrastInk(page.accent||'#22d3ee') }}>
         {page.blocks.some(b => ['stats','bars','donut','radar'].includes(b.type)) && <p className="ix-note">Cifras configuradas por el autor del contenido. Consulta Indicadores para las métricas de actividad de nextONE.</p>}
         {page.blocks.map(b => (
           <section key={b.id} className={`ix-block ix-t-${b.type}`}>

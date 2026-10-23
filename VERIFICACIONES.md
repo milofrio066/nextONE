@@ -35,3 +35,7 @@ TypeScript estricto y build correctos. 18 pruebas unitarias pasan (incluidas 40 
 ## Versión 0.7
 
 TypeScript, build y 18 pruebas unitarias correctos. Suites PostgreSQL/RLS originales, páginas y proyectos correctas; nueva suite unified-check verifica los nueve tipos, guardado atómico y rollback, autoridad del evento, asignación/revocación de organizadores, revisión oficial con voto comunitario previo, versiones de evaluación, permisos y ocultamiento tras eliminar. Navegador y correo correctos: ver ACTUALIZAR_V07.md para alcance y límites.
+
+## Versión 0.10 · 23 octubre 2026
+
+Instalación con lockfile congelado, TypeScript y build correctos. 29 pruebas unitarias y 2 de API IA pasan; suites PostgreSQL/RLS originales y nueva suite de perfil correctas. Navegador general, correo y nueva suite de perfil/enlaces pasan. Se comprobaron clics de botones en vista previa/publicado con destinos interceptados, persistencia del perfil, emojis ES, variantes, avatar, temas y móvil. Auth/OAuth/SMTP y producción alojada no se han verificado con cuentas reales. Consulta ACTUALIZAR_V010.md para el alcance detallado.

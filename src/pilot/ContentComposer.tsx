@@ -1,3 +1,4 @@
+import { normalizeWebUrl } from './webLinks';
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { backend, rpc } from './backend';
 import type { Content, Kind, Profile } from './types';
@@ -17,6 +18,8 @@ export default function ContentComposer({people,userId,value,kind,parentId,items
  useEffect(()=>{if(!value)return;let alive=true;void backend?.from('content_pages').select('template_id,data').eq('content_id',value.id).maybeSingle().then(({data,error})=>{if(!alive)return;if(error)setError('No se pudo leer el diseño existente. Cierra y vuelve a intentar para evitar sobrescribirlo.');else{setInitial(data);setReady(true);}});return()=>{alive=false;};},[value?.id]);
  if(!ready)return <div className="modal-backdrop studio-backdrop"><div className="studio" role="dialog" aria-label="Cargando contenido"><p>{error||'Cargando diseño…'}</p><button className="secondary" onClick={close}>Cerrar</button></div></div>;
  async function publish(template:string,data:PageData){
+  for(const field of ['url','join']){const input=form.current?.elements.namedItem(field) as HTMLInputElement|null;if(input?.value){const url=normalizeWebUrl(input.value);if(url)input.value=url;}}
+
   if(!form.current?.checkValidity()){const details=form.current?.closest('details');if(details)details.open=true;form.current?.reportValidity();throw new Error('Completa los datos de publicación que aparecen arriba.');}
   const f=new FormData(form.current),url=String(f.get('url')||''),join=String(f.get('join')||'');
   if(!urlAllowed(url)||!urlAllowed(join))throw new Error('Usa enlaces HTTPS válidos.');

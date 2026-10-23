@@ -24,7 +24,7 @@ function Hero({ p }: B) {
       {s(p.eyebrow) && <span className="ix-eyebrow"><Sparkles size={14} /> {s(p.eyebrow, 60)}</span>}
       <h2>{s(p.title, 140)}</h2>
       {s(p.subtitle) && <p>{s(p.subtitle, 300)}</p>}
-      {link && s(p.button) && <a className="ix-btn" href={link} target="_blank" rel="noopener noreferrer">{s(p.button, 40)} <ArrowUpRight size={16} /></a>}
+      {s(p.button) && (link ? <a className="ix-btn" href={link} target="_blank" rel="noopener noreferrer">{s(p.button, 40)} <ArrowUpRight size={16} /></a> : <div><button type="button" className="ix-btn" disabled>{s(p.button,40)}</button><small className="ix-link-hint">Añade un enlace válido a este botón desde el editor.</small></div>)}
     </header>
   );
 }
@@ -491,12 +491,12 @@ function Slider({ p }: B) {
 
 /* ── Enlaces ─────────────────────────────────────────────── */
 function Links({ p }: B) {
-  const items = arr(p.items, 10).map(i => ({ label: s(i.label, 80), desc: s(i.desc, 140), url: safeUrl(i.url) })).filter(i => i.url && i.label);
+  const items = arr(p.items, 10).map(i => ({ label: s(i.label, 80), desc: s(i.desc, 140), url: safeUrl(i.url) })).filter(i => i.label);
   return (
     <>
       <Title p={p} />
       <div className="ix-links">
-        {items.map((it, i) => <a key={i} href={it.url} target="_blank" rel="noopener noreferrer"><span><b>{it.label}</b>{it.desc && <small>{it.desc}</small>}</span><ArrowUpRight size={18} /></a>)}
+        {items.map((it, i) => it.url ? <a key={i} href={it.url} target="_blank" rel="noopener noreferrer"><span><b>{it.label}</b>{it.desc && <small>{it.desc}</small>}</span><ArrowUpRight size={18} /></a> : <div className="ix-missing-link" key={i}><b>{it.label}</b><small>Enlace pendiente de configurar</small></div>)}
       </div>
     </>
   );
@@ -516,7 +516,7 @@ function Cta({ p }: B) {
     <div className="ix-cta">
       <h3>{s(p.title, 120)}</h3>
       {s(p.body) && <p>{s(p.body, 300)}</p>}
-      {link && s(p.button) && <a className="ix-btn" href={link} target="_blank" rel="noopener noreferrer">{s(p.button, 40)} <ArrowUpRight size={16} /></a>}
+      {s(p.button) && (link ? <a className="ix-btn" href={link} target="_blank" rel="noopener noreferrer">{s(p.button, 40)} <ArrowUpRight size={16} /></a> : <div><button type="button" className="ix-btn" disabled>{s(p.button,40)}</button><small className="ix-link-hint">Añade un enlace válido a este botón desde el editor.</small></div>)}
     </div>
   );
 }
