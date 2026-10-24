@@ -36,5 +36,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/admin-notifications.mjs": {
+      "maxDuration": 60
+    }
+  }
 }

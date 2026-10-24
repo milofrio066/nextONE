@@ -1,8 +1,8 @@
-# nextONE 1.0
+# nextONE 1.1
 
 Plataforma de comunidad Makers: encuentros, aprendizaje, personas, retos, soluciones, proyectos y semilleros. React 19 + TypeScript + Vite + Supabase; una sola aplicación en la raíz.
 
-**Para actualizar tu plataforma existente, sigue ACTUALIZAR_V1.md.** Las instrucciones de versiones anteriores se conservan como historial y no reemplazan esa guía.
+**Para actualizar tu plataforma existente, sigue ACTUALIZAR_V11.md.** Las instrucciones de versiones anteriores se conservan como historial y no reemplazan esa guía.
 
 ## Desarrollo
 
@@ -21,11 +21,19 @@ El archivo pnpm-lock.yaml mantiene las versiones instaladas y no cambió en esta
 
 ## Base de datos
 
-La carpeta `supabase/migrations` contiene 001–012 en orden. Una base que ya tiene 001–010 solo necesita 011 y 012. Conserva el historial real de migraciones y usa la integración GitHub/Supabase existente. No vuelvas a ejecutar migraciones aplicadas ni el instalador histórico `INSTALAR_NEXTONE.sql` sobre tu plataforma.
+La carpeta `supabase/migrations` contiene 001–014 en orden. Una base que ya tiene 001–012 solo necesita 013 y 014. Conserva el historial real de migraciones y usa la integración GitHub/Supabase existente. No vuelvas a ejecutar migraciones aplicadas ni el instalador histórico `INSTALAR_NEXTONE.sql` sobre tu plataforma.
 
-En una instalación totalmente nueva, aplica 001–012 una vez, en orden, usando migraciones de Supabase. Después de registrar tu primera cuenta, `supabase/activate-admin.sql` permite activar al fundador sustituyendo el correo por el correcto. Las cuentas nuevas continúan pendientes de aprobación o invitación.
+En una instalación totalmente nueva, aplica 001–014 una vez, en orden, usando migraciones de Supabase. Después de registrar tu primera cuenta, `supabase/activate-admin.sql` permite activar al fundador sustituyendo el correo por el correcto. Las cuentas nuevas continúan pendientes de aprobación o invitación.
 
-## Flujos de esta versión
+## Novedades de administración 1.1
+
+Panel de control con tarjetas accionables, gráficos reales, bandejas desplegables y paginadas, búsqueda/estado, aprobación de ingreso con correo verificado, historial de revisión de reportes, prioridad y asignación, invitaciones con trazabilidad, alertas internas y cola de avisos por correo. Distribución global de miembros y actividad por país, región y ciudad declarados voluntariamente y protegidos por permisos.
+
+Los avisos por correo necesitan configuración de Vercel y un Database Webhook en Supabase. No se envían con subir únicamente el ZIP. Consulta ACTUALIZAR_V11.md; los destinatarios se configuran fuera del código público.
+
+El catálogo carga descripciones recortadas y obtiene el contenido completo al abrirlo. Administración, Indicadores y el editor de perfil se descargan bajo demanda. Las bandejas administrativas usan páginas de 20 y los detalles se consultan al desplegarlos. El directorio y el catálogo aún mantienen sus metadatos autorizados en memoria; esta versión no promete escalabilidad ilimitada ni sustituye mediciones de carga en producción.
+
+## Flujos conservados
 
 - Indicadores exclusivos de administradores en navegación, vista y funciones de base de datos, incluidas las funciones antiguas. Miembros y organizadores conservan la valoración pública de contenidos y su propia actividad.
 - Retos: reglas, instrucciones, entregables, criterios ponderados, cupos, fechas, fases y gestión de participantes. Una publicación guarda metadatos, reglas y diseño de forma atómica.

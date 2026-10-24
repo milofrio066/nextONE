@@ -1,0 +1,40 @@
+import {PGlite} from '@electric-sql/pglite';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,raw_user_meta_data jsonb default '{}');create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('test.uid',true),'')::uuid$$;grant usage on schema public,auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text);alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,delete on storage.objects to authenticated;`);
+for(const f of ['001_pilot.sql','002_hardening.sql','003_projects.sql','004_interactive_pages.sql','005_unified_content.sql','006_makers.sql','007_workspace.sql','008_evidence_storage.sql','009_delete_and_profile_theme.sql','010_profile_appearance.sql','011_challenges_admin_analytics.sql','012_avatar_studio.sql','013_admin_operations_geography.sql','014_admin_email_outbox.sql'])await db.exec(await fs.readFile(new URL('../supabase/migrations/'+f,import.meta.url),'utf8'));
+const [admin,student,evaluator,outsider,teammate]=Array.from({length:5},(_,i)=>`00000000-0000-4000-8000-00000000000${i+1}`);
+for(const id of [admin,student,evaluator,outsider,teammate])await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,id+'@test.example']);
+await db.exec("update public.profiles set status='active'");await db.query("update public.profiles set role='admin' where id=$1",[admin]);
+async function as(id,sql,args=[]){await db.query("select set_config('test.uid',$1,false)",[id]);await db.exec('set role authenticated');try{return(await db.query(sql,args)).rows;}finally{await db.exec('reset role');}}
+async function call(id,name,args=[]){return(await as(id,`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) value`,args))[0]?.value;}
+const create=(id,kind,title,parent=null)=>call(id,'save_content',[null,kind,title,'Descripción válida',null,parent,['event','webinar'].includes(kind)?new Date(Date.now()-3600000):null,['event','webinar','case'].includes(kind)?new Date(Date.now()+3600000):null,20,true,null]);
+try {
+ for(const who of [student,evaluator]){for(const [name,args] of [['admin_overview',[]],['admin_operations_metrics',[]],['admin_inbox',['members','pending','',0,20]],['admin_record',['reports',admin]],['community_geography',[new Date(Date.now()-86400000),new Date()]]])await assert.rejects(()=>call(who,name,args));}
+ await call(student,'save_member_location',['CO','Antioquia','Medellín']);await call(outsider,'save_member_location',['MX','Jalisco','Guadalajara']);
+ assert.equal((await as(outsider,'select * from public.member_location where user_id=$1',[student])).length,0);
+ await assert.rejects(()=>call(student,'save_member_location',['ZZ','X','X']));
+ const operations=await call(admin,'admin_operations_metrics');assert.equal(operations.states.active,5);assert.equal(operations.daily.length,14);assert.equal(operations.daily.reduce((n,d)=>n+Number(d.count),0),5);
+ const geo=await call(admin,'community_geography',[new Date(Date.now()-86400000),new Date(Date.now()+1000)]);assert.equal(geo.total_members,5);assert.equal(geo.declared,2);assert.equal(geo.rows.find(r=>r.country==='CO').members,1);
+ const regional=await call(admin,'community_geography',[new Date(Date.now()-86400000),new Date(Date.now()+1000),'CO','']);assert.equal(regional.rows[0].region,'Antioquia');
+ await call(student,'save_member_location',['','','']);assert.equal((await as(student,'select * from public.member_location where user_id=$1',[student])).length,0);
+ const token=await call(admin,'create_managed_invitation',['Campaña Makers','',2,new Date(Date.now()+86400000)]);
+ await db.query("update public.profiles set status='pending' where id=$1",[student]);
+ assert.equal((await call(student,'inspect_invitation',[token])).result,'valid');assert.equal(await call(student,'claim_invitation',[token]),'pending');assert.equal(await call(student,'claim_invitation',[token]),'pending');
+ const invites=await call(admin,'admin_inbox',['invitations','','',0,20]);assert.equal(invites.rows[0].used,1);const inv=invites.rows[0].id;
+ const tracking=await call(admin,'admin_record',['invitations',inv]);assert.equal(tracking.claims.length,1);assert.ok(tracking.checks.length>=2);
+ await call(admin,'admin_member',[student,'active','member','Identidad verificada manualmente']);assert.equal((await call(admin,'admin_inbox',['invitations','','',0,20])).rows[0].approved,1);
+ await db.query("update public.profiles set status='suspended' where id=$1",[outsider]);await assert.rejects(()=>call(outsider,'claim_invitation',[token]),/suspendida/);
+ const personal=await call(admin,'create_managed_invitation',['Invitación personal',student+'@test.example',1,new Date(Date.now()+86400000)]);assert.equal((await call(teammate,'inspect_invitation',[personal])).result,'wrong_email');await assert.rejects(()=>call(teammate,'claim_invitation',[personal]));
+ await db.query('update auth.users set email_confirmed_at=null where id=$1',[teammate]);await assert.rejects(()=>call(admin,'admin_member',[teammate,'active','member','Aprobación no válida']),/verificado/);
+ const content=await create(admin,'resource','Recurso reportado');await call(student,'report_item',[content,null,'Este recurso necesita una revisión del equipo.']);
+ const inbox=await call(admin,'admin_inbox',['reports','pending','',0,20]);const report=inbox.rows[0].id;await call(admin,'manage_report',[report,'in_review','urgent',admin,'Revisión iniciada por el equipo']);assert.equal((await call(admin,'admin_inbox',['reports','in_review','',0,20])).total,1);
+ await call(admin,'manage_report',[report,'resolved','high',admin,'Se revisó y se corrigió el problema']);assert.equal((await call(admin,'admin_record',['reports',report])).history.length,2);
+ await call(admin,'manage_report',[report,'open','normal',null,'Se reabre por nueva información']);assert.equal((await call(admin,'admin_overview')).reports,1);
+ const overview=await call(admin,'admin_overview');assert.ok(overview.unread>0);await call(admin,'mark_admin_alerts',[overview.latest_id]);assert.equal((await call(admin,'admin_overview')).unread,0);
+ await assert.rejects(()=>as(student,"update public.member_location set country='MX' where user_id=$1",[student]));
+ const newcomer='00000000-0000-4000-8000-000000000009';const before=await call(admin,'admin_overview');await db.query('insert into auth.users(id,email) values($1,$2)',[newcomer,'pending@example.com']);assert.equal((await call(admin,'admin_overview')).latest_id,before.latest_id);await db.query('update auth.users set email_confirmed_at=now() where id=$1',[newcomer]);assert.equal((await call(admin,'admin_overview')).latest_id,before.latest_id+1);
+ const mail=await call(admin,'admin_email_status');assert.ok(mail.pending>=1);await assert.rejects(()=>call(student,'claim_admin_email'));await db.exec('set role service_role');let claimed;try{claimed=(await db.query('select public.claim_admin_email(null) value')).rows[0].value;}finally{await db.exec('reset role');}assert.ok(claimed.id);await db.exec('set role service_role');try{await db.query('select public.finish_admin_email($1,$2,true,$3,$4)',[claimed.id,claimed.lease,'test-provider-id','']);}finally{await db.exec('reset role');}assert.equal((await call(admin,'admin_email_status')).sent,1);
+ console.log('PASS administración: bandejas/alertas privadas, invitaciones verificadas y trazables, no reactivar suspendidos, aprobación verificada, reportes con historial, geografía agregada y privacidad.');
+}finally{await db.close();}

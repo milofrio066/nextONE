@@ -1,0 +1,2 @@
+import {describe,it,expect} from 'vitest';import {countries,countryCodes,countryName} from './countries';
+describe('country catalogue for voluntary aggregate geography',()=>{it('contains unique ISO country codes and Spanish labels',()=>{expect(countryCodes).toHaveLength(249);expect(new Set(countryCodes).size).toBe(249);expect(countryName('CO')).toBe('Colombia');expect(countryName(null)).toBe('Sin país declarado');expect(countries.some(c=>c.code==='MX')).toBe(true);});});
