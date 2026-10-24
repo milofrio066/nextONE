@@ -1,0 +1,11 @@
+import {useState} from 'react';
+import {DEFAULT_RULES} from './challengeModel';
+import type {ChallengeRules} from './challengeModel';
+export default function ChallengeFields({initial=DEFAULT_RULES}:{initial?:ChallengeRules}){
+ const [criteria,setCriteria]=useState(initial.criteria);const total=criteria.reduce((a,c)=>a+c.weight,0);
+ return <fieldset className="challenge-fields"><legend>Reglas y criterios del reto</legend><label className="field">Instrucciones del reto<textarea name="challenge_instructions" defaultValue={initial.instructions} maxLength={6000} placeholder="Qué problema deben resolver, para quién y con qué restricciones."/></label><label className="field">Entregables esperados<textarea name="challenge_deliverables" defaultValue={initial.deliverables} maxLength={3000} placeholder="Demostración HTTPS, explicación y evidencias de validación."/></label><p>Define criterios antes de recibir soluciones. Sus pesos deben sumar 100%.</p>
+ <input type="hidden" name="challenge_criteria" value={JSON.stringify(criteria)}/>
+ {criteria.map((c,i)=><div className="criterion-row" key={i}><label className="field">Criterio {i+1}<input required minLength={3} maxLength={100} value={c.label} onChange={e=>setCriteria(v=>v.map((x,j)=>i===j?{...x,label:e.target.value}:x))}/></label><label className="field">Peso {i+1} (%)<input required type="number" min={1} max={100} value={c.weight} onChange={e=>setCriteria(v=>v.map((x,j)=>i===j?{...x,weight:Number(e.target.value)}:x))}/></label><button type="button" className="secondary" disabled={criteria.length<=1} onClick={()=>setCriteria(v=>v.filter((_,j)=>j!==i))}>Quitar criterio {i+1}</button></div>)}
+ <p role={total===100?undefined:'alert'}>Total: {total}%{total!==100?' · Debe sumar 100%.':''}</p><button className="secondary" type="button" disabled={criteria.length>=8} onClick={()=>setCriteria(v=>[...v,{label:'Nuevo criterio',weight:10}])}>Añadir criterio</button>
+ <label className="field">Cupo de participantes (opcional)<input type="number" name="challenge_limit" min={1} max={10000} defaultValue={initial.participant_limit||''}/></label><label className="field"><input className="inline-check" type="checkbox" name="challenge_updates" defaultChecked={initial.allow_updates}/> Permitir revisiones de la entrega hasta el cierre</label></fieldset>;
+}

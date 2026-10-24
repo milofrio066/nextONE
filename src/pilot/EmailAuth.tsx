@@ -1,169 +1,39 @@
-import { useState } from 'react';
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2, KeyRound } from 'lucide-react';
-import { backend } from './backend';
+import {useEffect,useRef,useState} from 'react';
+import {Mail,Lock,User,Eye,EyeOff,ArrowRight,CheckCircle2,KeyRound} from 'lucide-react';
+import {backend} from './backend';import {authMessage,clearAuthUrl,passwordStrength,recoveryError} from './authModel';
 import './auth.css';
-
-type Mode = 'signin' | 'signup' | 'forgot';
-
-function strength(pw: string) {
-  let score = 0;
-  if (pw.length >= 8) score++;
-  if (pw.length >= 12) score++;
-  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
-  if (/\d/.test(pw)) score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-  return Math.min(score, 4);
+type Mode='signin'|'signup'|'forgot';
+const labels=['Muy débil','Débil','Aceptable','Fuerte','Excelente'];
+function Strength({password}:{password:string}){const level=passwordStrength(password);return password?<div className="ea-strength" aria-live="polite"><div className="ea-bars">{[0,1,2,3].map(i=><i key={i} className={i<level?`on l${level}`:''}/>)}</div><small>{labels[level]} · Recomendamos 12 caracteres o más.</small></div>:null;}
+export default function EmailAuth({initialMode='signin'}:{initialMode?:Mode}){
+ const [mode,setMode]=useState<Mode>(initialMode),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[show,setShow]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[done,setDone]=useState(''),[retryAt,setRetryAt]=useState(0),[now,setNow]=useState(Date.now());const pending=useRef(false);const cooldown=useRef({signup:0,forgot:0});
+ const remaining=Math.max(0,Math.ceil((retryAt-now)/1000));useEffect(()=>{if(!retryAt)return;const timer=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(timer);},[retryAt]);
+ function switchMode(next:Mode){setRetryAt(next==='signin'?0:cooldown.current[next]);setMode(next);setError('');setDone('');setPassword('');setShow(false);}
+ async function requestReset(){if(!backend)return;const {error}=await backend.auth.resetPasswordForEmail(email.trim(),{redirectTo:location.origin+'/?recovery=1'});if(error)throw error;cooldown.current.forgot=Date.now()+60000;setRetryAt(cooldown.current.forgot);setNow(Date.now());setDone('Si el correo existe, recibirás un enlace para crear una nueva contraseña.');}
+ async function submit(e:React.FormEvent){e.preventDefault();if(!backend||pending.current||(mode==='forgot'&&remaining))return;pending.current=true;setBusy(true);setError('');setDone('');try{
+ if(mode==='forgot')await requestReset();else if(mode==='signin'){const {error}=await backend.auth.signInWithPassword({email:email.trim(),password});if(error)throw error;}else{if(name.trim().length<1)throw Error('Escribe tu nombre.');if(password.length<8)throw Error('La contraseña debe tener al menos 8 caracteres.');const {data,error}=await backend.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:location.origin,data:{full_name:name.trim()}}});if(error)throw error;if(data.user?.identities?.length===0)throw Error('Ya existe una cuenta con este correo. Ingresa o recupera tu contraseña.');if(!data.session){setDone('¡Casi listo! Te enviamos un enlace de confirmación. Ábrelo para activar tu cuenta.');cooldown.current.signup=Date.now()+60000;setRetryAt(cooldown.current.signup);setNow(Date.now());}}
+ }catch(e){setError(authMessage((e as {message:string}).message));}finally{pending.current=false;setBusy(false);}}
+ async function resend(){if(!backend||pending.current||remaining)return;pending.current=true;setBusy(true);setError('');try{if(mode==='forgot')await requestReset();else{const {error}=await backend.auth.resend({type:'signup',email:email.trim(),options:{emailRedirectTo:location.origin}});if(error)throw error;cooldown.current.signup=Date.now()+60000;setRetryAt(cooldown.current.signup);setNow(Date.now());}}catch(e){setError(authMessage((e as {message:string}).message));}finally{pending.current=false;setBusy(false);}}
+ return <section className="email-auth" aria-label="Acceso con correo electrónico"><div className="email-auth-tabs" role="tablist"><button type="button" role="tab" aria-selected={mode!=='signup'} className={mode!=='signup'?'on':''} disabled={busy} onClick={()=>switchMode('signin')}>Ingresar</button><button type="button" role="tab" aria-selected={mode==='signup'} className={mode==='signup'?'on':''} disabled={busy} onClick={()=>switchMode('signup')}>Crear cuenta</button></div><h3>{mode==='signup'?'Crea tu cuenta':mode==='forgot'?'Recupera tu acceso':'Ingresa con tu correo'}</h3>
+ {done?<div className="email-auth-done" role="status"><CheckCircle2 size={22}/><p>{done}</p></div>:<form onSubmit={submit}>
+ {mode==='signup'&&<label className="ea-field"><span>Nombre</span><div><User size={17}/><input autoComplete="name" value={name} required maxLength={120} onChange={e=>setName(e.target.value)}/></div></label>}
+ <label className="ea-field"><span>Correo</span><div><Mail size={17}/><input type="email" autoComplete="email" value={email} required maxLength={254} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com"/></div></label>
+ {mode!=='forgot'&&<label className="ea-field"><span>Contraseña</span><div><Lock size={17}/><input type={show?'text':'password'} value={password} required minLength={mode==='signup'?8:undefined} maxLength={128} autoComplete={mode==='signup'?'new-password':'current-password'} onChange={e=>setPassword(e.target.value)}/><button type="button" className="ea-eye" aria-label={show?'Ocultar contraseña':'Mostrar contraseña'} onClick={()=>setShow(!show)}>{show?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></label>}
+ {mode==='signup'&&<Strength password={password}/>}<button className="primary ea-submit" disabled={busy||(mode==='forgot'&&remaining>0)}>{busy?'Un momento…':mode==='forgot'?'Enviar enlace':mode==='signup'?'Crear cuenta':'Ingresar'} <ArrowRight size={16}/></button></form>}
+ {error&&<p className="ea-error" role="alert">{error}</p>}{done&&<div className="ea-links"><button type="button" disabled={busy||remaining>0} onClick={()=>void resend()}>{remaining?`Puedes reenviar en ${remaining}s`:'Reenviar enlace'}</button><button type="button" disabled={busy} onClick={()=>{setDone('');setError('');}}>Corregir correo</button></div>}
+ <div className="ea-links">{mode==='signin'&&<button type="button" disabled={busy} onClick={()=>switchMode('forgot')}>¿Olvidaste tu contraseña?</button>}{mode==='forgot'&&<button type="button" disabled={busy} onClick={()=>switchMode('signin')}>Volver a ingresar</button>}</div>
+ {mode==='forgot'&&<details><summary>¿No llegó el correo?</summary><p>Revisa spam y confirma que escribiste el correo de tu cuenta. El enlace es de un solo uso. Con el correo predeterminado, ábrelo en el navegador donde hiciste la solicitud. Puedes pedir uno nuevo tras la espera indicada.</p></details>}</section>;
 }
-const strengthLabels = ['Muy débil', 'Débil', 'Aceptable', 'Fuerte', 'Excelente'];
-
-function friendly(message: string) {
-  const m = message.toLowerCase();
-  if (m.includes('invalid login')) return 'Correo o contraseña incorrectos.';
-  if (m.includes('email not confirmed')) return 'Falta confirmar tu correo. Revisa tu bandeja de entrada.';
-  if (m.includes('rate limit') || m.includes('too many')) return 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.';
-  if (m.includes('password should be')) return 'La contraseña debe tener al menos 8 caracteres.';
-  return message;
+export function NewPassword({onDone}:{onDone:()=>void}){
+ const [password,setPassword]=useState(''),[confirm,setConfirm]=useState(''),[show,setShow]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[closeOthers,setCloseOthers]=useState(true),[success,setSuccess]=useState(false),[warning,setWarning]=useState('');const pending=useRef(false);
+ async function submit(e:React.FormEvent){e.preventDefault();if(!backend||pending.current)return;setError('');if(password.length<8){setError('La contraseña debe tener al menos 8 caracteres.');return;}if(password!==confirm){setError('Las contraseñas no coinciden.');return;}pending.current=true;setBusy(true);try{const {error}=await backend.auth.updateUser({password});if(error)throw error;if(closeOthers){const result=await backend.auth.signOut({scope:'others'});if(result.error)setWarning('La contraseña cambió, pero no pudimos confirmar el cierre de las otras sesiones. Revísalas desde tu cuenta.');}setPassword('');setConfirm('');clearAuthUrl();setSuccess(true);}catch(e){setError(authMessage((e as {message:string}).message));}finally{pending.current=false;setBusy(false);}}
+ if(success)return <section className="panel email-auth"><CheckCircle2 size={30}/><h2>Contraseña actualizada.</h2><p>Ya puedes continuar con tu cuenta.</p>{warning&&<p role="alert">{warning}</p>}<button className="primary" onClick={onDone}>Continuar</button></section>;
+ return <section className="panel email-auth email-auth-reset"><KeyRound size={26}/><h2>Crea tu nueva contraseña</h2><p>Confirma la contraseña nueva para recuperar el acceso a tu cuenta.</p><form onSubmit={submit}><label className="ea-field"><span>Nueva contraseña</span><div><Lock size={17}/><input type={show?'text':'password'} value={password} required minLength={8} maxLength={128} autoComplete="new-password" onChange={e=>setPassword(e.target.value)}/></div></label><Strength password={password}/><label className="ea-field"><span>Confirmar nueva contraseña</span><div><Lock size={17}/><input type={show?'text':'password'} value={confirm} required minLength={8} maxLength={128} autoComplete="new-password" onChange={e=>setConfirm(e.target.value)}/></div></label><button type="button" className="secondary" aria-pressed={show} onClick={()=>setShow(!show)}>{show?'Ocultar contraseñas':'Mostrar contraseñas'}</button><label className="field"><input className="inline-check" type="checkbox" checked={closeOthers} onChange={e=>setCloseOthers(e.target.checked)}/> Cerrar mis otras sesiones</label>{error&&<p className="ea-error" role="alert">{error}</p>}<button className="primary ea-submit" disabled={busy}>{busy?'Guardando…':'Guardar contraseña'} <ArrowRight size={16}/></button></form></section>;
 }
-
-export default function EmailAuth() {
-  const [mode, setMode] = useState<Mode>('signin');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [show, setShow] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const [done, setDone] = useState('');
-  const level = strength(password);
-
-  function switchMode(next: Mode) {
-    setMode(next);
-    setError('');
-    setDone('');
-  }
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!backend) return;
-    setError('');
-    setDone('');
-    setBusy(true);
-    try {
-      if (mode === 'signup') {
-        if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.');
-        const { data, error: err } = await backend.auth.signUp({
-          email: email.trim(),
-          password,
-          options: { emailRedirectTo: location.origin, data: { full_name: name.trim() } }
-        });
-        if (err) throw err;
-        if (data.user && data.user.identities && data.user.identities.length === 0) {
-          throw new Error('Ya existe una cuenta con este correo. Ingresa con tu contraseña o usa GitHub.');
-        }
-        if (!data.session) setDone('¡Casi listo! Te enviamos un enlace de confirmación. Ábrelo para activar tu cuenta.');
-      } else if (mode === 'signin') {
-        const { error: err } = await backend.auth.signInWithPassword({ email: email.trim(), password });
-        if (err) throw err;
-      } else {
-        const { error: err } = await backend.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin+'/?recovery=1' });
-        if (err) throw err;
-        setDone('Si el correo existe, recibirás un enlace para crear una nueva contraseña.');
-      }
-    } catch (ex) {
-      setError(friendly(ex instanceof Error ? ex.message : String((ex as { message?: string }).message || ex)));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const title = mode === 'signup' ? 'Crea tu cuenta' : mode === 'forgot' ? 'Recupera tu acceso' : 'Ingresa con tu correo';
-
-  return (
-    <section className="email-auth" aria-label="Acceso con correo electrónico">
-      <div className="email-auth-tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={mode !== 'signup'} className={mode !== 'signup' ? 'on' : ''} disabled={busy} onClick={() => switchMode('signin')}>Ingresar</button>
-        <button type="button" role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'on' : ''} onClick={() => switchMode('signup')}>Crear cuenta</button>
-      </div>
-      <h3>{title}</h3>
-      {done ? (
-        <div className="email-auth-done" role="status"><CheckCircle2 size={22} /><p>{done}</p></div>
-      ) : (
-        <form onSubmit={submit} noValidate={false}>
-          {mode === 'signup' && (
-            <label className="ea-field"><span>Nombre</span>
-              <div><User size={17} /><input value={name} onChange={e => setName(e.target.value)} required maxLength={120} autoComplete="name" placeholder="Tu nombre completo" /></div>
-            </label>
-          )}
-          <label className="ea-field"><span>Correo</span>
-            <div><Mail size={17} /><input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" placeholder="tu@correo.com" /></div>
-          </label>
-          {mode !== 'forgot' && (
-            <label className="ea-field"><span>Contraseña</span>
-              <div>
-                <Lock size={17} />
-                <input type={show ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={mode === 'signup' ? 8 : undefined} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} placeholder={mode === 'signup' ? 'Mínimo 8 caracteres' : 'Tu contraseña'} />
-                <button type="button" className="ea-eye" aria-label={show ? 'Ocultar contraseña' : 'Mostrar contraseña'} onClick={() => setShow(!show)}>{show ? <EyeOff size={17} /> : <Eye size={17} />}</button>
-              </div>
-            </label>
-          )}
-          {mode === 'signup' && password && (
-            <div className="ea-strength" aria-live="polite">
-              <div className="ea-bars">{[0, 1, 2, 3].map(i => <i key={i} className={i < level ? `on l${level}` : ''} />)}</div>
-              <small>{strengthLabels[level]}</small>
-            </div>
-          )}
-          {error && <p className="ea-error" role="alert">{error}</p>}
-          <button className="primary ea-submit" disabled={busy}>
-            {busy ? 'Un momento…' : mode === 'signup' ? 'Crear cuenta' : mode === 'forgot' ? 'Enviar enlace' : 'Ingresar'} <ArrowRight size={16} />
-          </button>
-        </form>
-      )}
-      <div className="ea-links">
-        {mode === 'signin' && <button type="button" onClick={() => switchMode('forgot')}>¿Olvidaste tu contraseña?</button>}
-        {mode === 'forgot' && <button type="button" onClick={() => switchMode('signin')}>Volver a ingresar</button>}
-      </div>
-    </section>
-  );
-}
-
-export function NewPassword({ onDone }: { onDone: () => void }) {
-  const [password, setPassword] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const level = strength(password);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!backend) return;
-    if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres.'); return; }
-    setBusy(true);
-    setError('');
-    try {
-      const { error: err } = await backend.auth.updateUser({ password });
-      if(err)throw err;
-      setPassword('');onDone();
-    }catch(ex){setError(friendly(String((ex as {message?:string}).message||ex)));}
-    finally{setBusy(false);}
-  }
-
-  return (
-    <section className="panel email-auth email-auth-reset">
-      <KeyRound size={26} />
-      <h2>Crea tu nueva contraseña</h2>
-      <p>Elige una contraseña segura para volver a entrar a nextONE.</p>
-      <form onSubmit={submit}>
-        <label className="ea-field"><span>Nueva contraseña</span>
-          <div><Lock size={17} /><input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" placeholder="Mínimo 8 caracteres" /></div>
-        </label>
-        {password && (
-          <div className="ea-strength" aria-live="polite">
-            <div className="ea-bars">{[0, 1, 2, 3].map(i => <i key={i} className={i < level ? `on l${level}` : ''} />)}</div>
-            <small>{strengthLabels[level]}</small>
-          </div>
-        )}
-        {error && <p className="ea-error" role="alert">{error}</p>}
-        <button className="primary ea-submit" disabled={busy}>{busy ? 'Guardando…' : 'Guardar contraseña'} <ArrowRight size={16} /></button>
-      </form>
-    </section>
-  );
+export function RecoveryFlow({onDone,onCancel}:{onDone:()=>void;onCancel:()=>void}){
+ const [state,setState]=useState<'verifying'|'ready'|'error'>('verifying'),[message,setMessage]=useState(''),[resend,setResend]=useState(false);const verification=useRef<Promise<void>|null>(null);
+ useEffect(()=>{let alive=true;if(!verification.current)verification.current=(async()=>{if(!backend)throw Error('Configura Supabase para recuperar tu cuenta.');if(recoveryError(location.href))throw Error('El enlace venció o ya no es válido. Solicita otro.');const url=new URL(location.href),token=url.searchParams.get('token_hash');if(token){const {error}=await backend.auth.verifyOtp({token_hash:token,type:'recovery'});if(error)throw error;}const {data,error}=await backend.auth.getSession();if(error)throw error;if(!data.session)throw Error('No hay una sesión de recuperación válida. Solicita un enlace nuevo.');})();verification.current.then(()=>{if(alive){setState('ready');clearAuthUrl(true);}}).catch(e=>{if(alive){setState('error');setMessage(authMessage(e.message));clearAuthUrl();}});return()=>{alive=false;};},[]);
+ if(state==='verifying')return <section className="panel"><h2>Verificando enlace de recuperación</h2><p role="status">Estamos comprobando tu acceso…</p></section>;
+ if(state==='ready')return <NewPassword onDone={onDone}/>;
+ return <section className="panel email-auth"><h2>No pudimos validar el enlace</h2><p role="alert">{message}</p>{resend?<EmailAuth initialMode="forgot"/>:<button className="primary" onClick={()=>setResend(true)}>Solicitar otro enlace</button>}<button className="secondary" onClick={onCancel}>Volver al inicio</button></section>;
 }

@@ -1,31 +1,37 @@
-import {useId} from 'react';
-import type {Profile} from './types';
-import {resolveTheme} from './profileThemes';
+import {useId} from 'react';import type {Profile} from './types';import {resolveTheme} from './profileThemes';
 export default function ProfileAvatar({person,compact=false}:{person:Profile;compact?:boolean}){
- const t=resolveTheme(person),a=t.avatar,id=useId().replace(/:/g,'');
- return <span className={`maker-avatar avatar-${a.motion}${compact?' compact':''}`} role="img" aria-label={`Avatar personalizable de ${person.name}`}>
- <svg viewBox="0 0 200 240" aria-hidden="true"><defs><linearGradient id={'outfit-'+id} x2="1" y2="1"><stop stopColor={a.shirtColor}/><stop offset="1" stopColor="#172135"/></linearGradient></defs>
- <ellipse className="avatar-shadow" cx="100" cy="222" rx="49" ry="8" fill={t.accent} opacity=".2"/>
- <g className="avatar-body"><path d="M76 177h20l-2 37H75zM104 177h20l3 37h-22z" fill="#263149"/><path d="M72 209h25v13H65q-4-8 7-13M103 209h24q12 5 8 13h-32z" fill="#f3f4ff"/>
- <path d="M61 119q39-24 78 0l-10 66H71z" fill={'url(#outfit-'+id+')'}/>
- {a.outfit==='hoodie'&&<><path d="M76 113q24 39 48 0" fill="none" stroke="#ffffff60" strokeWidth="9"/><path d="M87 143h26v19H87z" fill="#ffffff14"/><path d="M92 133v18m16-18v18" stroke="#fff" strokeWidth="2"/></>}
- {a.outfit==='jacket'&&<><path d="M99 121v64M80 117l15 30-15-7m40-23-15 30 15-7" stroke="#ffffff90" strokeWidth="3" fill="none"/><circle cx="105" cy="156" r="2" fill="#fff"/></>}
- {a.outfit==='tee'&&<path d="M84 117q16 17 32 0" fill="none" stroke="#fff8" strokeWidth="4"/>}
- <path d="M62 121q-14 12-16 51l14 4 17-46" fill={a.shirtColor}/><circle cx="51" cy="177" r="9" fill={a.skin}/>
- <g className="avatar-arm"><path d="M137 121q18 15 19 50l-15 4-18-45" fill={a.shirtColor}/><circle cx="150" cy="178" r="9" fill={a.skin}/></g>
- <path d="M89 100h22v22q-11 12-22 0" fill={a.skin}/>
- <g className="avatar-head">{a.hair==='long'&&<path d="M61 60q4-39 39-40 39 0 40 47l9 60-35-9-54 4z" fill={a.hairColor}/>}
- <ellipse cx="63" cy="73" rx="8" ry="12" fill={a.skin}/><ellipse cx="137" cy="73" rx="8" ry="12" fill={a.skin}/><path d="M65 53q1-31 35-31 35 0 35 31v30q-3 32-35 33-32-1-35-33z" fill={a.skin}/>
- {a.hair==='crop'&&<path d="M64 60V43q5-28 39-24 31 0 34 29l-4 17-13-26-44 8-10 17" fill={a.hairColor}/>}
- {a.hair==='wave'&&<path d="M63 63q-13-38 13-42-3-12 14-9 28-15 41 7 23 8 7 47l-11-24q-36 13-49-2z" fill={a.hairColor}/>}
- {a.hair==='curls'&&<g fill={a.hairColor}>{[65,80,95,110,125,137].map((x,i)=><circle key={x} cx={x} cy={34-(i>1&&i<4?10:0)} r="16"/>)}</g>}
- {a.hair==='long'&&<path d="M63 57q-3-35 40-36 39 5 35 42-20-6-38-29-15 19-37 23" fill={a.hairColor}/>}
- <path d="M78 64l10-2m24 0 10 2" stroke={a.hairColor} strokeWidth="3" strokeLinecap="round"/>
- {a.expression==='happy'?<path d="M78 77q5-8 10 0m24 0q5-8 10 0" stroke="#251f2e" strokeWidth="3" fill="none"/>:<g fill="#251f2e"><ellipse className="avatar-eye" cx="83" cy="76" rx="3" ry="4"/><ellipse className="avatar-eye" cx="117" cy="76" rx="3" ry="4"/></g>}
- <path d="M100 77l-3 10h6" fill="none" stroke="#0003" strokeWidth="2"/>
- {a.expression==='calm'?<path d="M91 97h18" stroke="#542f39" strokeWidth="3" strokeLinecap="round"/>:<path d="M89 94q11 14 22 0" fill="#fff" stroke="#542f39" strokeWidth="2"/>}
- {a.accessory==='glasses'&&<g fill="none" stroke="#171522" strokeWidth="4"><rect x="71" y="68" width="24" height="17" rx="7"/><rect x="105" y="68" width="24" height="17" rx="7"/><path d="M95 75h10"/></g>}
- {a.accessory==='headphones'&&<g fill={t.accent} stroke="#272035" strokeWidth="4"><path d="M58 65q-4-58 42-58 46 0 42 58" fill="none" strokeWidth="8"/><rect x="52" y="59" width="14" height="31" rx="6"/><rect x="134" y="59" width="14" height="31" rx="6"/></g>}
- {a.accessory==='cap'&&<path d="M61 46q0-36 40-36 39 0 39 36H61m38 0h53q11 7-4 12h-49z" fill={a.shirtColor} stroke="#ffffff30" strokeWidth="2"/>}
- </g></g></svg></span>;
+ const t=resolveTheme(person),a=t.avatar,id=useId().replace(/:/g,''),suit='suit-'+id,skin='skin-'+id,hair='hair-'+id;
+ const width=a.body==='athletic'?53:a.body==='soft'?49:44;
+ const face=a.face==='square'?'M80 66Q80 29 120 29Q160 29 160 66V91L149 111Q120 129 91 111L80 91Z':a.face==='round'?'M77 66Q77 28 120 28Q163 28 163 66V86Q161 125 120 125Q79 125 77 86Z':'M82 64Q82 29 120 29Q158 29 158 64V87Q153 124 120 126Q87 124 82 87Z';
+ return <span className={`maker-avatar avatar-v2 avatar-${a.motion} presentation-${a.presentation}${compact?' compact':''}`} role="img" aria-label={`Avatar personalizable de ${person.name}`} onPointerMove={e=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const box=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--look-x',((e.clientX-box.left)/box.width*6-3)+'px');e.currentTarget.style.setProperty('--look-y',((e.clientY-box.top)/box.height*4-2)+'px');}} onPointerLeave={e=>{e.currentTarget.style.setProperty('--look-x','0px');e.currentTarget.style.setProperty('--look-y','0px');}}>
+ <svg viewBox="0 0 240 280" aria-hidden="true"><defs><linearGradient id={suit} x1="0" y1="0" x2="1" y2="1"><stop stopColor={a.shirtColor}/><stop offset=".55" stopColor={a.shirtColor}/><stop offset="1" stopColor="#101b38"/></linearGradient><linearGradient id={skin} x2=".8" y2="1"><stop stopColor={a.skin}/><stop offset=".7" stopColor={a.skin}/><stop offset="1" stopColor="#492e4055"/></linearGradient><linearGradient id={hair} x2="1" y2="1"><stop stopColor={a.hairColor}/><stop offset="1" stopColor="#101220"/></linearGradient></defs>
+ <ellipse className="avatar-halo" cx="120" cy="153" rx="100" ry="112" fill="none" stroke={t.accent} strokeWidth="1" opacity=".2"/><ellipse className="avatar-shadow" cx="120" cy="260" rx="68" ry="12" fill={t.accent} opacity=".16"/><ellipse cx="120" cy="261" rx="46" ry="5" fill="#ffffff22"/>
+ <g className="avatar-body"><g className="avatar-leg left"><path d="M91 199H116L112 249H87Z" fill="#1b253e"/><path d="M85 242H114V258H77Q70 250 85 242" fill="#e8edf6"/><path d="M77 257H114" stroke={a.shirtColor} strokeWidth="3"/></g><g className="avatar-leg right"><path d="M124 199H149L153 249H128Z" fill="#25314d"/><path d="M126 242H154Q169 250 163 258H126Z" fill="#e8edf6"/><path d="M126 257H164" stroke={a.shirtColor} strokeWidth="3"/></g>
+ <path d={`M${120-width} 136Q120 110 ${120+width} 136L${a.outfit==='dress'?172:151} ${a.outfit==='dress'?220:208}H${a.outfit==='dress'?68:89}Z`} fill={'url(#'+suit+')'} stroke="#ffffff20" strokeWidth="2"/>
+ {a.outfit==='hoodie'&&<><path d="M94 131Q120 166 146 131" fill="#0002" stroke="#ffffff50" strokeWidth="7"/><path d="M109 146V170M131 146V170" stroke="#f8f6ff" strokeWidth="2"/><path d="M102 174H138V191H102Z" fill="#0002" stroke="#fff3"/></>}
+ {(a.outfit==='jacket'||a.outfit==='blazer')&&<><path d="M108 128L120 151L132 128L127 203H113Z" fill="#eef4ff"/><path d="M99 131L111 157L102 164L117 197M141 131L129 157L138 164L123 197" fill="none" stroke="#ffffff65" strokeWidth="3"/><circle cx="123" cy="181" r="2" fill="#fff"/></>}
+ {a.outfit==='tee'&&<><path d="M100 131Q120 153 140 131" fill="none" stroke="#ffffffb0" strokeWidth="5"/><path d="M112 164L122 151L132 164L122 177Z" fill="#ffffff90"/></>}
+ {a.outfit==='dress'&&<><path d="M93 143Q120 167 147 143M89 174H151" fill="none" stroke="#ffffff80" strokeWidth="3"/><path d="M101 177L88 212M120 179V214M139 177L152 212" stroke="#fff2" strokeWidth="2"/></>}
+ {a.outfit==='sport'&&<><path d="M88 139L104 172M152 139L136 172M120 134V207" stroke="#f5f5ff" strokeWidth="4"/><text x="120" y="188" fontSize="18" textAnchor="middle" fill="#fff" fontWeight="800">N</text></>}
+ <g className="avatar-left-arm"><path d={`M${120-width+1} 137Q58 149 63 195L80 197L96 148Z`} fill={'url(#'+suit+')'}/><ellipse cx="72" cy="201" rx="10" ry="13" fill={'url(#'+skin+')'}/><path d="M67 201L70 208" stroke="#0002" strokeWidth="2"/></g>
+ <g className="avatar-arm"><path d={`M${120+width-1} 137Q182 149 177 195L160 197L144 148Z`} fill={'url(#'+suit+')'}/><ellipse cx="169" cy="201" rx="10" ry="13" fill={'url(#'+skin+')'}/><path d="M171 201L168 208" stroke="#0002" strokeWidth="2"/></g>
+ <path d="M108 111H132V133Q120 148 108 133Z" fill={a.skin}/><path d="M108 114Q120 127 132 114V123Q120 132 108 123Z" fill="#0002"/>
+ <g className="avatar-head">{['long','braids','ponytail','bob'].includes(a.hair)&&<path d="M74 65Q68 17 120 17Q172 17 166 65L176 143L145 133L120 144L67 139Z" fill={'url(#'+hair+')'}/>}{a.hair==='ponytail'&&<path d="M154 46Q199 13 189 76L166 119L161 67" fill={a.hairColor}/>}<ellipse cx="81" cy="80" rx="9" ry="14" fill={a.skin}/><ellipse cx="159" cy="80" rx="9" ry="14" fill={a.skin}/><path d={face} fill={'url(#'+skin+')'} stroke="#00000010" strokeWidth="1"/>
+ {a.hair==='crop'&&<path d="M80 64V45Q85 20 121 21Q158 22 160 51L154 66L145 44L94 45L85 65" fill={'url(#'+hair+')'}/>}
+ {a.hair==='wave'&&<path d="M79 67Q62 26 91 22Q86 7 108 13Q137-4 151 21Q177 30 160 69L148 45Q105 61 92 43Z" fill={'url(#'+hair+')'}/>}
+ {a.hair==='undercut'&&<><path d="M81 49Q82 23 119 22Q157 22 160 49L153 65L147 40L94 46L84 67Z" fill={a.hairColor} opacity=".6"/><path d="M84 43Q80 6 124 13Q167 8 153 44Q111 59 84 43" fill={'url(#'+hair+')'}/></>}
+ {(a.hair==='curls'||a.hair==='afro')&&<g fill={'url(#'+hair+')'}>{[75,89,105,123,141,157,166].map((x,i)=><circle key={x} cx={x} cy={a.hair==='afro'?35-Math.sin(i/6*Math.PI)*19:38-Math.sin(i/6*Math.PI)*12} r={a.hair==='afro'?23:16}/>)}</g>}
+ {['long','bob','braids','ponytail','bun'].includes(a.hair)&&<path d="M77 64Q71 21 118 19Q167 20 163 67Q136 59 122 37Q103 63 77 64" fill={'url(#'+hair+')'}/>}
+ {a.hair==='bun'&&<circle cx="123" cy="17" r="23" fill={a.hairColor}/>}
+ {a.hair==='bob'&&<path d="M76 54L72 117L91 120L85 65M161 54L166 117L148 120L154 65" fill={a.hairColor}/>}
+ {a.hair==='braids'&&<g fill={a.hairColor}>{[0,1,2,3,4].map(i=><g key={i}><ellipse cx={78-i*.7} cy={85+i*12} rx="8" ry="9"/><ellipse cx={162+i*.7} cy={85+i*12} rx="8" ry="9"/></g>)}</g>}
+ <path d="M95 68Q101 64 108 67M132 67Q139 64 146 68" fill="none" stroke={a.hairColor} strokeWidth={a.presentation==='masculine'?4:2.5} strokeLinecap="round"/>
+ {a.expression==='happy'?<path d="M96 82Q102 71 109 82M131 82Q138 71 145 82" stroke="#251f2e" strokeWidth="3" fill="none"/>:<g className="avatar-gaze"><g className="avatar-eye"><ellipse cx="102" cy="81" rx="8" ry="6" fill="#fff"/><circle cx="103" cy="81" r="4.7" fill={a.eyeColor}/><circle cx="104" cy="80" r="2" fill="#121322"/><circle cx="105" cy="79" r="1.4" fill="#fff"/></g><g className="avatar-eye"><ellipse cx="138" cy="81" rx="8" ry="6" fill="#fff"/><circle cx="137" cy="81" r="4.7" fill={a.eyeColor}/><circle cx="136" cy="80" r="2" fill="#121322"/><circle cx="135" cy="79" r="1.4" fill="#fff"/></g></g>}
+ <path d="M121 79L117 93H124" fill="none" stroke="#0002" strokeWidth="2.5" strokeLinecap="round"/><ellipse cx="96" cy="94" rx="7" ry="3" fill="#e2647450"/><ellipse cx="144" cy="94" rx="7" ry="3" fill="#e2647450"/>
+ {a.facialHair==='beard'&&<path d="M86 91Q90 124 120 126Q150 124 154 91L143 107L120 100L97 107Z" fill={a.hairColor} opacity=".9"/>}{a.facialHair==='stubble'&&<path d="M88 99Q120 139 152 99" fill="none" stroke={a.hairColor} opacity=".5" strokeWidth="7" strokeDasharray="1 3"/>}{a.facialHair==='mustache'&&<path d="M100 101Q109 92 120 100Q132 92 142 101Q128 108 120 102Q111 108 100 101" fill={a.hairColor}/>}
+ {a.expression==='calm'?<path d="M109 106Q120 110 131 106" fill="none" stroke="#69313e" strokeWidth="2.5" strokeLinecap="round"/>:<path d="M108 103Q120 118 132 103Z" fill="#fff" stroke="#69313e" strokeWidth="2"/>}
+ {a.accessory==='glasses'&&<g fill="none" stroke="#1d233a" strokeWidth="3"><rect x="89" y="73" width="25" height="18" rx="7"/><rect x="127" y="73" width="25" height="18" rx="7"/><path d="M114 80H127"/></g>}
+ {a.accessory==='headphones'&&<g fill={t.accent} stroke="#283148" strokeWidth="3"><path d="M73 72Q65 8 120 8Q175 8 167 72" fill="none" strokeWidth="8"/><rect x="65" y="66" width="16" height="34" rx="7"/><rect x="159" y="66" width="16" height="34" rx="7"/></g>}
+ {a.accessory==='cap'&&<path d="M77 51Q76 9 120 9Q165 9 164 51H77M118 51H176Q187 61 175 64H118Z" fill={'url(#'+suit+')'} stroke="#ffffff40" strokeWidth="2"/>}
+ </g></g><g className="avatar-sparkles" fill={t.accent}><path d="M38 74L41 83L50 86L41 89L38 98L35 89L26 86L35 83Z"/><path d="M201 137L204 144L211 147L204 150L201 157L198 150L191 147L198 144Z"/></g></svg></span>;
 }
