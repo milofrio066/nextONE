@@ -1,79 +1,49 @@
-# nextONE 0.10 · botones y perfiles
+# nextONE 1.0
 
-Para actualizar tu versión existente sigue ACTUALIZAR_V010.md. Esta entrega añade la migración 010, sin modificar 001–009. Incluye corrección de enlaces de plantillas, fuentes y colores por sección, botones de redes, avatar animado y selector Unicode con búsqueda.
+Plataforma de comunidad Makers: encuentros, aprendizaje, personas, retos, soluciones, proyectos y semilleros. React 19 + TypeScript + Vite + Supabase; una sola aplicación en la raíz.
 
-> Versión 0.8: utiliza ACTUALIZAR_V08.md. Si ya tienes 001–006, aplica únicamente 007 y 008, en orden.
+**Para actualizar tu plataforma existente, sigue ACTUALIZAR_V1.md.** Las instrucciones de versiones anteriores se conservan como historial y no reemplazan esa guía.
 
+## Desarrollo
 
-Catálogo existente conservado, lienzo en blanco, evaluación oficial, borradores recuperables, historial de participación y progreso sincronizado. **Consulta ACTUALIZAR_MAKERS.md antes de actualizar.** Sobre una base con 001–005 se aplica únicamente 006_makers.sql. El catálogo de esta revisión contiene 45 composiciones interactivas; la cifra de 47 funcionales confirmada por el propietario puede incluir otras estructuras. No se eliminó ninguna plantilla.
-
-
-Aplicación consolidada React 19 + TypeScript + Vite + Supabase. La aplicación productiva está ahora en la raíz de este proyecto. La demo antigua se conserva en un ZIP independiente y no interviene en el despliegue.
-
-## Puesta en marcha
-
-Node.js 24 y pnpm 11.25.0. Desde esta carpeta:
+Usa Node.js 24. Copia `.env.example` a `.env.local` y completa los valores públicos de tu proyecto. El cliente nunca debe recibir `service_role`, contraseñas de base de datos ni secretos OAuth.
 
 ```sh
 pnpm install --frozen-lockfile
-cp .env.example .env.local
 pnpm dev
 pnpm check:types
 pnpm test
 pnpm build
+pnpm test:browser:all
 ```
 
-En Windows, copia .env.example a .env.local con tu explorador o PowerShell. Completa VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY con los valores públicos de tu proyecto. No uses service_role ni un secreto OAuth. Google aparece cuando VITE_GOOGLE_LOGIN_ENABLED=true y el proveedor está habilitado en Supabase.
+El archivo pnpm-lock.yaml mantiene las versiones instaladas y no cambió en esta entrega. En Windows, si pnpm no puede crear enlaces simbólicos, `npm install --package-lock=false` permite instalar sin reemplazar ese archivo. La comprobación con npm se realizó sin scripts de instalación. Las pruebas de navegador usan Chrome instalado; alternativamente instala Chromium con Playwright y define NEXTONE_BROWSER_CHANNEL=chromium. No son pruebas contra tu base de producción.
 
-## Supabase
+## Base de datos
 
-Si tu base tiene 001–005, aplica solo supabase/migrations/006_makers.sql. Si falta alguna, aplica las pendientes en orden. No vuelvas a ejecutar los instaladores sobre tablas existentes.
+La carpeta `supabase/migrations` contiene 001–012 en orden. Una base que ya tiene 001–010 solo necesita 011 y 012. Conserva el historial real de migraciones y usa la integración GitHub/Supabase existente. No vuelvas a ejecutar migraciones aplicadas ni el instalador histórico `INSTALAR_NEXTONE.sql` sobre tu plataforma.
 
-Para una base nueva, ejecuta supabase/migrations/001_pilot.sql, 002_hardening.sql, 003_projects.sql, 004_interactive_pages.sql, 005_unified_content.sql y 006_makers.sql, una vez cada una y en ese orden. No combines esta ruta con el instalador combinado. Después del registro, usa supabase/activate-admin.sql con el correo correcto para activar al primer administrador.
+En una instalación totalmente nueva, aplica 001–012 una vez, en orden, usando migraciones de Supabase. Después de registrar tu primera cuenta, `supabase/activate-admin.sql` permite activar al fundador sustituyendo el correo por el correcto. Las cuentas nuevas continúan pendientes de aprobación o invitación.
 
-En Authentication → Providers, conserva GitHub y Google y habilita Email con Confirm email activado. Configura un SMTP propio y revisa la entrega de correos de confirmación y recuperación.
+## Flujos de esta versión
 
-Site URL: https://nextone-opal.vercel.app
+- Indicadores exclusivos de administradores en navegación, vista y funciones de base de datos, incluidas las funciones antiguas. Miembros y organizadores conservan la valoración pública de contenidos y su propia actividad.
+- Retos: reglas, instrucciones, entregables, criterios ponderados, cupos, fechas, fases y gestión de participantes. Una publicación guarda metadatos, reglas y diseño de forma atómica.
+- Participantes: explorar, filtrar, iniciar, salir antes de entregar, usar plantilla o lienzo en blanco, entregar prototipo HTTPS, revisar su solución o retirarla para reemplazarla mientras el reto lo permita.
+- Evaluación: calificación comunitaria y feedback oficial separados; el organizador responsable evalúa cada criterio y obtiene un resultado ponderado. El reto no se finaliza con soluciones sin evaluación definitiva.
+- Historial de revisiones de soluciones a partir de esta versión. El servidor bloquea las ediciones fuera de plazo, las revisiones deshabilitadas y las entregas con evaluación final. Administración mantiene capacidad de corrección.
+- Indicadores: período Colombia UTC−5, personas únicas, acciones, media/mediana y distribución de utilidad, cohortes de inicio a entrega, días sin actividad, comparación histórica cuando hay base, tablas paginadas, exportaciones y pendientes de feedback. Los análisis de temas, metodologías, intereses y cohortes se conservan y se consultan al abrir su panel.
+- Recuperación: solicitud, reenvío con espera, confirmación de contraseña, mostrar/ocultar, enlaces vencidos o usados, nueva solicitud y cierre opcional de otras sesiones. OAuth GitHub/Google se conserva. Consulta la configuración de correo en ACTUALIZAR_V1.md.
+- Avatar vectorial animado: puntos de partida femenino/masculino/neutro, rasgos combinables, rostro, silueta, ojos, vello facial, once peinados, seis prendas y cinco opciones de movimiento. Se guarda en la cuenta, aparece en navegación/perfil/directorio y respeta reducir movimiento.
 
-Redirect URLs autorizadas:
+Se mantienen el catálogo de 45 composiciones interactivas, el editor por bloques, las estructuras anteriores, borradores recuperables, progreso sincronizado, redes y temas de perfil, selector Unicode, proyectos/evaluador independiente, evidencias, chat, invitaciones, moderación y eliminación autorizada.
 
-- https://nextone-opal.vercel.app
-- https://nextone-opal.vercel.app/?recovery=1
-- http://127.0.0.1:5173
-- http://127.0.0.1:5173/?recovery=1
-- http://127.0.0.1:4173
-- http://127.0.0.1:4173/?recovery=1
+## Despliegue
 
-Si usas localhost o un dominio propio, añade sus URL exactas. Los callbacks de los proveedores OAuth siguen siendo https://TU_PROYECTO.supabase.co/auth/v1/callback. Credenciales de proveedores y SMTP se configuran únicamente en Supabase.
+Sube **el contenido** de la carpeta `nextONE` a la raíz del mismo repositorio. `package.json`, `src`, `public`, `supabase` y `api` quedan directamente allí. Vercel: mismo proyecto y dominio, Root Directory raíz, framework Vite, salida dist, comando npm run build, Node.js 24. No hace falta importar otro proyecto.
 
-El cliente mantiene PKCE. La confirmación y recuperación deben probarse abriendo el enlace en el mismo navegador desde el que se solicitó. El estado de recuperación se conserva en la URL y el cambio de contraseña requiere una sesión autenticada; el parámetro no concede una sesión ni evita la autorización de Supabase.
-
-## GitHub y Vercel
-
-Sube el contenido de esta carpeta como raíz del repositorio, sustituyendo la estructura antigua después de revisar el diff. No copies solamente archivos nuevos sobre las copias antiguas: quedarían duplicados. Conserva el ZIP de la demo como respaldo independiente.
-
-En el proyecto existente de Vercel cambia Root Directory de nextONE-piloto-backend a la raíz (vacío o ./). Framework: Vite; build: pnpm build; salida: dist. Define las variables de .env.example para cada entorno que uses. Vercel conserva los encabezados de seguridad de vercel.json.
-
-Una vez desplegado, prueba con cuentas reales GitHub, Google (si habilitado), registro por correo, confirmación, ingreso y recuperación. La instalación y pruebas locales no verifican tus credenciales ni la entrega real de SMTP. No se ejecutó push ni despliegue desde esta tarea.
-
-## Contenido interactivo
-
-Nueve tipos: eventos, webinars, recursos, speakers, builder cases, soluciones, proyectos, avances y publicaciones. Cada tipo conserva sus tres estructuras originales y añade cinco nuevas, con objetivos y bloques propios: diapositivas, línea de tiempo, mapa explorable, tarjetas y checklist. El catálogo de páginas contiene 45 composiciones, con estructuras heredadas conservadas.
-
-Studio permite modificar nombres y contenidos de bloques, añadir hasta doce, eliminar, ordenar, cambiar formato y probar la experiencia antes de guardar. Las soluciones utilizan las mismas cinco plantillas mediante el formulario de entrega de un builder case, conforme al flujo original; allí se usa el mismo editor por bloques con vista previa. Los miembros conservan los permisos de creación originales.
-
-Las experiencias se guardan en content.body con una cabecera y separador de bloques. El contenido antiguo conserva su renderizado. No se agrega HTML arbitrario, scripts ni nuevas dependencias de animación. Los checklists del nuevo motor sincronizan progreso con la cuenta y registran finalización por revisión; los de las estructuras heredadas conservan su comportamiento. No se presentan como certificaciones ni logros de aprendizaje. Los cinco diseños se adaptan a móviles y respetan el modo claro/oscuro y la preferencia de movimiento reducido. Es un editor de recorridos estructurados inspirado en presentaciones interactivas; no implementa un lienzo libre de Genially ni edición de video.
-
-## Indicadores
-
-Filtros de sección y título, selección de métrica y orden; comparaciones por contenido, inscripciones/asistencia/accesos y reacciones. Tarjetas de resultados, media ponderada de utilidad, tasa de asistencia y exportación CSV filtrada. Mantiene la tabla detallada y permisos de content_metrics.
-
-Los clics no representan asistencia ni permanencia. La utilidad es una percepción. Los participantes son únicos dentro de cada contenido y no se suman como personas únicas de la comunidad. Los acumulados anteriores se mantienen separados del nuevo historial por períodos; este empieza con las acciones posteriores a 006, sin reconstruir el pasado.
+Variables públicas: VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY y VITE_GOOGLE_LOGIN_ENABLED. El asistente opcional de IA usa además APP_ORIGIN, OPENAI_API_KEY y OPENAI_MODEL solo en Vercel; conserva sus valores si ya funciona. Sin configuración devuelve una explicación y la ficha manual sigue disponible.
 
 ## Verificación
 
-pnpm test ejecuta Vitest y las suites de PostgreSQL/RLS con PGlite. pnpm check:types verifica TypeScript; pnpm build genera producción. El proyecto original no incluye una configuración de ESLint: no se afirma haber ejecutado lint.
-
-Las suites de navegador usan Chrome instalado y Playwright. Para repetirlas, construye temporalmente con VITE_SUPABASE_URL=https://nextone-test.supabase.co, VITE_SUPABASE_PUBLISHABLE_KEY=test-public-key y VITE_GOOGLE_LOGIN_ENABLED=true; los adaptadores sirven dist directamente. Después ejecuta node scripts/pilot-browser-check.mjs y node scripts/email-browser-check.mjs. Todas las respuestas HTTP de Supabase son adaptadores de prueba; la suite de participación ejecuta las RPC contra PostgreSQL/PGlite con RLS real. No uses los valores de prueba para producción.
-
-Referencias de configuración: [Supabase Auth](https://supabase.com/docs/guides/auth/passwords), [Vercel Root Directory](https://vercel.com/docs/project-configuration/general-settings).
+Consulta VERIFICACIONES.md. Las pruebas locales cubren reglas SQL/RLS y recorridos en navegador con transporte/Auth de prueba. El correo real, OAuth real, integración de migraciones, Storage alojado y despliegue deben comprobarse en tu cuenta después de actualizar. No se hizo push ni se cambió la base alojada desde esta entrega.

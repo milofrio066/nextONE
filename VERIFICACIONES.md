@@ -1,41 +1,18 @@
-> Documento histórico. Para esta entrega utiliza ACTUALIZAR_MAKERS.md; sus instrucciones de migración y validación prevalecen.
+# Verificación de nextONE 1.0
 
-# Verificaciones · 13 octubre 2026
+Base: paquete 0.10 corregido. Entorno principal de verificación: Node.js 24.22.1, TypeScript 5.7.3, Vite 6.4.4, Vitest 4.1.12, PostgreSQL local con PGlite y Chrome de escritorio.
 
-## Resultado
+- Instalación npm sin scripts y sin crear package-lock: correcta; dependencias disponibles y consistentes. pnpm con frozen-lockfile no pudo completar el registro por la restricción Windows de enlaces simbólicos (EPERM). No se cambió pnpm-lock.yaml; npm permitió continuar. No se verificó una instalación limpia en una máquina vacía.
+- Comprobación TypeScript y build de producción.
+- 37 pruebas unitarias: plantillas, datos, navegación, progreso, enlaces/temas/Unicode, fechas de indicadores, fórmulas CSV, estados de retos, rúbrica y recuperación.
+- Suites PostgreSQL/RLS: acceso y roles, cupos/registro/cancelación, acceso privado, invitaciones, comentarios/reacciones, proyectos, diseños, contenido unificado, historial de actividad, workspace, evidencias, eliminación y apariencia.
+- Nueva suite release-check: migraciones 001–012 sobre base vacía, bloqueo de tres funciones de indicadores y exportación para miembros/organizadores, filtros y cifras, cupos, salida, retiro, versiones, plazos, evaluación ponderada, cierre condicionado a feedback, guardado atómico con rollback y avatar ampliado con datos maliciosos/aislamiento/suspensión.
+- Dos pruebas del asistente IA con transporte controlado: formato, origen, sesión, cuota, tiempo de espera y respuesta segura.
+- Navegador general: nueve tipos, plantilla/en blanco, edición, borrador recuperado, fallo de guardado y reintento, progreso entre contextos, opiniones, evaluación, borrado, roles de proyecto, ficha, chat, nombres, directorio y móvil.
+- Navegador de perfil: emojis y banderas, redes separadas, fuentes y colores persistentes, nuevo avatar, abrir enlaces, editor y botones visibles, recarga y directorio.
+- Navegador de acceso: proveedores conservados, error de ingreso, registro, solicitud de recuperación, confirmación, sesiones ausentes/enlaces vencidos, token-hash en contexto nuevo, verificación única, recarga, rechazo de contraseñas distintas y cierre de otras sesiones.
+- Navegador de versión: miembro/organizador sin indicadores, reto/participación/entrega/retiro/versiones, bloqueo al pasar a revisión, filtros de reporte, detalle de día, exportación y estado vacío. Anchos 320, 390, 768 y 1440 sin desbordamiento de página.
 
-- Instalación con pnpm y lockfile: correcta. Se usó un almacén dentro del workspace y node-linker hoisted por las restricciones de enlaces de Windows.
-- TypeScript estricto: correcto.
-- Build de producción Vite: correcto, sin errores.
-- 14 pruebas unitarias activas: correctas (45 plantillas, compatibilidad, serialización editable, métricas ponderadas y valores sin datos).
-- 9 pruebas de la demo histórica: correctas antes de separar la demo.
-- 10 pruebas de PostgreSQL/RLS: correctas (roles, perfiles, permisos, votos, comentarios, cupos, Zoom privado, invitaciones, entregas, suspensión y jerarquía).
-- Suite de proyectos PostgreSQL/RLS: correcta (roles, privacidad, solicitudes, aprobación con cupos, tareas, avances y salida).
-- Navegador Chrome + PostgreSQL local: correcto (participación, comunidad, proyectos, chat y cinco formatos interactivos; edición, guardado, recarga, filtros y exportación CSV).
-- Correo en navegador: correcto con respuestas HTTP simuladas (proveedores preservados, solicitud de ingreso, error de credenciales, registro con nombre, confirmación, recuperación, nueva contraseña y limpieza de retorno).
-- Adaptación visual: comprobaciones de desbordamiento en 320, 390, 768, 1024 y 1440 px según la suite; capturas revisadas de experiencias e indicadores.
-- ESLint: no configurado en el proyecto de origen. No se afirma que se ejecutó lint.
+Comandos: npm run check:types; npm test; npm run build; npm run test:browser:all. El proyecto no trae ESLint configurado: se usó comprobación estricta de TypeScript y las pruebas indicadas, no se declara un lint inexistente.
 
-## Límites de verificación
-
-Supabase Auth HTTP, sesiones y entrega de correo están simulados en las pruebas locales. Las RPC ejecutan PostgreSQL/PGlite con políticas RLS reales. No se han validado proveedores OAuth con cuentas reales, SMTP, configuración de tu base alojada ni despliegue Vercel de esta versión.
-
-Se inspeccionó la web pública nextone-opal.vercel.app sin modificarla. Su pantalla de ingreso actual muestra GitHub, sin correo ni Google visible. Se descargó el repositorio público para compararlo con los adjuntos; no se hizo push, commit remoto ni despliegue.
-
-En este entorno pnpm 11 intenta reinstalar al ejecutar scripts si cambia el almacén local. Los comandos build y test se ejecutaron con --config.verify-deps-before-run=false tras instalar y comprobar el lockfile. La compilación y las pruebas también se ejecutaron directamente con sus herramientas. No es un cambio al código ni una omisión de pruebas.
-
-## Rediseño 0.5
-
-TypeScript y build final correctos. Las 14 pruebas unitarias, comprobaciones de PostgreSQL/RLS, suite de proyectos y pruebas de navegador/correo pasaron. Se añadieron verificaciones de Home, perfiles expandibles, selección de columnas y adaptación móvil, con capturas revisadas en ambos temas. Auth HTTP utiliza respuestas simuladas; no se probó SMTP/OAuth alojado ni se publicó esta versión.
-
-## Integración 0.6
-
-TypeScript estricto y build correctos. 18 pruebas unitarias pasan (incluidas 40 plantillas nuevas y 22 bloques); suites originales de PostgreSQL/RLS y proyectos correctas, y nueva suite de páginas correcta, con rechazo de JSON sin blocks. Navegador Chrome: crear/duplicar/eliminar/guardar diseño, acento, progreso de checklist tras recarga, editor 390/1440 y regresión de la plataforma hasta 320 px. Correo probado con HTTP Auth simulado. No se probó ni migró Supabase alojado, SMTP u OAuth reales. No hay ESLint configurado.
-
-## Versión 0.7
-
-TypeScript, build y 18 pruebas unitarias correctos. Suites PostgreSQL/RLS originales, páginas y proyectos correctas; nueva suite unified-check verifica los nueve tipos, guardado atómico y rollback, autoridad del evento, asignación/revocación de organizadores, revisión oficial con voto comunitario previo, versiones de evaluación, permisos y ocultamiento tras eliminar. Navegador y correo correctos: ver ACTUALIZAR_V07.md para alcance y límites.
-
-## Versión 0.10 · 23 octubre 2026
-
-Instalación con lockfile congelado, TypeScript y build correctos. 29 pruebas unitarias y 2 de API IA pasan; suites PostgreSQL/RLS originales y nueva suite de perfil correctas. Navegador general, correo y nueva suite de perfil/enlaces pasan. Se comprobaron clics de botones en vista previa/publicado con destinos interceptados, persistencia del perfil, emojis ES, variantes, avatar, temas y móvil. Auth/OAuth/SMTP y producción alojada no se han verificado con cuentas reales. Consulta ACTUALIZAR_V010.md para el alcance detallado.
+Los navegadores usan el build real, RLS/funciones PostgreSQL reales en una base local y un adaptador HTTP/Auth de prueba. No son un despliegue ni una conexión a producción. No se comprobó entrega SMTP real, credenciales OAuth, migraciones en el Supabase alojado, carga de evidencias al Storage alojado ni respuesta real de OpenAI. Deben validarse después de actualizar según ACTUALIZAR_V1.md. Las capturas entregadas usan cuentas y contenido de prueba.
