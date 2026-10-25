@@ -1,3 +1,5 @@
+> **Versión actual: nextONE 1.3.0.** Para instalar esta entrega, empieza por [ACTUALIZAR_V13.md](ACTUALIZAR_V13.md). Incluye una nueva migración: 017. Las instrucciones de versiones anteriores se conservan como referencia.
+
 # nextONE 1.1
 
 Plataforma de comunidad Makers: encuentros, aprendizaje, personas, retos, soluciones, proyectos y semilleros. React 19 + TypeScript + Vite + Supabase; una sola aplicación en la raíz.
