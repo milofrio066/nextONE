@@ -1,4 +1,4 @@
-> **Versión actual: nextONE 1.3.0.** Para instalar esta entrega, empieza por [ACTUALIZAR_V13.md](ACTUALIZAR_V13.md). Incluye una nueva migración: 017. Las instrucciones de versiones anteriores se conservan como referencia.
+> **Versión actual: nextONE 1.4.0.** Para instalar esta entrega, empieza por [ACTUALIZAR_V14.md](ACTUALIZAR_V14.md). Incluye la migración 018. Conserva la configuración de las versiones anteriores.
 
 # nextONE 1.1
 

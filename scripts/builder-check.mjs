@@ -7,7 +7,7 @@ const dir=new URL('../supabase/migrations/',import.meta.url);
 for(const f of (await fs.readdir(dir)).filter(x=>/^\d{3}_.*\.sql$/.test(x)).sort())await db.exec(await fs.readFile(new URL(f,dir),'utf8'));
 const [admin,member,other,suspended]=Array.from({length:4},(_,i)=>`00000000-0000-4000-8000-00000000000${i+1}`);
 for(const id of [admin,member,other,suspended])await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,id+'@test.example']);
-await db.exec("update public.profiles set status='active'");await db.query("update public.profiles set role='admin' where id=$1",[admin]);await db.query("update public.profiles set status='suspended' where id=$1",[suspended]);
+await db.exec("update public.profiles set status='active',onboarding_completed_at=now()");await db.query("update public.profiles set role='admin' where id=$1",[admin]);await db.query("update public.profiles set status='suspended' where id=$1",[suspended]);
 async function as(id,sql,args=[]){await db.query("select set_config('test.uid',$1,false)",[id]);await db.exec('set role authenticated');try{return(await db.query(sql,args)).rows;}finally{await db.exec('reset role');}}
 async function call(id,name,args=[]){return(await as(id,`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) value`,args))[0]?.value;}
 const save=(id,kind,title,published=true)=>call(id,'save_content',[null,kind,title,'Descripción válida del caso',null,null,null,null,null,published,null]);
