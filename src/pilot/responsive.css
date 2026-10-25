@@ -1,0 +1,55 @@
+/* Loaded after the visual layers: keep content inside its available column. */
+.pilot :where(.panel,.pilot-box,.pilot-card,.home-copy,.home-upcoming,.field,.news-item,.section-shortcut,.profile-banner,.pilot-row)>*{min-width:0}
+.pilot :where(h1,h2,h3,h4,p,summary,.badge,.primary,.secondary,.text-button,.section-shortcut){overflow-wrap:anywhere}
+.pilot :where(button.secondary,a.secondary,.pilot-notice button,.home-upcoming button){max-width:100%;white-space:normal;line-height:1.5}
+.pilot .home-upcoming button{display:grid;grid-template-columns:minmax(0,1fr);gap:.3rem;border-radius:14px;justify-items:start}
+.pilot .home-upcoming :where(strong,small){display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.pilot .pilot-notice button{display:inline-block;text-align:left;border-radius:14px}
+.pilot :where(.home-highlight,.home-news,.shortcut-grid,.project-grid,.metric-filters,.appearance-grid,.challenge-roadmap,.ix-page,.ix-block,.ix-editor,.ix-live,.studio,.studio-body){min-width:0;max-width:100%}
+.pilot .workspace-home .home-hero{padding:clamp(20px,4vw,36px)}
+.pilot :where(.section-title,.catalog-toolbar,.community-toolbar,.profile-banner,.pilot-row,.modal-actions){flex-wrap:wrap}
+.pilot :where(.search-box,.search){min-width:0;max-width:100%}
+.pilot :where(.search-box,.search) input{min-width:0;width:100%}
+.pilot :where(.field,.form-grid,.composer-metadata){min-width:0}
+.pilot .field :where(input,select,textarea){min-width:0;box-sizing:border-box}
+.pilot :where(img,video,canvas){max-width:100%;height:auto}
+.pilot :where(.ix-page,.portfolio,.pilot-detail) :where(a,button,p,h1,h2,h3,strong){overflow-wrap:anywhere}
+.pilot .ix-links{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.pilot .ix-people{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+.pilot .ix-flip-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.pilot .ix-stats{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+.pilot :where(.ix-agenda li,.ix-bars li,.ix-cmp-row)>*{min-width:0;overflow-wrap:anywhere}
+.pilot .ix-page svg{max-width:100%}
+.pilot :where(.ix-edit,.ix-bcard,.ix-btitle,.ix-bbody){min-width:0;max-width:100%}
+.pilot .ix-btitle b{min-width:0;overflow-wrap:anywhere}
+.pilot :where(.table-scroll,.tabs,.space-tabs){max-width:100%;overscroll-behavior-inline:contain}
+@media(max-width:1000px){
+ .pilot .home-highlights{grid-template-columns:minmax(0,1fr)}
+ .pilot .home-news,.pilot .shortcut-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .pilot .home-news,.pilot .shortcut-grid{grid-template-columns:minmax(0,1fr)}
+ .pilot .home-upcoming button{padding:12px;text-align:left}
+ .pilot .section-hero{padding:20px!important}
+ .pilot :where(.metric-filters,.project-brief){grid-template-columns:minmax(0,1fr)}
+ .pilot .form-grid{grid-template-columns:minmax(0,1fr)}
+ .pilot .composer-metadata{padding:16px}
+ .pilot .ix-agenda li{grid-template-columns:minmax(0,1fr);gap:8px}
+ .pilot .ix-count-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pilot .ix-bars li{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:6px}
+ .pilot .ix-split{padding:12px;max-height:none;overflow:visible}
+ .pilot .ix-bhead{flex-wrap:wrap}
+ .pilot .ix-btitle{flex-basis:100%}
+ .pilot .ix-btitle svg{flex-shrink:0}
+ .pilot .ix-item-tools{margin-left:auto}
+ .pilot .ix-modal{max-height:calc(100dvh - 24px)}
+ .pilot :where(.modal-actions,.save-actions){gap:8px}
+ .pilot :where(.modal-actions,.save-actions)>button{flex:1 1 auto;white-space:normal}
+ .pilot .profile-banner{align-items:flex-start}
+ .pilot .section-color-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pilot .section-color-row>strong,.pilot .section-color-row>span{grid-column:1/-1}
+ .pilot .section-color-row>label{min-width:0}
+ .pilot .section-color-row input[type=color]{width:100%;max-width:100%}
+ .pilot .pilot-header .actions{flex-wrap:wrap}
+ .pilot input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=range]),.pilot textarea,.pilot select{font-size:16px}
+}
