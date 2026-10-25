@@ -5,10 +5,31 @@ export const THEMES:Record<ProfileTheme['template'],{name:string;accent:string;b
 };
 export const FONTS={modern:{name:'Moderna',family:'system-ui, sans-serif'},geometric:{name:'Geométrica',family:'"Trebuchet MS", sans-serif'},rounded:{name:'Redondeada',family:'"Arial Rounded MT Bold", "Century Gothic", sans-serif'},mono:{name:'Tecnológica',family:'Consolas, "Courier New", monospace'},editorial:{name:'Editorial',family:'Georgia, serif'},display:{name:'Impacto',family:'Impact, "Arial Black", sans-serif'}};
 export const SECTIONS:Record<ProfileSection,string>={hero:'Presentación',skills:'Qué hago',interests:'Intereses',about:'Sobre mí',links:'Redes y enlaces'};
-export const DEFAULT_AVATAR:AvatarConfig={skin:'#cf9569',hairColor:'#262033',shirtColor:'#8b5cf6',hair:'wave',outfit:'hoodie',accessory:'none',expression:'smile',motion:'float',presentation:'neutral',face:'oval',body:'classic',eyeColor:'#3b2a25',facialHair:'none'};
+export const DEFAULT_AVATAR:AvatarConfig={skin:'#cf9569',hairColor:'#262033',shirtColor:'#8b5cf6',hair:'wave',outfit:'hoodie',accessory:'none',expression:'smile',motion:'float',presentation:'neutral',face:'oval',body:'classic',eyeColor:'#3b2a25',facialHair:'none',gesture:'idle',mood:'smile',gear:'none',bottom:'jeans',bottomColor:'#334155',shoes:'sneakers',shoesColor:'#f3f4ff'};
 export const HEX=/^#[0-9a-fA-F]{6}$/;
 const color=(v:unknown,fallback:string)=>typeof v==='string'&&HEX.test(v)?v:fallback;
 const option=<T extends string>(v:unknown,list:readonly T[],fallback:T):T=>list.includes(v as T)?v as T:fallback;
+export const AVATAR_CHOICES={
+ presentation:[['neutral','Neutra'],['feminine','Femenina'],['masculine','Masculina']],face:[['oval','Ovalado'],['round','Redondo'],['square','Cuadrado']],body:[['classic','Clásica'],['soft','Suave'],['athletic','Atlética']],
+ facialHair:[['none','Ninguno'],['stubble','Barba corta'],['beard','Barba'],['mustache','Bigote']],
+ hair:[['crop','Corto'],['wave','Ondulado'],['curls','Rizos'],['long','Largo'],['bald','Sin cabello'],['bob','Bob'],['ponytail','Coleta'],['braids','Trenzas'],['bun','Recogido'],['afro','Afro'],['undercut','Degradado'],['pixie','Pixie'],['pigtails','Dos coletas'],['mohawk','Mohicano'],['fade','Fade'],['quiff','Pompadour']],
+ outfit:[['hoodie','Sudadera'],['jacket','Chaqueta'],['tee','Camiseta'],['shirt','Camisa'],['tank','Esqueleto'],['dress','Vestido'],['blazer','Blazer'],['suit','Traje con corbata'],['coat','Abrigo largo'],['overalls','Overol'],['sport','Deportivo'],['tracksuit','Conjunto deportivo']],
+ bottom:[['jeans','Jean'],['trousers','Pantalón'],['shorts','Short'],['skirt','Falda']],shoes:[['sneakers','Tenis'],['boots','Botas'],['flats','Bailarinas']],
+ accessory:[['none','Ninguno'],['glasses','Gafas'],['headphones','Audífonos'],['cap','Gorra']],
+ gear:[['none','Ninguno'],['sunglasses','Gafas de sol'],['round','Gafas redondas'],['beanie','Gorro'],['headband','Diadema'],['bow','Moño'],['crown','Corona'],['scarf','Bufanda'],['chain','Cadena'],['earrings','Aretes']],
+ mood:[['smile','Sonrisa'],['calm','Serena'],['happy','Alegre'],['grin','Carcajada'],['wink','Guiño'],['surprised','Sorpresa'],['smirk','Pícara'],['sleepy','Tranquila']],
+ gesture:[['idle','Relajado'],['wave','Saludando'],['hips','Manos a la cintura'],['victory','Victoria'],['think','Pensando'],['thumbs','Pulgar arriba'],['salute','Saludo']],
+ motion:[['float','Respirar y flotar'],['wave','Saludar'],['none','Sin movimiento'],['dance','Bailar'],['walk','Caminar']],
+} as const satisfies Record<string,readonly (readonly [string,string])[]>;
+export const AVATAR_COLORS=[['skin','Tono de piel'],['hairColor','Color del cabello'],['eyeColor','Color de los ojos'],['shirtColor','Color de la ropa'],['bottomColor','Color del pantalón o falda'],['shoesColor','Color del calzado']] as const;
+const pick=<K extends keyof typeof AVATAR_CHOICES>(k:K,v:unknown,fallback:string)=>{const keys=AVATAR_CHOICES[k].map(o=>o[0]) as string[];return (keys.includes(v as string)?v:fallback) as never;};
+/** Normaliza un avatar de cualquier origen: solo catálogos cerrados y colores hex de 6 dígitos llegan al dibujo. */
+export function normalizeAvatar(a:Partial<AvatarConfig>|null|undefined,accent=DEFAULT_AVATAR.shirtColor):AvatarConfig{
+ const x=(a&&typeof a==='object'?a:{}) as Record<string,unknown>,D=DEFAULT_AVATAR;
+ return {skin:color(x.skin,D.skin),hairColor:color(x.hairColor,D.hairColor),shirtColor:color(x.shirtColor,accent),eyeColor:color(x.eyeColor,D.eyeColor),bottomColor:color(x.bottomColor,D.bottomColor),shoesColor:color(x.shoesColor,D.shoesColor),
+  hair:pick('hair',x.hair,'wave'),outfit:pick('outfit',x.outfit,'hoodie'),accessory:pick('accessory',x.accessory,'none'),expression:option(x.expression,['smile','calm','happy'],'smile'),motion:pick('motion',x.motion,'float'),presentation:pick('presentation',x.presentation,'neutral'),face:pick('face',x.face,'oval'),body:pick('body',x.body,'classic'),facialHair:pick('facialHair',x.facialHair,'none'),
+  gesture:pick('gesture',x.gesture,'idle'),mood:pick('mood',x.mood??(x.expression==='happy'?'happy':x.expression==='calm'?'calm':'smile'),'smile'),gear:pick('gear',x.gear,'none'),bottom:pick('bottom',x.bottom,'jeans'),shoes:pick('shoes',x.shoes,'sneakers')};
+}
 export function resolveTheme(p:Pick<Profile,'theme'>):ProfileTheme{
  const t=p.theme&&typeof p.theme==='object'?p.theme:{};
  const template=option(t.template,Object.keys(THEMES) as ProfileTheme['template'][],'neon');const base=THEMES[template];
@@ -16,7 +37,7 @@ export function resolveTheme(p:Pick<Profile,'theme'>):ProfileTheme{
  const a=t.avatar||{} as Partial<AvatarConfig>;
  return {template,accent:color(t.accent,base.accent),headline:typeof t.headline==='string'?t.headline.slice(0,80):'',quote:typeof t.quote==='string'?t.quote.slice(0,160):'',
  links:Array.isArray(t.links)?t.links.flatMap(l=>{if(!l||typeof l.label!=='string')return [];const url=normalizeWebUrl(l.url);return url?[{label:l.label.slice(0,30),url,kind:typeof l.kind==='string'?l.kind:'other'}]:[];}).slice(0,8):[],font:option(t.font,Object.keys(FONTS) as ProfileTheme['font'][],'modern'),titleStyle:option(t.titleStyle,['outline','solid','gradient'],'outline'),background:color(t.background,base.bg),sections,
- avatar:{skin:color(a.skin,DEFAULT_AVATAR.skin),hairColor:color(a.hairColor,DEFAULT_AVATAR.hairColor),shirtColor:color(a.shirtColor,base.accent),hair:option(a.hair,['crop','wave','curls','long','bald','bob','ponytail','braids','bun','afro','undercut'],'wave'),outfit:option(a.outfit,['hoodie','jacket','tee','dress','blazer','sport'],'hoodie'),accessory:option(a.accessory,['none','glasses','headphones','cap'],'none'),expression:option(a.expression,['smile','calm','happy'],'smile'),motion:option(a.motion,['float','wave','none','dance','walk'],'float'),presentation:option(a.presentation,['neutral','feminine','masculine'],'neutral'),face:option(a.face,['oval','round','square'],'oval'),body:option(a.body,['classic','soft','athletic'],'classic'),eyeColor:color(a.eyeColor,'#3b2a25'),facialHair:option(a.facialHair,['none','stubble','beard','mustache'],'none')}};
+ avatar:normalizeAvatar(a,base.accent)};
 }
 export function themeVars(t:ProfileTheme):Record<string,string>{const base=THEMES[t.template];return {'--pf-accent':t.accent,'--pf-bg':t.background,'--pf-bg2':base.bg2,'--pf-font':FONTS[t.font].family};}
 export const splitList=(v:string)=>v.split(/[,;]/).map(s=>s.trim()).filter(Boolean);

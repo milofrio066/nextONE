@@ -180,7 +180,7 @@ export const CATALOG: PageTemplate[] = [
 
   /* ═════════════ BUILDER CASES ═════════════ */
   T('case-reto', 'case', 'Reto del caso', 'Brief', 'Brief del reto con cuenta regresiva, entregables y criterios.', C.violet, [
-    hero('Builder case', 'Nombre del reto', 'El problema que tu equipo va a resolver.'),
+    hero('Reto', 'Nombre del reto', 'El problema que tu equipo va a resolver.'),
     countdown('Cierre de entregas en'),
     tabs('El brief', [['Contexto', 'Describe la situación.'], ['Objetivo', 'Qué debe lograr la solución.'], ['Restricciones', 'Límites de tiempo, datos o tecnología.']]),
     checklist('Entregables', ['Prototipo o demo funcionando', 'Documento de una página', 'Presentación de 5 minutos']),

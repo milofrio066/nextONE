@@ -11,3 +11,10 @@
 .portfolio .pf-title,.portfolio .pf-hero h3,.pf-card .pf-card-name{font-family:var(--pf-font,system-ui,sans-serif)!important}
 
 .pf-modal .pf-top{padding-right:44px;gap:12px;flex-wrap:wrap}
+
+/* Avatar ampliado: saludo, reacción al clic y movimiento reducido */
+.maker-avatar{position:relative}.gesture-wave{animation:avatar-gesture-wave .9s ease-in-out infinite}
+.avatar-pop{position:absolute;left:50%;top:6%;font-size:1.5rem;pointer-events:none;animation:avatar-pop 1.1s ease-out forwards}
+@keyframes avatar-gesture-wave{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+@keyframes avatar-pop{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-46px) scale(1.2)}}
+@media(prefers-reduced-motion:reduce){.gesture-wave,.avatar-pop{animation:none!important}}

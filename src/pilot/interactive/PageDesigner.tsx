@@ -13,7 +13,7 @@ import type { Block, BlockType, FieldSpec, PageData, Props } from './types';
 import { ACCENTS, s, uid } from './util';
 import './interactive.css';
 
-const KIND_NAMES: Record<string, string> = { event: 'Eventos', webinar: 'Webinars', resource: 'Aprendizaje', speaker: 'Speakers', case: 'Builder cases', solution: 'Soluciones', project: 'Proyectos y semilleros', post: 'Comunidad', update: 'Avances' };
+const KIND_NAMES: Record<string, string> = { event: 'Eventos', webinar: 'Webinars', resource: 'Aprendizaje', speaker: 'Speakers', case: 'Retos', solution: 'Soluciones', builder: 'Builder case', project: 'Proyectos y semilleros', post: 'Comunidad', update: 'Avances' };
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
 const blank = (fields: FieldSpec[]): Props => Object.fromEntries(fields.map(f => [f.key, f.type === 'strings' ? [] : f.type === 'list' ? [] : '']));
 

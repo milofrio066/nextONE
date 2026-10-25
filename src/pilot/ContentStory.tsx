@@ -3,7 +3,7 @@ import InteractiveStory from './InteractiveStory';
 import {decodeStory} from './storyModel';
 import {templates} from './templates';
 import type {Kind} from './types';
-const headings=new Set((['event','webinar','resource','speaker','case','solution','project','update','post'] as Kind[]).flatMap(k=>templates(k).flatMap(t=>t.steps)).map(s=>s.toLowerCase()));
+const headings=new Set((['event','webinar','resource','speaker','case','solution','project','update','post','builder'] as Kind[]).flatMap(k=>templates(k).flatMap(t=>t.steps)).map(s=>s.toLowerCase()));
 export default function ContentStory({body}:{body:string}){
  if(decodeStory(body).layout)return <InteractiveStory body={body}/>;
  const blocks=body.split(/\n\s*\n/).map(text=>{const lines=text.trim().split('\n'),title=lines[0].replace(/:$/,'').trim();return {title:headings.has(title.toLowerCase())&&lines.length>1?title:null,text};});
