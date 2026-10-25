@@ -1,3 +1,4 @@
+import {useRemoteRefresh} from './useRemoteRefresh';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import {ProgressProvider} from './interactive/Progress';
@@ -26,6 +27,7 @@ export default function InteractiveSlot({ item, canEdit, userId }: { item: { id:
   }, [item.id]);
   useEffect(() => { setReady(false); setRow(null); void load();const refresh=(event:Event)=>{if((event as CustomEvent<string>).detail===item.id)void load();};window.addEventListener('nextone:page-saved',refresh);return()=>window.removeEventListener('nextone:page-saved',refresh); }, [load]);
 
+  useRemoteRefresh(()=>{if(!designing)void load();});
   if (!ready) return null;
   return (
     <>

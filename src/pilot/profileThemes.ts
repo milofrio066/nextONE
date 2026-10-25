@@ -1,3 +1,4 @@
+import {readable,mix,luminance} from './contrast';
 import type {AvatarConfig,Profile,ProfileSection,ProfileTheme} from './types';
 import {normalizeWebUrl} from './webLinks';
 export const THEMES:Record<ProfileTheme['template'],{name:string;accent:string;bg:string;bg2:string}>={
@@ -39,7 +40,10 @@ export function resolveTheme(p:Pick<Profile,'theme'>):ProfileTheme{
  links:Array.isArray(t.links)?t.links.flatMap(l=>{if(!l||typeof l.label!=='string')return [];const url=normalizeWebUrl(l.url);return url?[{label:l.label.slice(0,30),url,kind:typeof l.kind==='string'?l.kind:'other'}]:[];}).slice(0,8):[],font:option(t.font,Object.keys(FONTS) as ProfileTheme['font'][],'modern'),titleStyle:option(t.titleStyle,['outline','solid','gradient'],'outline'),background:color(t.background,base.bg),sections,
  avatar:normalizeAvatar(a,base.accent)};
 }
-export function themeVars(t:ProfileTheme):Record<string,string>{const base=THEMES[t.template];return {'--pf-accent':t.accent,'--pf-bg':t.background,'--pf-bg2':base.bg2,'--pf-font':FONTS[t.font].family};}
+export function themeVars(t:ProfileTheme):Record<string,string>{const accent=readable(t.accent,t.background,5.5),text=readable('#f3f4ff',t.background,5.5);return {'--pf-accent':accent,'--pf-bg':t.background,'--pf-bg2':mix(t.background,luminance(text)>.5?'#000000':'#ffffff',.08),'--pf-text':text,'--pf-on-accent':readable('#05060d',accent),'--pf-font':FONTS[t.font].family};}
+
+export function sectionStyle(t:ProfileTheme,key:ProfileSection){const sec=t.sections[key];return {backgroundColor:sec.background,color:readable(sec.text,sec.background),'--pf-section-accent':readable(t.accent,sec.background)};}
+
 export const splitList=(v:string)=>v.split(/[,;]/).map(s=>s.trim()).filter(Boolean);
 export function graphemes(value:string):string[]{return Array.from(new Intl.Segmenter('es',{granularity:'grapheme'}).segment(value),x=>x.segment);}
 export function limitNickname(value:string,max=40):string{let out='';for(const part of graphemes(value)){if(Array.from(out+part).length>max)break;out+=part;}return out;}
