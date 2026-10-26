@@ -7,7 +7,7 @@ const origin='https://nextone-opal.vercel.app';
 assert.ok(html.includes(`<link rel="canonical" href="${origin}/"`));
 assert.match(html,/<html lang="es"/);assert.match(html,/<meta name="description" content="[^"]{60,}"/);
 assert.match(html,/<meta name="robots" content="index, follow/);
-assert.match(html,/<div id="root"><main[^>]*><h1>nextONE/);
+assert.match(html,/<div id="root"><main[^>]*><h1>Makers Fellowship by nextONE/);
 for(const field of ['og:title','og:description','og:image','og:url','twitter:card'])assert.ok(html.includes(`"${field}"`));
 const data=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 assert.equal(JSON.parse(data)['@type'],'WebSite');assert.equal(JSON.parse(data).url,origin+'/');

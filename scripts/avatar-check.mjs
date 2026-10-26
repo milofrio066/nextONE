@@ -7,7 +7,7 @@ const dir=new URL('../supabase/migrations/',import.meta.url);
 for(const f of (await fs.readdir(dir)).filter(x=>/^\d{3}_.*\.sql$/.test(x)).sort())await db.exec(await fs.readFile(new URL(f,dir),'utf8'));
 const [a,b,c]=Array.from({length:3},(_,i)=>`00000000-0000-4000-8000-00000000000${i+1}`);
 for(const id of [a,b,c])await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,id+'@test.example']);
-await db.exec("update public.profiles set status='active',onboarding_completed_at=now()");await db.query("update public.profiles set status='suspended' where id=$1",[c]);
+await db.exec("update public.profiles set status='active',onboarding_completed_at=now(),fellowship_location_completed_at=now()");await db.query("update public.profiles set status='suspended' where id=$1",[c]);
 async function as(id,sql,args=[]){await db.query("select set_config('test.uid',$1,false)",[id]);await db.exec('set role authenticated');try{return(await db.query(sql,args)).rows;}finally{await db.exec('reset role');}}
 const base={skin:'#cf9569',hairColor:'#262033',shirtColor:'#8b5cf6',hair:'pixie',outfit:'suit',accessory:'glasses',expression:'smile',motion:'dance',presentation:'feminine',face:'round',body:'soft',eyeColor:'#3b2a25',facialHair:'none',gesture:'victory',mood:'wink',gear:'crown',bottom:'skirt',bottomColor:'#6D28D9',shoes:'boots',shoesColor:'#111111'};
 const theme=av=>({template:'neon',accent:'#00e5ff',headline:'',quote:'',links:[],font:'modern',titleStyle:'outline',background:'#05060d',sections:{},avatar:av});
