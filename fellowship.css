@@ -1,0 +1,31 @@
+/* Makers colors retain the existing layout, personal portfolio skins and motion preferences. */
+.pilot{--cyan:#4ed9bb;--purple:#a58af5;--accent:#4ed9bb;--primary:#4ed9bb}
+.pilot.next-era .primary{background:linear-gradient(110deg,#41d7ae,#7ca9ea 60%,#b19af7);color:#09151a;border-color:transparent}
+.pilot.next-era .primary:hover{filter:brightness(1.08)}
+.pilot .eyebrow{color:#66debf}
+.pilot-header .brand img{object-fit:contain;background:#000;border-radius:14px}
+.pilot-header .brand .brand-mark .brand-logo{width:100%;height:100%;transform:none;max-width:100%}
+.pilot-header .brand .nextone-cobrand{width:38px;height:38px;transform:none;max-width:38px}
+.pilot-header .brand .fellowship-brand{font-size:27px;line-height:1.15;text-align:left}
+.fellowship-brand small{font-size:9px;letter-spacing:1px;display:block;margin-top:5px}
+.pilot footer{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;font-size:12px;line-height:1.6}
+.fellowship-gate{max-width:780px;margin:32px auto}
+.fellowship-gate form{display:grid;gap:18px}
+.fellowship-insights{padding-block:24px;border-block:1px solid #65c9ba40;margin-block:28px}
+.fellowship-kpis,.fellowship-charts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:22px 0}
+.fellowship-kpis article{display:grid;gap:12px;background:linear-gradient(140deg,#174a463b,#7862ad20)}
+.fellowship-kpis strong{font-size:clamp(24px,3vw,42px);line-height:1.1}
+.fellowship-charts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fellowship-charts figure{margin:0;min-width:0}.fellowship-charts figcaption{font-weight:700;margin-bottom:20px}
+.fellowship-charts svg{display:block;width:100%;height:auto}.fellowship-charts p{font-size:12px;line-height:1.6}
+.fellowship-funnel{display:grid;grid-template-columns:minmax(90px,1fr) 2fr 38px;align-items:center;gap:12px;margin:15px 0;font-size:13px}
+.fellowship-funnel progress{width:100%;accent-color:#55cfb7;min-width:0}
+.fellowship-ring{display:grid;place-items:center;width:150px;aspect-ratio:1;margin:20px auto;border-radius:50%;background:conic-gradient(#69d7bd var(--score),#81839c24 0);position:relative}
+.fellowship-ring:before{content:'';position:absolute;inset:14px;border-radius:50%;background:#101522}.fellowship-ring strong{position:relative;color:#f4f5ff;font-size:32px}.fellowship-ring small{font-size:14px}
+.member-timeline{list-style:none;padding:0}.member-timeline li{display:grid;gap:7px;border-inline-start:2px solid #62d4b8;margin-block:12px;padding:12px 20px;background:#8585ac0c}.member-timeline time{font-size:12px;opacity:.8}
+.recording-player{width:100%;aspect-ratio:16/9;height:auto;border:0;border-radius:18px}
+@media(max-width:900px){.fellowship-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.fellowship-charts{grid-template-columns:minmax(0,1fr)}.fellowship-kpis,.fellowship-charts{gap:10px}.fellowship-funnel{grid-template-columns:minmax(80px,1fr) 1fr 25px;gap:8px}.fellowship-insights .section-title{flex-wrap:wrap}.fellowship-gate{margin:10px 0}}
+html[data-theme='light'] .pilot .eyebrow,body.light .pilot .eyebrow{color:#216650}
+
+:root[data-theme="light"] .pilot.next-era .eyebrow{color:#216650}

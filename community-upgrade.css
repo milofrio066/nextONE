@@ -1,0 +1,31 @@
+/* Portfolios keep their personal skin in both app themes, with readable colors. */
+.pilot .directory-card.pf-card{background:linear-gradient(165deg,var(--pf-bg),var(--pf-bg2));color:var(--pf-text);border-color:var(--pf-accent)}
+.pf-card .pf-card-hit,.pf-card .pf-card-meta :is(strong,small){color:var(--pf-text)}
+.pf-card .pf-card-meta small{opacity:1}.pf-card .pf-card-meta strong{white-space:normal;overflow-wrap:anywhere}
+.pf-card .pf-card-name{font-size:clamp(24px,2.6vw,36px);line-height:1.15;word-break:normal;overflow-wrap:anywhere}
+.pf-card .pf-chip{color:var(--pf-on-accent);background:var(--pf-accent)}
+.pf-card .pf-chip.ghost{background:transparent;color:var(--pf-accent)}
+.pf-card .pf-card-row{min-width:0}.pf-card .pf-card-meta{flex:1}
+.portfolio{background:linear-gradient(165deg,var(--pf-bg),var(--pf-bg2));color:var(--pf-text);--text:var(--pf-text);--muted:var(--pf-text)}
+.portfolio :is(.pf-top,.pf-foot,.pf-quote){color:var(--pf-text);opacity:1}
+.portfolio .pf-hero :is(h3,p,small),.portfolio .pf-grid :is(p,h4,li){color:inherit;opacity:1}
+.portfolio .pf-role,.portfolio .pf-links a{color:var(--pf-section-accent,var(--pf-accent))}
+.portfolio .pf-links a{border-color:currentColor}.portfolio .pf-links a:hover,.portfolio .pf-links a:focus-visible{background:transparent;outline:2px solid currentColor;outline-offset:2px;text-decoration:underline}
+.portfolio .pf-muted{opacity:1}
+.pf-close{background:#111827;color:#ffffff;border-color:#94a3b8}
+.content-cover{position:relative;aspect-ratio:16/9;width:100%;min-width:0;border-radius:18px;overflow:hidden;background:#152436;isolation:isolate;margin-bottom:12px}
+.content-cover img{display:block;width:100%;height:100%!important;object-fit:cover}
+.cover-detail{max-height:420px;aspect-ratio:3/1;margin-bottom:24px}
+.cover-fallback{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:clamp(14px,3vw,28px);gap:10px;position:absolute;inset:0;color:#fff;background:linear-gradient(125deg,#123b50,#342344)}
+.cover-fallback span{font-size:clamp(16px,2vw,25px);line-height:1.2;font-weight:700;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cover-tone-1 .cover-fallback{background:linear-gradient(125deg,#16483d,#26325c)}.cover-tone-2 .cover-fallback{background:linear-gradient(125deg,#482a53,#23384b)}.cover-tone-3 .cover-fallback{background:linear-gradient(125deg,#4a271e,#38314e)}.cover-tone-4 .cover-fallback{background:linear-gradient(125deg,#233958,#384525)}.cover-tone-5 .cover-fallback{background:linear-gradient(125deg,#453719,#24404c)}
+.cover-error{position:absolute;bottom:6px;left:8px;background:#111827;color:#fff;padding:4px 8px;border-radius:5px}
+.cover-editor{border:1px solid var(--border);border-radius:16px;padding:16px;min-width:0;margin:24px 0}.cover-editor legend{font-weight:700;padding:0 6px}
+.cover-editor p,.cover-editor small{font-size:12px}.cover-editor input[type=file]{white-space:normal;min-width:0;width:100%;font-size:13px}
+.cover-editor .content-cover{max-width:600px}
+.community-feed .content-cover{max-height:300px}
+.home-upcoming .content-cover{margin:0 0 8px;max-height:160px}
+.sync-status{font-size:10px;color:var(--muted);display:block;white-space:normal;max-width:150px}
+@media(max-width:600px){.cover-detail{aspect-ratio:16/9}.pf-card .pf-card-name{font-size:28px}.sync-status{max-width:100px;font-size:9px}.cover-editor{padding:12px}}
+
+.portfolio.title-gradient .pf-title{background-image:linear-gradient(100deg,var(--pf-accent),var(--pf-text))}
