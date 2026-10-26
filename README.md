@@ -1,59 +1,264 @@
-> **Versión actual: nextONE 1.4.0.** Para instalar esta entrega, empieza por [ACTUALIZAR_V14.md](ACTUALIZAR_V14.md). Incluye la migración 018. Conserva la configuración de las versiones anteriores.
 
-# nextONE 1.1
+<div align="center">
 
-Plataforma de comunidad Makers: encuentros, aprendizaje, personas, retos, soluciones, proyectos y semilleros. React 19 + TypeScript + Vite + Supabase; una sola aplicación en la raíz.
+# nextONE 🚀
 
-**Para actualizar tu plataforma existente, sigue ACTUALIZAR_V11.md.** Las instrucciones de versiones anteriores se conservan como historial y no reemplazan esa guía.
+### Connecting Talent, Ideas & Opportunities
 
-## Desarrollo
+**A unified digital ecosystem for technology communities.**
 
-Usa Node.js 24. Copia `.env.example` a `.env.local` y completa los valores públicos de tu proyecto. El cliente nunca debe recibir `service_role`, contraseñas de base de datos ni secretos OAuth.
+A platform designed to transform how tech communities
+connect, collaborate, organize and grow.
 
-```sh
-pnpm install --frozen-lockfile
-pnpm dev
-pnpm check:types
-pnpm test
-pnpm build
-pnpm test:browser:all
-```
+[![Live Platform](https://img.shields.io/badge/Live_Platform-Visit_nextONE-7C3AED?style=for-the-badge)](https://nextone-opal.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/milofrio066/nextONE)
 
-El archivo pnpm-lock.yaml mantiene las versiones instaladas y no cambió en esta entrega. En Windows, si pnpm no puede crear enlaces simbólicos, `npm install --package-lock=false` permite instalar sin reemplazar ese archivo. La comprobación con npm se realizó sin scripts de instalación. Las pruebas de navegador usan Chrome instalado; alternativamente instala Chromium con Playwright y define NEXTONE_BROWSER_CHANNEL=chromium. No son pruebas contra tu base de producción.
+![Status](https://img.shields.io/badge/Status-Active_Development-22C55E?style=flat-square)
+![Focus](https://img.shields.io/badge/Focus-Community_Technology-6366F1?style=flat-square)
+![Made in](https://img.shields.io/badge/Made_in-Colombia-FACC15?style=flat-square)
 
-## Base de datos
+</div>
 
-La carpeta `supabase/migrations` contiene 001–014 en orden. Una base que ya tiene 001–012 solo necesita 013 y 014. Conserva el historial real de migraciones y usa la integración GitHub/Supabase existente. No vuelvas a ejecutar migraciones aplicadas ni el instalador histórico `INSTALAR_NEXTONE.sql` sobre tu plataforma.
+---
 
-En una instalación totalmente nueva, aplica 001–014 una vez, en orden, usando migraciones de Supabase. Después de registrar tu primera cuenta, `supabase/activate-admin.sql` permite activar al fundador sustituyendo el correo por el correcto. Las cuentas nuevas continúan pendientes de aprobación o invitación.
+## 🌐 About nextONE
 
-## Novedades de administración 1.1
+**nextONE** is a community management platform designed to centralize activities, connect technology enthusiasts and provide actionable insights into community engagement.
 
-Panel de control con tarjetas accionables, gráficos reales, bandejas desplegables y paginadas, búsqueda/estado, aprobación de ingreso con correo verificado, historial de revisión de reportes, prioridad y asignación, invitaciones con trazabilidad, alertas internas y cola de avisos por correo. Distribución global de miembros y actividad por país, región y ciudad declarados voluntariamente y protegidos por permisos.
+The project originated from identifying challenges faced by growing technology communities: fragmented tools, decentralized information and limited visibility into participation and impact.
 
-Los avisos por correo necesitan configuración de Vercel y un Database Webhook en Supabase. No se envían con subir únicamente el ZIP. Consulta ACTUALIZAR_V11.md; los destinatarios se configuran fuera del código público.
+nextONE aims to bring these experiences together through a modern, scalable and user-centered digital solution.
 
-El catálogo carga descripciones recortadas y obtiene el contenido completo al abrirlo. Administración, Indicadores y el editor de perfil se descargan bajo demanda. Las bandejas administrativas usan páginas de 20 y los detalles se consultan al desplegarlos. El directorio y el catálogo aún mantienen sus metadatos autorizados en memoria; esta versión no promete escalabilidad ilimitada ni sustituye mediciones de carga en producción.
+### Our Mission
 
-## Flujos conservados
+Empower technology communities through accessible digital tools that simplify management, encourage collaboration and transform information into meaningful decisions.
 
-- Indicadores exclusivos de administradores en navegación, vista y funciones de base de datos, incluidas las funciones antiguas. Miembros y organizadores conservan la valoración pública de contenidos y su propia actividad.
-- Retos: reglas, instrucciones, entregables, criterios ponderados, cupos, fechas, fases y gestión de participantes. Una publicación guarda metadatos, reglas y diseño de forma atómica.
-- Participantes: explorar, filtrar, iniciar, salir antes de entregar, usar plantilla o lienzo en blanco, entregar prototipo HTTPS, revisar su solución o retirarla para reemplazarla mientras el reto lo permita.
-- Evaluación: calificación comunitaria y feedback oficial separados; el organizador responsable evalúa cada criterio y obtiene un resultado ponderado. El reto no se finaliza con soluciones sin evaluación definitiva.
-- Historial de revisiones de soluciones a partir de esta versión. El servidor bloquea las ediciones fuera de plazo, las revisiones deshabilitadas y las entregas con evaluación final. Administración mantiene capacidad de corrección.
-- Indicadores: período Colombia UTC−5, personas únicas, acciones, media/mediana y distribución de utilidad, cohortes de inicio a entrega, días sin actividad, comparación histórica cuando hay base, tablas paginadas, exportaciones y pendientes de feedback. Los análisis de temas, metodologías, intereses y cohortes se conservan y se consultan al abrir su panel.
-- Recuperación: solicitud, reenvío con espera, confirmación de contraseña, mostrar/ocultar, enlaces vencidos o usados, nueva solicitud y cierre opcional de otras sesiones. OAuth GitHub/Google se conserva. Consulta la configuración de correo en ACTUALIZAR_V1.md.
-- Avatar vectorial animado: puntos de partida femenino/masculino/neutro, rasgos combinables, rostro, silueta, ojos, vello facial, once peinados, seis prendas y cinco opciones de movimiento. Se guarda en la cuenta, aparece en navegación/perfil/directorio y respeta reducir movimiento.
+### Our Vision
 
-Se mantienen el catálogo de 45 composiciones interactivas, el editor por bloques, las estructuras anteriores, borradores recuperables, progreso sincronizado, redes y temas de perfil, selector Unicode, proyectos/evaluador independiente, evidencias, chat, invitaciones, moderación y eliminación autorizada.
+Build a technology ecosystem that enables communities to grow, collaborate and make data-driven decisions.
 
-## Despliegue
+Initially focused on the **Makers community**, the platform is designed with the potential to support additional independent communities in the future.
 
-Sube **el contenido** de la carpeta `nextONE` a la raíz del mismo repositorio. `package.json`, `src`, `public`, `supabase` y `api` quedan directamente allí. Vercel: mismo proyecto y dominio, Root Directory raíz, framework Vite, salida dist, comando npm run build, Node.js 24. No hace falta importar otro proyecto.
+---
 
-Variables públicas: VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY y VITE_GOOGLE_LOGIN_ENABLED. El asistente opcional de IA usa además APP_ORIGIN, OPENAI_API_KEY y OPENAI_MODEL solo en Vercel; conserva sus valores si ya funciona. Sin configuración devuelve una explicación y la ficha manual sigue disponible.
+## 🎯 The Problem
 
-## Verificación
+Technology communities often use multiple disconnected tools to manage:
 
-Consulta VERIFICACIONES.md. Las pruebas locales cubren reglas SQL/RLS y recorridos en navegador con transporte/Auth de prueba. El correo real, OAuth real, integración de migraciones, Storage alojado y despliegue deben comprobarse en tu cuenta después de actualizar. No se hizo push ni se cambió la base alojada desde esta entrega.
+- Events and webinars.
+- Community members and profiles.
+- Collaborative projects.
+- Speakers and participation.
+- Feedback and evaluation.
+- Challenges and learning activities.
+- Performance metrics and analytics.
+
+This fragmentation makes it difficult to understand member preferences, measure participation and optimize community activities.
+
+### The Opportunity
+
+Create a centralized platform that reduces operational complexity while enabling organizers to understand their community through meaningful data.
+
+---
+
+## 💡 The Solution
+
+nextONE combines community management, collaborative tools and analytics within a unified digital ecosystem.
+
+The platform is structured around several interconnected modules:
+
+| Module | Purpose |
+|--------|---------|
+| 📅 Events | Create and manage community events |
+| 🎙️ Webinars | Organize sessions and collect feedback |
+| 👥 Community | Connect members and encourage interaction |
+| 🚀 Projects | Showcase and track technology initiatives |
+| 🧠 Builder Cases | Support practical challenges and learning |
+| 🎤 Speakers | Manage participation and evaluation |
+| 💡 Solutions | Connect problems with potential solutions |
+| 👤 Profiles | Highlight skills, experience and projects |
+| 📊 Analytics | Transform activity data into insights |
+| ⚙️ Administration | Centralize community management |
+
+> Note: nextONE is under active development. Module availability and functionality may evolve as the platform progresses.
+
+---
+
+## 📊 Data-Driven Communities
+
+One of nextONE's central goals is to make community engagement measurable and actionable.
+
+The analytics vision includes:
+
+**Participation Analytics**
+- Event registrations and attendance.
+- Participation and engagement trends.
+- Attendance rates over time.
+
+**Event Performance**
+- Webinar feedback and ratings.
+- Session performance comparisons.
+- Event scheduling effectiveness.
+
+**Community Insights**
+- Member activity.
+- Interests and preferences.
+- Project participation.
+- Community growth indicators.
+
+**Continuous Improvement**
+- Identify successful activities.
+- Discover opportunities for improvement.
+- Support decisions through measurable indicators.
+
+The goal is not simply to collect data, but to help communities understand what works and why.
+
+---
+
+## 🛠️ Technology & Development
+
+nextONE is developed using modern web technologies and cloud-based services.
+
+### Core Technology Areas
+
+- **Frontend:** Modern responsive web interfaces.
+- **Backend:** Application logic and service integrations.
+- **Database:** Persistent information and data management.
+- **Authentication:** User access and identity management.
+- **Deployment:** Cloud-based application hosting.
+- **Analytics:** Metrics and data visualization.
+- **UI/UX:** Accessible and intuitive user experiences.
+
+### Development Tools
+
+![Tools](https://skillicons.dev/icons?i=react,ts,js,html,css,supabase,postgres,vercel,git,github)
+
+> Technology icons represent the project's development stack and associated tooling. Exact dependencies and versions are maintained in the source code.
+
+---
+
+## 🧩 Architecture & Design Principles
+
+nextONE is guided by several engineering principles:
+
+### Modular Design
+
+Organize functionality into independent modules that can evolve without unnecessarily affecting other areas of the platform.
+
+### Scalability
+
+Prepare the application to support increasing activity, additional functionalities and future growth.
+
+### Security & Privacy
+
+Prioritize appropriate access control, responsible data handling and separation of information between potential community environments.
+
+### User Experience
+
+Build interfaces that are intuitive, responsive, accessible and consistent.
+
+### Continuous Improvement
+
+Apply iterative development, testing and feedback to progressively strengthen the product.
+
+---
+
+## 🚀 Live Application
+
+nextONE is available through its current public deployment:
+
+### [Launch nextONE](https://nextone-opal.vercel.app/)
+
+The deployed application demonstrates the project's ongoing development and evolving functionality.
+
+**Deployment:** Vercel
+
+---
+
+## 🗺️ Development Roadmap
+
+The following roadmap represents planned development priorities rather than a statement that every capability is already complete.
+
+### Phase 1 — Foundation
+- [x] Define the platform concept and scope.
+- [x] Create the initial application.
+- [x] Establish a public deployment.
+- [x] Implement initial authentication capabilities.
+
+### Phase 2 — Community Experience
+- [ ] Consolidate and validate community modules.
+- [ ] Improve member profiles and interactions.
+- [ ] Refine event and webinar management.
+- [ ] Expand editable templates.
+
+### Phase 3 — Analytics & Intelligence
+- [ ] Strengthen participation tracking.
+- [ ] Improve dashboards and visualizations.
+- [ ] Develop advanced engagement indicators.
+- [ ] Explore AI-assisted project evaluation.
+
+### Phase 4 — Scalability
+- [ ] Strengthen architecture and automated testing.
+- [ ] Review performance and security.
+- [ ] Improve technical documentation.
+- [ ] Evaluate support for independent communities.
+
+> Roadmap priorities are subject to product validation and development progress.
+
+---
+
+## 👨‍💻 Creator & Development
+
+### Juan Camilo Marín
+
+**Systems Engineering Student | Software Developer | Tech Builder**
+
+nextONE is an independently initiated and developed technology project focused on solving real challenges in community management.
+
+My work includes:
+
+- Problem identification and research.
+- Product concept and feature planning.
+- User interface and experience design.
+- Full-stack application development.
+- Database and service integration.
+- Deployment and technical iteration.
+- Continuous improvement through feedback.
+
+The project reflects my interest in connecting software engineering, entrepreneurship and technology-driven social impact.
+
+**GitHub:** [@milofrio066](https://github.com/milofrio066)
+
+**Location:** Colombia
+
+---
+
+## 🤝 Collaboration & Community
+
+nextONE is being developed with a focus on real-world application, community feedback and continuous technical learning.
+
+The project aims to contribute to the Makers technology ecosystem while exploring opportunities for future development and collaboration.
+
+---
+
+## 📌 Project Status
+
+**Active Development**
+
+nextONE is an evolving product. Some capabilities are operational, while others remain under improvement, validation or development.
+
+The repository documents the project's technical evolution and its broader product vision.
+
+---
+
+<div align="center">
+
+### Technology is more meaningful when it connects people and creates opportunities.
+
+**Built with purpose. Designed for growth.**
+
+Made with 💜 in Colombia
+
+[Explore nextONE](https://nextone-opal.vercel.app/) · [Developer Profile](https://github.com/milofrio066)
+
+</div>
