@@ -1,15 +1,39 @@
-export type Kind = 'event'|'webinar'|'resource'|'speaker'|'case'|'solution'|'project'|'update'|'post'|'builder';
-export type ProfileSection='hero'|'skills'|'interests'|'about'|'links';
-export type AvatarConfig={skin:string;hairColor:string;shirtColor:string;hair:'crop'|'wave'|'curls'|'long'|'bald'|'bob'|'ponytail'|'braids'|'bun'|'afro'|'undercut'|'pixie'|'pigtails'|'mohawk'|'fade'|'quiff';outfit:'hoodie'|'jacket'|'tee'|'dress'|'blazer'|'sport'|'shirt'|'tank'|'suit'|'coat'|'overalls'|'tracksuit';accessory:'none'|'glasses'|'headphones'|'cap';expression:'smile'|'calm'|'happy';motion:'float'|'wave'|'none'|'dance'|'walk';presentation:'neutral'|'feminine'|'masculine';face:'oval'|'round'|'square';body:'classic'|'soft'|'athletic';eyeColor:string;facialHair:'none'|'stubble'|'beard'|'mustache';gesture:'idle'|'wave'|'hips'|'victory'|'think'|'thumbs'|'salute';mood:'smile'|'calm'|'happy'|'grin'|'wink'|'surprised'|'smirk'|'sleepy';gear:'none'|'sunglasses'|'round'|'beanie'|'headband'|'bow'|'crown'|'scarf'|'chain'|'earrings';bottom:'jeans'|'trousers'|'shorts'|'skirt';bottomColor:string;shoes:'sneakers'|'boots'|'flats';shoesColor:string};
-export type ProfileTheme = {template:'neon'|'aurora'|'ember'|'mono'|'custom';accent:string;headline:string;quote:string;links:{label:string;url:string;kind?:string}[];font:'modern'|'geometric'|'rounded'|'mono'|'editorial'|'display';titleStyle:'outline'|'solid'|'gradient';background:string;sections:Record<ProfileSection,{background:string;text:string}>;avatar:AvatarConfig};
-export type Profile = {fellowship_location_completed_at?:string|null;onboarding_completed_at?:string|null;id:string;theme?:Partial<ProfileTheme>;name:string;bio:string;skills:string;role:'admin'|'organizer'|'mentor'|'member';status:'pending'|'active'|'suspended';source:string;nickname?:string;name_changes?:number;interests?:string[];cohort?:string;created_at:string};
-export type Content = {cover_path?:string|null;cover_alt?:string;cover_position?:'top'|'center'|'bottom';id:string;kind:Kind;title:string;body:string;url:string|null;owner_id:string;parent_id:string|null;starts_at:string|null;ends_at:string|null;capacity:number|null;published:boolean;evaluator_id?:string|null;project_type?:'project'|'semillero';project_plan?:Record<string,string>;featured?:boolean;topics?:string[];methodology?:string;audience?:string;created_at:string};
-export type Feedback = {content_id:string;user_id:string;reaction:-1|1|null;rating:number|null;updated_at:string};
-export type Comment = {id:string;content_id:string;author_id:string;body:string;created_at:string};
-export type Registration = {confirmed_at?:string|null;content_id:string;user_id:string;status:'registered'|'attended'|'cancelled';joined_at:string|null;created_at:string};
-export type Attempt = {case_id:string;user_id:string;started_at:string;submitted_at:string|null;solution_id:string|null};
-export type Invite = {id:string;token:string;label:string;recipient_email:string|null;max_uses:number;used:number;expires_at:string;revoked:boolean;direct:boolean};
-export type Report = {id:string;user_id:string;content_id:string|null;comment_id:string|null;reason:string;resolved:boolean;decision:string;created_at:string};
-export const labels = ['Nada útil','Poco útil','Me sirvió','Muy útil','Excelente'];
-export function summarize(rows:Feedback[]){const ratings=rows.filter(f=>f.rating!==null).map(f=>f.rating!);return {likes:rows.filter(f=>f.reaction===1).length,dislikes:rows.filter(f=>f.reaction===-1).length,ratingCount:ratings.length,average:ratings.length?ratings.reduce((a,b)=>a+b,0)/ratings.length:null,distribution:labels.map((_,i)=>ratings.filter(n=>n===i+1).length)};}
-export function urlAllowed(value:string){if(!value)return true;try{const u=new URL(value);return u.protocol==='https:';}catch{return false;}}
+import type { ComponentType } from 'react';
+import type { Kind } from '../types';
+
+export type BlockType =
+  | 'hero' | 'countdown' | 'stats' | 'flip' | 'tabs' | 'accordion' | 'timeline' | 'agenda'
+  | 'checklist' | 'quiz' | 'chooser' | 'steps' | 'bars' | 'donut' | 'radar' | 'people'
+  | 'kanban' | 'compare' | 'slider' | 'links' | 'callout' | 'cta';
+
+export type Props = Record<string, unknown>;
+export interface Block { id: string; type: BlockType; props: Props }
+export interface PageData { v: 1; accent?: string; blocks: Block[] }
+
+export type FieldType = 'text' | 'textarea' | 'url' | 'number' | 'datetime' | 'select' | 'list' | 'strings';
+export interface FieldSpec {
+  key: string;
+  label: string;
+  type: FieldType;
+  max?: number;
+  help?: string;
+  options?: [string, string][];
+  fields?: FieldSpec[];
+}
+export interface BlockDef {
+  type: BlockType;
+  label: string;
+  desc: string;
+  icon: ComponentType<{ size?: number }>;
+  fields: FieldSpec[];
+  defaults: () => Props;
+}
+export interface PageTemplate {
+  id: string;
+  kind: Kind;
+  name: string;
+  description: string;
+  tag: string;
+  accent: string;
+  blocks: { type: BlockType; props: Props }[];
+}
