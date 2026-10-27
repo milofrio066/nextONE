@@ -29,3 +29,34 @@
 html[data-theme='light'] .pilot .eyebrow,body.light .pilot .eyebrow{color:#216650}
 
 :root[data-theme="light"] .pilot.next-era .eyebrow{color:#216650}
+
+/* 1.5.1: equal partner hierarchy, visible Makers palette and compact report navigation. */
+.pilot.next-era .brand{gap:10px;max-width:100%}
+.pilot.next-era .brand .fellowship-brand{font-size:27px;font-weight:650;white-space:nowrap;line-height:1.1}
+.pilot.next-era .brand .fellowship-brand strong{font-size:inherit}
+.pilot.next-era .brand .fellowship-brand small{font-size:8px;letter-spacing:1.1px;margin-top:7px}
+.pilot.next-era .brand>.brand-by{font-size:12px;opacity:.7}
+.nextone-lockup{display:flex;align-items:center;gap:9px}
+.nextone-symbol{display:block;width:50px;height:50px;overflow:hidden;background:#030611;border-radius:12px;flex-shrink:0}
+.pilot.next-era .brand .nextone-symbol img{width:150px;height:150px;max-width:none;transform:translate(-50px,-32px);object-fit:contain}
+.pilot.next-era .brand-mark{width:50px;height:50px}
+.pilot.next-era .brand .brand-mark .brand-logo{width:82px;height:82px;max-width:none;transform:translate(-16px,-16px)}
+.pilot.next-era .cyber-hero{background:radial-gradient(ellipse at 12% 20%,#34d6a657,transparent 60%),radial-gradient(ellipse at 88% 16%,#aa89ff70,transparent 65%),linear-gradient(125deg,#0c3c39,#163342 48%,#3c2858);border-color:#6ee7c36b;box-shadow:inset 0 1px #c4ffe722,0 16px 65px #278c8c12}
+.pilot.next-era .cyber-hero .home-copy{position:relative;z-index:2}.pilot.next-era .cyber-hero h1{color:#f5fffc;text-shadow:0 2px 18px #051b2580}.pilot.next-era .cyber-hero .home-lead{color:#e0efed}.pilot.next-era .cyber-hero .eyebrow{color:#b4ffe3}
+.pilot.next-era .cyber-hero .cyber-grid{opacity:.26}.pilot.next-era .cyber-stats button{background:#0b243f80;border-color:#9ce2d264}.pilot.next-era .cyber-stats strong{color:#b3ffe3}.pilot.next-era .cyber-stats small{color:#e1eef4}
+.fellowship-insights .panel,.admin-analytics .visual-records{background:radial-gradient(ellipse at top right,#aa7ff51d,transparent 70%),linear-gradient(135deg,#38c7a60b,#7779e60e);border-color:#7ccac836}
+.fellowship-kpis article:nth-child(2){background:linear-gradient(125deg,#7060dd30,#a76eea13)}.fellowship-kpis article:nth-child(3){background:linear-gradient(125deg,#269cd132,#4979e916)}.fellowship-kpis article:nth-child(4){background:linear-gradient(125deg,#d376c132,#6f56c820)}
+.fellowship-kpis strong{background:linear-gradient(90deg,#7ef0c6,#b7a4ff);background-clip:text;-webkit-text-fill-color:transparent}
+.metrics-jump{position:fixed;right:24px;bottom:26px;z-index:90;display:grid;justify-items:end;gap:12px}
+.metrics-jump-trigger{display:flex;align-items:center;gap:10px;border-radius:50px!important;background:linear-gradient(120deg,#64deb8,#a495ef)!important;color:#10212c!important;box-shadow:0 8px 30px #070d2550;padding:14px 18px!important;font-size:22px!important;border:1px solid #d1fff280!important}
+.metrics-jump-trigger span{font-size:12px;font-weight:700}.metrics-jump nav{position:absolute;bottom:68px;right:0;width:250px;padding:12px;display:grid;gap:5px;background:var(--surface,#111624);border:1px solid #7dd1bc60;box-shadow:0 18px 60px #0005;border-radius:20px;max-height:65dvh;overflow:auto}
+.metrics-jump nav button{justify-content:flex-start;text-align:left;width:100%;border:0;background:transparent;padding:12px}.metrics-jump nav button:hover,.metrics-jump nav button[aria-current=true]{background:#7bd7bf25}
+.admin-analytics [id^=mx-],#fellowship-overview{scroll-margin-top:110px}
+.view-switch{display:flex;gap:5px;flex-wrap:wrap}.view-switch button{padding:8px 13px;border-radius:12px;font-size:12px;background:transparent}.view-switch button[aria-pressed=true]{background:linear-gradient(110deg,#3dcfa83b,#ab8bef3d);border-color:#88d9c590}
+.visual-records{padding:20px;border:1px solid #7dcfbd30;border-radius:20px;margin-block:20px;min-width:0}.visual-records h3{margin:0}.visual-records .section-title{flex-wrap:wrap;gap:12px}
+.prism-bar{display:grid;grid-template-columns:minmax(90px,1.1fr) minmax(70px,2fr) 42px;gap:12px;align-items:center;margin:18px 0}.prism-bar>span{overflow-wrap:anywhere;font-size:13px}.prism-bar>div{height:15px;border-radius:20px;background:#8293be1a;overflow:hidden}.prism-bar i{display:block;height:100%;min-width:0;border-radius:20px;background:linear-gradient(90deg,#3bd8a6,#54b6e8 55%,#b397ff);filter:hue-rotate(var(--hue));box-shadow:0 0 18px #76c7bd30}.prism-bar small{grid-column:1/-1;font-size:11px;opacity:.8}.visual-table{overflow:auto}.pilot .visual-table table{min-width:500px}.visual-records button:focus-visible,.month-grid button:focus-visible,.metrics-jump button:focus-visible{outline:3px solid #89d7e2;outline-offset:3px}
+.member-monthly{padding:22px;margin-block:20px;border-radius:22px;background:linear-gradient(145deg,#3bc9ad12,#a484f21a);border:1px solid #929ce93b}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;max-width:720px}.month-grid button{min-width:0;min-height:70px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:10px;background:linear-gradient(135deg,rgb(56 209 167 / var(--intensity)),rgb(154 122 239 / var(--intensity)));border:1px solid #9eb5d430;border-radius:13px}.month-grid button.selected{outline:2px solid #b2dff3}.month-grid small{opacity:.8}.month-grid strong{font-size:20px}
+:root[data-theme=light] .fellowship-kpis strong{background:none;-webkit-text-fill-color:currentColor;color:#185c55}:root[data-theme=light] .pilot.next-era .cyber-hero .eyebrow{color:#b4ffe3}
+@media(max-width:700px){.pilot.next-era .pilot-header .brand .fellowship-brand{font-size:22px}.pilot.next-era .brand .fellowship-brand small{font-size:6px;letter-spacing:.5px}.pilot.next-era .brand-mark,.nextone-symbol{width:38px;height:38px}.pilot.next-era .brand .brand-mark .brand-logo{width:62px;height:62px;transform:translate(-12px,-12px)}.pilot.next-era .brand .nextone-symbol img{width:114px;height:114px;transform:translate(-38px,-24px)}.pilot.next-era .brand{gap:6px}.nextone-lockup{gap:6px}.pilot-header>.badge{display:none}.metrics-jump{right:14px;bottom:18px}.metrics-jump-trigger span{display:none}.member-monthly,.visual-records{padding:14px}.month-grid{gap:4px}.month-grid button{padding:6px;min-height:52px;border-radius:9px}.month-grid strong{font-size:16px}.prism-bar{grid-template-columns:minmax(80px,1fr) minmax(50px,1fr) 28px;gap:8px}}
+
+.month-weekday{text-align:center;font-size:11px;opacity:.75;padding-block:5px}
