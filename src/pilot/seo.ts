@@ -2,6 +2,6 @@ const titles:Record<string,string>={home:'Comunidad Makers: conecta, aprende y c
 export function updateSeo(page:string,authenticated:boolean){
  const query=new URLSearchParams(location.search);
  const privateView=authenticated||page!=='home'||[...query.keys()].some(k=>k!=='page'&&!k.startsWith('utm_'))||!!location.hash;
- document.title=`nextONE · ${titles[page]||'Comunidad Makers'}`;
+ document.title=`Makers Fellowship by nextONE · ${titles[page]||'Comunidad Makers'}`;
  document.querySelector('meta[name="robots"]')?.setAttribute('content',privateView?'noindex, nofollow':'index, follow, max-image-preview:large');
 }
