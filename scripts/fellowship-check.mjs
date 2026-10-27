@@ -41,5 +41,8 @@ try{
  assert.equal((await db.query("select public.ingest_google_attendance('anonymous-receipt','conferenceRecords/test-session','') v")).rows[0].v,false);
  await assert.rejects(()=>as(member,'select * from public.attendance_receipts'));
  await assert.rejects(()=>as(member,'select * from public.event_email_deliveries'));
+ const month=new Date().toLocaleDateString('sv-SE',{timeZone:'America/Bogota'}).slice(0,7)+'-01';
+ for(let i=0;i<55;i++)await db.query("select public.append_activity($1,$2,'content_viewed')",[event,member]);
+ const monthly=await call(admin,'admin_member_monthly',[member,month,'webinar','content_viewed',0]);assert.ok(monthly.total>=55);assert.equal(monthly.events.length,50);assert.equal(monthly.days.reduce((n,d)=>n+Number(d.actions),0),monthly.total);assert.ok((await call(admin,'admin_member_monthly',[member,month,'webinar','content_viewed',50])).events.length>0);assert.equal((await call(admin,'admin_member_monthly',[member,month,'resource','',0])).total,0);await assert.rejects(()=>call(member,'admin_member_monthly',[admin,month,'','',0]));
  console.log('Fellowship: location gate, private timeline, view deduplication, confirmation, survey validation, verified attendance, mail lease and permissions passed.');
 }finally{await db.close();}
