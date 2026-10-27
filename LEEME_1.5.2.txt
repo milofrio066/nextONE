@@ -1,0 +1,17 @@
+NEXTONE 1.5.2 · CARPETA LIMPIA
+
+Correcciones: sin src/src ni archivos fuente/migraciones duplicados en la raíz.
+La migración correcta supabase/migrations/021_member_monthly_visuals.sql usa CREATE OR REPLACE.
+Se añade una comprobación de estructura antes de compilar.
+
+No vuelvas a ejecutar consultas manuales en Supabase para esta corrección.
+No repitas migraciones 001–020. Las funciones y tablas ya estaban instaladas.
+No subas este directorio como una subcarpeta: su CONTENIDO corresponde a la raíz del repositorio.
+Conserva .git y cualquier .env privado. No publiques node_modules, dist ni claves.
+
+En GitHub Desktop, los archivos duplicados aparecerán como eliminados: es lo esperado.
+Summary: Corregir estructura y migración 021 - nextONE 1.5.2
+Commit to main. Después, Push origin. Espera el nuevo despliegue, no revises el anterior.
+
+Comprobado: estructura, TypeScript, build Vite, SEO y SQL/RLS con repetición de 021.
+El diseño y los flujos 1.5.1 se conservan. No se ha hecho commit/push ni cambiado la base hospedada.

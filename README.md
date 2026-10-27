@@ -1,3 +1,7 @@
+# nextONE 1.5.2 · estructura y migración corregidas
+
+Lee primero LEEME_1.5.2.txt.
+
 # Makers Fellowship by nextONE · 1.5.1
 
 Cambios visuales y migración nueva: [ACTUALIZAR_V151.md](ACTUALIZAR_V151.md).

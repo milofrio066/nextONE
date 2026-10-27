@@ -5,6 +5,8 @@ const db=new PGlite();
 await db.exec(`create role anon;create role authenticated;create role service_role;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,raw_user_meta_data jsonb default '{}');create table auth.identities(user_id uuid,provider text,identity_data jsonb);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('test.uid',true),'')::uuid$$;grant usage on schema public,auth to authenticated,anon;grant execute on function auth.uid() to authenticated,anon;create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text);alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,delete on storage.objects to authenticated;`);
 for(const f of (await fs.readdir(new URL('../supabase/migrations/',import.meta.url))).filter(f=>f.endsWith('.sql')).sort())await db.exec(await fs.readFile(new URL('../supabase/migrations/'+f,import.meta.url),'utf8'));
 
+await db.exec(await fs.readFile(new URL('../supabase/migrations/021_member_monthly_visuals.sql',import.meta.url),'utf8'));
+
 const [admin,member,pending]=[1,2,3].map(i=>`00000000-0000-4000-8000-00000000000${i}`);
 for(const id of [admin,member,pending])await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',[id,id+'@test.example']);
 await db.query("update public.profiles set status='active',onboarding_completed_at=now() where id in ($1,$2)",[admin,member]);await db.query("update public.profiles set role='admin' where id=$1",[admin]);

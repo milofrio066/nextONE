@@ -1,5 +1,5 @@
 begin;
-create function public.admin_member_monthly(p_user uuid,p_month date,p_kind text default '',p_event text default '',p_offset integer default 0) returns jsonb language plpgsql security definer set search_path='' as $$
+create or replace function public.admin_member_monthly(p_user uuid,p_month date,p_kind text default '',p_event text default '',p_offset integer default 0) returns jsonb language plpgsql security definer set search_path='' as $$
 declare first_day date:=date_trunc('month',p_month)::date;start_at timestamptz;end_at timestamptz;result jsonb;
 begin
  if not public.is_admin() then raise exception 'Solo administración';end if;
