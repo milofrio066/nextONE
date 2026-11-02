@@ -10,7 +10,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/structure-check.mjs && tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "vitest run && node scripts/backend-check.mjs && node scripts/project-check.mjs && node scripts/pages-check.mjs && node scripts/unified-check.mjs && node scripts/makers-check.mjs && node scripts/workspace-check.mjs && node scripts/delete-check.mjs && node --test scripts/ai-check.mjs && node scripts/profile-check.mjs && node scripts/release-check.mjs && node scripts/admin-check.mjs && node --test scripts/admin-email-check.mjs && node scripts/builder-check.mjs && node scripts/avatar-check.mjs && node scripts/covers-sync-check.mjs && node scripts/onboarding-admin-check.mjs && node scripts/fellowship-check.mjs && node --test scripts/fellowship-api-check.mjs",
+    "test": "vitest run && node scripts/backend-check.mjs && node scripts/project-check.mjs && node scripts/pages-check.mjs && node scripts/unified-check.mjs && node scripts/makers-check.mjs && node scripts/workspace-check.mjs && node scripts/delete-check.mjs && node --test scripts/ai-check.mjs && node scripts/profile-check.mjs && node scripts/release-check.mjs && node scripts/admin-check.mjs && node --test scripts/admin-email-check.mjs && node scripts/builder-check.mjs && node scripts/avatar-check.mjs && node scripts/covers-sync-check.mjs && node scripts/onboarding-admin-check.mjs && node scripts/fellowship-check.mjs && node --test scripts/fellowship-api-check.mjs && node scripts/mentorship-check.mjs",
     "check:types": "tsc -b",
     "test:browser": "node scripts/pilot-browser-check.mjs",
     "test:email": "node scripts/email-browser-check.mjs",
@@ -23,6 +23,7 @@
     "test:community-browser": "node scripts/covers-sync-browser-check.mjs",
     "test:onboarding-browser": "node scripts/onboarding-admin-browser-check.mjs",
     "test:fellowship-browser": "node scripts/fellowship-browser-check.mjs",
+    "test:mentorship-browser": "node scripts/mentorship-browser-check.mjs",
     "check:structure": "node scripts/structure-check.mjs"
   },
   "dependencies": {

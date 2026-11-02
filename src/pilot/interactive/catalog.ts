@@ -1,5 +1,5 @@
 import type { Kind } from '../types';
-import type { PageTemplate, Props } from './types';
+import type { PageTemplate, Props, TemplateKind } from './types';
 
 /* Constructores cortos: cada plantilla es una composición de bloques. Todo el texto es editable. */
 const soon = () => new Date(Date.now() + 14 * 864e5).toISOString();
@@ -27,7 +27,7 @@ const callout = (tone: 'info' | 'success' | 'warn', title: string, body: string)
 const cta = (title: string, body: string, button = '', url = '') => ({ type: 'cta' as const, props: { title, body, button, url } });
 
 const C = { cyan: '#22d3ee', violet: '#8b5cf6', green: '#34d399', amber: '#fbbf24', rose: '#fb7185', blue: '#60a5fa' };
-const T = (id: string, kind: Kind, name: string, tag: string, description: string, accent: string, blocks: PageTemplate['blocks']): PageTemplate => ({ id, kind, name, tag, description, accent, blocks });
+const T = (id: string, kind: TemplateKind, name: string, tag: string, description: string, accent: string, blocks: PageTemplate['blocks']): PageTemplate => ({ id, kind, name, tag, description, accent, blocks });
 
 export const CATALOG: PageTemplate[] = [
   /* ═════════════ EVENTOS ═════════════ */
@@ -65,6 +65,32 @@ export const CATALOG: PageTemplate[] = [
     flip('Rompehielos', [['👋', '¿En qué estás trabajando?', 'Pregunta abierta para empezar cualquier conversación.'], ['🎯', '¿Qué quieres aprender?', 'Ayuda a encontrar mentores y compañeros.'], ['🤝', '¿En qué puedo ayudarte?', 'Cambia la conversación hacia la colaboración.']]),
     steps('Cómo funciona la dinámica', [['Ronda 1', '5 minutos con una persona nueva.'], ['Ronda 2', 'Cambia de pareja y repite.'], ['Cierre', 'Comparte un aprendizaje con el grupo.']]),
     callout('info', 'Después del evento', 'Escribe a quienes conociste en las próximas 48 horas. Un mensaje corto marca la diferencia.')
+  ]),
+
+  /* ═════════════ MENTORÍAS GRUPALES ═════════════ */
+  T('mentoria-taller', 'mentorship', 'Taller guiado', 'Practicar en grupo', 'El mentor guía un ejercicio y cada persona sale con un resultado concreto.', C.green, [
+    steps('Qué trabajaremos', [['El problema', 'Describe el problema o tema que abordará la sesión.'], ['El ejercicio', 'Explica qué harán juntos durante la mentoría.'], ['La puesta en común', 'Cuenta cómo se revisará el trabajo de cada persona.']]),
+    checklist('Qué te llevarás', ['Un resultado concreto que puedas aplicar', 'Una decisión clara sobre tu siguiente paso', 'Comentarios del mentor sobre tu caso']),
+    callout('info', 'Para quién es', 'Describe el perfil y los conocimientos recomendados para aprovechar la sesión.'),
+    checklist('Cómo prepararte', ['Lleva tu proyecto o caso en el estado en que esté', 'Revisa el material previo', 'Escribe una pregunta concreta para el mentor'])
+  ]),
+  T('mentoria-clinica', 'mentorship', 'Clínica de proyectos', 'Revisar casos reales', 'Varias personas presentan su avance y reciben orientación en vivo.', C.blue, [
+    steps('Qué trabajaremos', [['Presentación', 'Cada proyecto se presenta en pocos minutos.'], ['Diagnóstico', 'El mentor identifica el mayor bloqueo.'], ['Plan', 'Se acuerda el siguiente paso.']]),
+    checklist('Qué te llevarás', ['Un diagnóstico de tu avance', 'Tus prioridades para las próximas dos semanas', 'Ideas de otros proyectos del grupo']),
+    callout('info', 'Para quién es', 'Personas con un proyecto en marcha que necesitan destrabar una decisión.'),
+    checklist('Cómo prepararte', ['Resume tu proyecto en tres frases', 'Identifica tu principal bloqueo', 'Comparte un enlace a tu avance'])
+  ]),
+  T('mentoria-preguntas', 'mentorship', 'Sesión de preguntas', 'Resolver dudas', 'Conversación abierta organizada alrededor de las dudas del grupo.', C.violet, [
+    tabs('Qué trabajaremos', [['Tema central', 'Describe el tema que abre la conversación.'], ['Preguntas del grupo', 'Explica cómo se recogerán y priorizarán las dudas.']]),
+    checklist('Qué te llevarás', ['Respuestas a tus dudas principales', 'Criterios para decidir por tu cuenta', 'Recursos recomendados por el mentor']),
+    callout('info', 'Para quién es', 'Describe a quién le servirá más esta conversación.'),
+    acc('Cómo prepararte', [['¿Qué debo traer?', 'Una o dos preguntas concretas sobre tu caso.'], ['¿Necesito experiencia previa?', 'Indica aquí qué conocimientos conviene tener.']])
+  ]),
+  T('mentoria-ruta', 'mentorship', 'Ruta en etapas', 'Paso a paso', 'Una sesión con agenda marcada para avanzar por etapas.', C.amber, [
+    agenda('Qué trabajaremos', [['0 min', 'Bienvenida y objetivo', '', 10], ['10 min', 'Tema principal', 'Mentor', 30], ['40 min', 'Aplicación a tu caso', '', 15], ['55 min', 'Cierre y siguientes pasos', '', 5]]),
+    checklist('Qué te llevarás', ['Un marco para aplicar a tu proyecto', 'Tu siguiente paso definido']),
+    callout('info', 'Para quién es', 'Describe el perfil y los conocimientos recomendados.'),
+    checklist('Cómo prepararte', ['Revisa el material previo', 'Ten a mano tu proyecto'])
   ]),
 
   /* ═════════════ WEBINARS ═════════════ */
@@ -324,5 +350,5 @@ export const CATALOG: PageTemplate[] = [
 // Avances comparten el motor, con cinco puntos de partida propios.
 CATALOG.push(...CATALOG.filter(t => t.kind === 'project').map((t,i) => ({...t,id:'update-'+i,kind:'update' as Kind,name:['Avance de sprint','Hitos y resultados','Experimento validado','Riesgos y decisiones','Próximos pasos'][i],description:'Presenta el avance de tu proyecto y personaliza todos sus bloques.'})));
 
-export const pageTemplates = (kind: Kind) => CATALOG.filter(t => t.kind === kind);
+export const pageTemplates = (kind: TemplateKind) => CATALOG.filter(t => t.kind === kind);
 export const templateById = (id: string) => CATALOG.find(t => t.id === id);

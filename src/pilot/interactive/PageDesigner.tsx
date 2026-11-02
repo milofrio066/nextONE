@@ -9,11 +9,11 @@ import type { Kind } from '../types';
 import InteractivePage, { normalize } from './InteractivePage';
 import { pageTemplates, templateById } from './catalog';
 import { DEF, DEFS } from './schema';
-import type { Block, BlockType, FieldSpec, PageData, Props } from './types';
+import type { Block, BlockType, FieldSpec, PageData, Props, TemplateKind } from './types';
 import { ACCENTS, s, uid } from './util';
 import './interactive.css';
 
-const KIND_NAMES: Record<string, string> = { event: 'Eventos', webinar: 'Webinars', resource: 'Aprendizaje', speaker: 'Speakers', case: 'Retos', solution: 'Soluciones', builder: 'Builder case', project: 'Proyectos y semilleros', post: 'Comunidad', update: 'Avances' };
+const KIND_NAMES: Record<string, string> = { mentorship: 'Mentorías', event: 'Eventos', webinar: 'Webinars', resource: 'Aprendizaje', speaker: 'Speakers', case: 'Retos', solution: 'Soluciones', builder: 'Builder case', project: 'Proyectos y semilleros', post: 'Comunidad', update: 'Avances' };
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
 const blank = (fields: FieldSpec[]): Props => Object.fromEntries(fields.map(f => [f.key, f.type === 'strings' ? [] : f.type === 'list' ? [] : '']));
 
@@ -72,8 +72,9 @@ function FieldEditor({ spec, value, onChange }: { spec: FieldSpec; value: unknow
   }
 }
 
-export default function PageDesigner({ item, initial, close, saved, savePage, metadata, draftKey, restoreMetadata }: {
+export default function PageDesigner({ item, templateKind, initial, close, saved, savePage, metadata, draftKey, restoreMetadata }: {
   item: { id: string; kind: Kind; title: string };
+  templateKind?: TemplateKind;
   initial: { template_id: string; data: unknown } | null;
   close: () => void;
   saved: () => void;
@@ -91,7 +92,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
   const [error, setError] = useState('');
   const busyRef = useRef(busy); busyRef.current = busy;
   const panel = useRef<HTMLDivElement>(null);
-  const options = pageTemplates(item.kind);
+  const options = pageTemplates(templateKind || item.kind);
   const [meta,setMeta]=useState<Record<string,string>>({});
   const [recoverable,setRecoverable]=useState<Draft<PageData>|null>(()=>draftKey?readDraft<PageData>(draftKey):null);
   const [draftWarning,setDraftWarning]=useState(''),[saveNotice,setSaveNotice]=useState('');
@@ -166,7 +167,7 @@ export default function PageDesigner({ item, initial, close, saved, savePage, me
     <div className="modal-backdrop studio-backdrop">
       <div ref={panel} onChangeCapture={()=>setMeta(formSnapshot(metadataForm()))} tabIndex={-1} className="studio ix-designer" role="dialog" aria-modal="true" aria-label="Diseño interactivo">
         <header className="studio-header">
-          <div><span className="eyebrow"><WandSparkles size={14} /> DISEÑO INTERACTIVO · {KIND_NAMES[item.kind] || ''}</span><h2>{item.title}</h2></div>
+          <div><span className="eyebrow"><WandSparkles size={14} /> DISEÑO INTERACTIVO · {KIND_NAMES[templateKind || item.kind] || ''}</span><h2>{item.title}</h2></div>
           <div className="save-actions">{draftKey&&<button type="button" className="secondary" disabled={busy} onClick={()=>void saveDraft()}>Guardar borrador</button>}<button type="button" className="primary" disabled={busy||(!data&&!savePage)} onClick={()=>void save(true)}>Guardar cambios</button></div><button className="icon-button" aria-label="Cerrar" disabled={busy} onClick={()=>currentClose.current()}><X /></button>
         </header>
 

@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {rpc} from './backend';
+import {backend,rpc} from './backend';
 type Values={status:string;role:string;cohort:string};
 type Member={onboarding_completed_at?:string|null;id:string;name?:string;verified?:boolean;created_at?:string;bio?:string;skills?:string;source?:string;status?:string;role?:string;cohort?:string};
 type Action=(work:()=>Promise<unknown>,message?:string)=>Promise<void>;
@@ -29,7 +29,13 @@ export default function MemberDecision({row,run,busy}:{row:Member;run:Action;bus
  <label className="field">Motivo de la decisión<textarea ref={note} required minLength={10} maxLength={2000} value={reason} onChange={e=>setReason(e.target.value)} placeholder="Explica por qué realizas estos cambios."/></label>
  <p className="decision-privacy">La justificación queda en el historial privado de esta persona, junto con tu nombre, la fecha y los cambios. Solo administración puede verla; no se publica en su perfil ni se envía por correo.</p>
  <div className="actions"><button type="button" className="secondary" disabled={busy} onClick={()=>setReview(false)}>Volver a editar</button><button className="primary" disabled={busy||stale||reason.trim().length<10}>Confirmar y guardar</button></div></form>}
- <MemberHistory user={row.id}/></section>;
+ {row.role==='member'&&<AccessTier user={row.id} run={run} busy={busy}/>}<MemberHistory user={row.id}/></section>;
+}
+function AccessTier({user,run,busy}:{user:string;run:Action;busy:boolean}){
+ const [tier,setTier]=useState(''),[saved,setSaved]=useState('');
+ useEffect(()=>{let alive=true;void backend?.from('profiles').select('access_tier').eq('id',user).maybeSingle().then(({data,error})=>{if(alive&&!error&&data){setTier(data.access_tier);setSaved(data.access_tier);}});return()=>{alive=false;};},[user]);
+ if(!saved)return null;
+ return <details className="admin-context"><summary>Tipo de acceso · {saved==='subscriber'?'Suscriptor':'Maker'}</summary><p>Un suscriptor solo ve Mentorías y las sesiones abiertas a suscriptores. No ve personas, comunidad ni el resto del contenido.</p><label className="field">Tipo de acceso<select value={tier} onChange={e=>setTier(e.target.value)}><option value="maker">Maker · comunidad completa</option><option value="subscriber">Suscriptor · solo mentorías autorizadas</option></select></label><button type="button" className="secondary" disabled={busy||tier===saved} onClick={()=>void run(async()=>{await rpc('admin_set_access_tier',{p_user:user,p_tier:tier});setSaved(tier);},'Tipo de acceso actualizado')}>Guardar tipo de acceso</button></details>;
 }
 type Entry={id:string;actor:string;created_at:string;reason:string;before_values:Values|null;after_values:Values|null;legacy:boolean};
 function MemberHistory({user}:{user:string}){

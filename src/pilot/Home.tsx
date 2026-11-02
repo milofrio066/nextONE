@@ -1,10 +1,10 @@
 import ContentCover from './ContentCover';
-import {ArrowUpRight,CalendarDays,Radio,Library,Mic,FlaskConical,Layers,Users,MessageSquare,GitBranch} from 'lucide-react';
+import {ArrowUpRight,CalendarDays,GraduationCap,Radio,Library,Mic,FlaskConical,Layers,Users,MessageSquare,GitBranch} from 'lucide-react';
 import type {Content,Profile} from './types';
 import type React from 'react';
 import Reminders from './Reminders';
 import {useRef} from 'react';
-const sections=[{id:'event',name:'Eventos',icon:CalendarDays},{id:'webinar',name:'Webinars',icon:Radio},{id:'resource',name:'Aprendizaje',icon:Library},{id:'speaker',name:'Speakers',icon:Mic},{id:'case',name:'Retos',icon:FlaskConical},{id:'solution',name:'Soluciones',icon:Layers},{id:'project',name:'Proyectos y semilleros',icon:GitBranch},{id:'people',name:'Personas',icon:Users},{id:'post',name:'Comunidad',icon:MessageSquare}];
+const sections=[{id:'mentorship',name:'Mentorías',icon:GraduationCap},{id:'event',name:'Eventos',icon:CalendarDays},{id:'webinar',name:'Webinars',icon:Radio},{id:'resource',name:'Aprendizaje',icon:Library},{id:'speaker',name:'Speakers',icon:Mic},{id:'case',name:'Retos',icon:FlaskConical},{id:'solution',name:'Soluciones',icon:Layers},{id:'project',name:'Proyectos y semilleros',icon:GitBranch},{id:'people',name:'Personas',icon:Users},{id:'post',name:'Comunidad',icon:MessageSquare}];
 export default function Home({authenticated=false,items=[],people=[],name,navigate,onAccess,open,userId,refreshKey=0}:{authenticated?:boolean;items?:Content[];people?:Profile[];name?:string;editor?:boolean;navigate:(page:string)=>void;onAccess:()=>void;open?:(item:Content)=>void;userId?:string;refreshKey?:number}){
  const enter=(page:string)=>{navigate(page);if(!authenticated)onAccess();};
  const upcoming=(kind:string)=>items.filter(c=>c.kind===kind&&c.published&&c.starts_at&&c.ends_at&&new Date(c.ends_at).getTime()>Date.now()).sort((a,b)=>a.starts_at!.localeCompare(b.starts_at!)).slice(0,3);
