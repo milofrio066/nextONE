@@ -1,0 +1,13 @@
+import {useState} from 'react';
+import {cvSuggestions,type CvDraft} from './cvModel';
+export default function CvImport({apply}:{apply:(draft:CvDraft)=>void}){
+ const [draft,setDraft]=useState<CvDraft|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function read(file:File){setBusy(true);setError('');setDraft(null);try{
+ if(file.size>5*1024*1024)throw Error('Usa un archivo de máximo 5 MB.');let text='';
+ if(/\.pdf$/i.test(file.name)){const pdf=await import('pdfjs-dist');const worker=await import('pdfjs-dist/build/pdf.worker.min.mjs?url');pdf.GlobalWorkerOptions.workerSrc=worker.default;const task=pdf.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false,useSystemFonts:true});const doc=await task.promise;try{if(doc.numPages>15)throw Error('Usa un CV de máximo 15 páginas.');for(let n=1;n<=doc.numPages;n++){const page=await doc.getPage(n),content=await page.getTextContent();text+=content.items.map(i=>'str' in i?i.str+('hasEOL' in i&&i.hasEOL?'\n':' '):'').join('')+'\n';if(text.length>100000)break;}}finally{await doc.destroy();}}
+ else if(/\.docx$/i.test(file.name)){const mammoth=await import('mammoth');text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value;}
+ else if(/\.txt$/i.test(file.name))text=await file.text();else throw Error('Selecciona PDF, DOCX o TXT.');
+ if(text.trim().length<40)throw Error('No encontramos texto suficiente. Si es un escaneo, usa un PDF con texto seleccionable, DOCX o completa los campos manualmente.');setDraft(cvSuggestions(text));
+ }catch(e){setError((e as Error).message);}finally{setBusy(false);}}
+ return <section className="cv-import"><h3>Empieza con tu currículum</h3><p>Lo leemos en tu dispositivo. No se guarda ni se envía el archivo. Revisa las sugerencias antes de aplicarlas; podrás editar cada campo.</p><label className="field">CV · PDF, DOCX o TXT · máximo 5 MB<input type="file" accept=".pdf,.docx,.txt" disabled={busy} onChange={e=>{const file=e.target.files?.[0];if(file)void read(file);e.target.value='';}}/></label>{busy&&<p role="status">Leyendo tu currículum…</p>}{error&&<p role="alert">{error}</p>}{draft&&<><p>No reemplazaremos datos que ya escribiste. Solo completaremos campos vacíos.</p>{(['name','bio','skills','linkedin','github'] as const).map(k=><label className="field" key={k}>{{name:'Nombre sugerido',bio:'Presentación',skills:'Habilidades',linkedin:'LinkedIn',github:'GitHub'}[k]}<textarea value={draft[k]} onChange={e=>setDraft({...draft,[k]:e.target.value})}/></label>)}<button type="button" className="primary" onClick={()=>{apply(draft);setDraft(null);}}>Aplicar a campos vacíos</button><button type="button" className="secondary" onClick={()=>setDraft(null)}>Descartar</button></>}</section>;
+}

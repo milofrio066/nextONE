@@ -1,3 +1,7 @@
+# Entrega actual: nextONE 1.6
+
+Empieza por [LEER_PRIMERO_1.6.md](LEER_PRIMERO_1.6.md). Esa guía corresponde a los cambios actuales y distingue las integraciones pendientes. La documentación histórica que sigue describe versiones anteriores.
+
 # nextONE 1.5.2 · estructura y migración corregidas
 
 Lee primero LEEME_1.5.2.txt.
