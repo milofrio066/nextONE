@@ -1,0 +1,3 @@
+import {useState} from 'react';
+import {youtubeId} from './youtube';
+export default function Recording({url}:{url:string|null}){const [show,setShow]=useState(false);const id=youtubeId(url);if(!id)return null;return <div className="pilot-box"><h3>Grabación · Aprende aquí</h3>{show?<iframe className="recording-player" title="Grabación de Makers Fellowship" src={`https://www.youtube-nocookie.com/embed/${id}?rel=0`} allow="encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>:<><p>Reproduce el material dentro de Makers Fellowship. Al pulsar se conecta con YouTube.</p><button className="primary" onClick={()=>setShow(true)}>Reproducir aquí</button></>}</div>}

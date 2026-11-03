@@ -1,0 +1,49 @@
+/* Mentorías grupales: reutiliza paneles, tarjetas y tokens de brand.css. */
+.mentorship-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.pilot.next-era .mentorship-tabs button{flex-shrink:0;padding:12px 14px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font-size:14px;font-weight:500}
+.pilot.next-era .mentorship-tabs button:hover{color:var(--text)}
+.pilot.next-era .mentorship-tabs button[aria-pressed=true]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.mentorship-next{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:center}
+.mentorship-next .content-cover{margin:0}
+.mentorship-next h2{margin-top:6px}
+.mentorship-month{margin-bottom:24px}
+.pilot.next-era .mentorship-month h3{color:var(--muted);font-size:16px;margin-bottom:12px}
+.pilot.next-era .mentorship-month h3::first-letter{text-transform:uppercase}
+.mentorship-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.pilot.next-era .mentorship-topic{font-size:14px;color:var(--accent);font-weight:500;margin:0 0 12px}
+.mentor-row{display:flex;align-items:center;gap:10px;margin:0 0 12px;min-width:0}
+.mentor-row>div{min-width:0}
+.mentor-row strong,.mentor-row small{display:block}
+.mentor-row small{color:var(--muted)}
+.mentor-row .maker-avatar{flex-shrink:0}
+.mentorship-facts{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px;font-size:14px}
+.mentorship-facts li{display:flex;gap:8px;align-items:flex-start}
+.mentorship-facts svg{flex-shrink:0;margin-top:2px;color:var(--accent)}
+.mentorship-facts small{display:block;color:var(--muted)}
+.mentorship-card .primary{margin-top:auto;width:100%}
+.mentorship-empty{text-align:center;padding:32px 20px}
+.mentorship-empty svg{color:var(--accent)}
+.mentorship-empty p{margin-bottom:0}
+.mentorship-page>.secondary{margin-bottom:16px}
+.mentorship-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.mentorship-content,.mentorship-aside{min-width:0}
+.mentorship-aside{position:sticky;top:92px}
+.mentorship-aside .panel,.mentorship-content .panel{margin-bottom:16px}
+.pilot.next-era .mentorship-aside h2{font-size:18px}
+.mentorship-action{display:grid;gap:10px}
+.mentorship-action p{margin:0}
+.mentorship-action :is(.primary,.secondary){width:100%}
+.pilot.next-era .mentorship-action .text-button{justify-self:center}
+.mentorship-data{margin:0;display:grid;gap:12px;font-size:14px}
+.mentorship-data dt{color:var(--muted);font-size:13px}
+.mentorship-data dd{margin:2px 0 0;line-height:1.5}
+.mentorship-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.mentorship-counts div{padding:12px;border-radius:10px;background:var(--surface2)}
+.mentorship-counts dt{font-size:13px;color:var(--muted)}
+.mentorship-counts dd{margin:4px 0 0;font-size:24px;font-weight:700}
+.mentorship-manage blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--surface2);border-radius:0 8px 8px 0;font-size:14px}
+.mentorship-manage h3{margin-top:20px}
+.pilot.next-era .mentorship-material{display:block;width:100%;margin-top:8px;text-align:left}
+@media(max-width:1000px){.mentorship-layout{grid-template-columns:minmax(0,1fr)}.mentorship-aside{position:static;grid-row:1}}
+@media(max-width:700px){.mentorship-next{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){.mentorship-counts{grid-template-columns:minmax(0,1fr)}}

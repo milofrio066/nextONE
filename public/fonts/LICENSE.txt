@@ -1,0 +1,3 @@
+Inter, Copyright The Inter Project Authors (https://github.com/rsms/inter).
+Distribuida con SIL Open Font License 1.1: https://openfontlicense.org
+Estos archivos son subconjuntos latinos en WOFF2 de los TTF del Brand Kit Makers.

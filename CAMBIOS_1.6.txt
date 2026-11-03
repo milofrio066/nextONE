@@ -1,0 +1,34 @@
+Archivos nuevos o modificados respecto al RAR recibido:
+
+.env.example
+LEER_PRIMERO_1.6.md
+README.md
+VERIFICACIONES_1.6.md
+api/maker-lookup.mjs
+package.json
+pnpm-lock.yaml
+public/brand/makers-doodles.webp
+scripts/browser-static.mjs
+scripts/fixtures/cv.docx
+scripts/launch-api-check.mjs
+scripts/launch-browser-check.mjs
+scripts/launch-check.mjs
+src/pilot/Benefits.tsx
+src/pilot/ContentComposer.tsx
+src/pilot/CvImport.tsx
+src/pilot/EmailAuth.tsx
+src/pilot/EntryRoutes.tsx
+src/pilot/Home.tsx
+src/pilot/Onboarding.tsx
+src/pilot/PilotApp.tsx
+src/pilot/ProfilePanel.tsx
+src/pilot/cvModel.test.ts
+src/pilot/cvModel.ts
+src/pilot/makers-launch.css
+src/pilot/navigation.ts
+src/pilot/seo.ts
+src/pilot/types.ts
+supabase/migrations/023_launch_access.sql
+vercel.json
+
+No se eliminaron archivos de la entrega original. Los documentos anteriores se conservan como historial; la guía actual es LEER_PRIMERO_1.6.md.

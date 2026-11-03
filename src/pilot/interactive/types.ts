@@ -28,9 +28,10 @@ export interface BlockDef {
   fields: FieldSpec[];
   defaults: () => Props;
 }
+export type TemplateKind = Kind | 'mentorship';
 export interface PageTemplate {
   id: string;
-  kind: Kind;
+  kind: TemplateKind;
   name: string;
   description: string;
   tag: string;
