@@ -1,71 +1,83 @@
-/* Makers brand kit: última capa visual. #5FCD9E, Inter e interfaz sobria en claro y oscuro.
-   Solo presentación: no cambia estructura ni flujos. Los portafolios personales conservan sus temas. */
+/* Identidad Makers según la guía de marca (TEMPLATE MAKERS): negro y blanco para fondos y textos,
+   lila #8896F5 y verde #5FCD9E como principales, rosa #EEA2F3 y amarillo #FCC368 de complemento,
+   degradado verde→lila, Inter Black/ExtraBold en títulos y los dibujos de línea de la portada.
+   Última capa visual: no cambia estructura ni flujos. Los portafolios personales conservan sus temas. */
 @font-face{font-family:Inter;font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/Inter-Regular.woff2') format('woff2')}
 @font-face{font-family:Inter;font-weight:500;font-style:normal;font-display:swap;src:url('/fonts/Inter-Medium.woff2') format('woff2')}
 @font-face{font-family:Inter;font-weight:600;font-style:normal;font-display:swap;src:url('/fonts/Inter-SemiBold.woff2') format('woff2')}
 @font-face{font-family:Inter;font-weight:700;font-style:normal;font-display:swap;src:url('/fonts/Inter-Bold.woff2') format('woff2')}
 @font-face{font-family:Inter;font-weight:800;font-style:normal;font-display:swap;src:url('/fonts/Inter-ExtraBold.woff2') format('woff2')}
+@font-face{font-family:Inter;font-weight:900;font-style:normal;font-display:swap;src:url('/fonts/Inter-Black.woff2') format('woff2')}
 
-/* Tokens. Los valores se comprueban en brand.test.ts. */
-:root,:root:not([data-theme=light]) .pilot.next-era,:root:not([data-theme=light]){--bg:#0b0f0e;--surface:#121816;--surface2:#1a2220;--sidebar:#0e1312;--text:#f1f5f3;--muted:#a9b5b0;--border:#ffffff1a;--accent:#5fcd9e;--accent-strong:#5fcd9e;--on-accent:#06241a;--tint:#5fcd9e1a;--success:#5fcd9e;--ring-track:#ffffff12;--shadow:0 12px 32px #0006;--brand-gradient:linear-gradient(90deg,#5fcd9e,#7f9cf5);--cy-cyan:#5fcd9e;--cy-violet:#5fcd9e;--cy-magenta:#5fcd9e;--cy-lime:#5fcd9e;color-scheme:dark}
-:root[data-theme=light] .pilot.next-era,:root[data-theme=light]{--bg:#f5f7f6;--surface:#ffffff;--surface2:#ecf1ee;--sidebar:#ffffff;--text:#0e1f1a;--muted:#4f5d58;--border:#0e1f1a1f;--accent:#0e7a55;--accent-strong:#0e7a55;--on-accent:#ffffff;--tint:#0e7a5514;--success:#0e7a55;--ring-track:#0e1f1a12;--shadow:0 12px 32px #0e1f1a14;--brand-gradient:linear-gradient(90deg,#0e7a55,#4a63c9);color-scheme:light}
+/* Tokens. brand.test.ts comprueba su contraste. --accent es el color de textos y enlaces;
+   --accent-fill es el lila de marca para rellenos y siempre lleva --on-accent encima.
+   En modo claro el lila y el verde de marca se oscurecen solo cuando son texto. */
+:root,:root:not([data-theme=light]) .pilot.next-era,:root:not([data-theme=light]){--bg:#000000;--surface:#0e0e13;--surface2:#17171f;--sidebar:#050507;--text:#ffffff;--muted:#b4b4c8;--border:#ffffff1f;--accent:#8896f5;--accent-strong:#8896f5;--accent-fill:#8896f5;--on-accent:#07071a;--accent-2:#5fcd9e;--pink-ink:#eea2f3;--yellow-ink:#fcc368;--danger:#ff8b97;--tint:#8896f51f;--success:#5fcd9e;--ring-track:#ffffff14;--shadow:0 18px 48px #000a;--brand-gradient:linear-gradient(100deg,#5fcd9e,#8896f5);--text-gradient:linear-gradient(100deg,#5fcd9e,#8896f5);--hero-bg:#000000;--hero-glow:radial-gradient(ellipse at 100% 120%,#8896f547,transparent 60%),radial-gradient(ellipse at 0% -10%,#5fcd9e33,transparent 55%);--doodle-opacity:.85;--card-glow:#8896f533;--cy-cyan:#5fcd9e;--cy-violet:#8896f5;--cy-magenta:#eea2f3;--cy-lime:#fcc368;color-scheme:dark}
+:root[data-theme=light] .pilot.next-era,:root[data-theme=light]{--bg:#ffffff;--surface:#ffffff;--surface2:#f3f4fd;--sidebar:#fbfbff;--text:#0a0a12;--muted:#4d4e63;--border:#0a0a1a1f;--accent:#5361d8;--accent-strong:#5361d8;--accent-fill:#8896f5;--on-accent:#07071a;--accent-2:#17784f;--pink-ink:#a1399f;--yellow-ink:#875b00;--danger:#b4232c;--tint:#8896f524;--success:#17784f;--ring-track:#0a0a1214;--shadow:0 18px 48px #3a3f8a1f;--brand-gradient:linear-gradient(100deg,#5fcd9e,#8896f5);--text-gradient:linear-gradient(100deg,#17784f,#5361d8);--hero-bg:linear-gradient(120deg,#eef0ff 0%,#ffffff 55%,#eafaf3 100%);--hero-glow:radial-gradient(ellipse at 100% 120%,#8896f540,transparent 60%),radial-gradient(ellipse at 0% -10%,#5fcd9e33,transparent 55%);--doodle-opacity:.8;--card-glow:#8896f540;color-scheme:light}
 :root{font-family:Inter,system-ui,-apple-system,'Segoe UI',Arial,sans-serif;font-feature-settings:'calt','kern'}
 
-/* Tipografía: escala del kit (42 · 32 · 24 · 20 · 16). Cuerpo en Regular para mantener legibilidad en pantalla. */
+/* Tipografía del kit: Black y ExtraBold en títulos, Regular en textos para leer en pantalla. */
 .pilot.next-era{font-size:16px;color:var(--text);background:var(--bg);overflow-wrap:break-word}
-.pilot.next-era :is(h1,h2,h3,h4,.brand,.metric>strong,.metric h4,.task h4,.orbit-core,.lesson-art span){font-family:inherit;letter-spacing:-.02em}
-.pilot.next-era h1{font-size:clamp(30px,3.4vw,42px);font-weight:800;line-height:1.15}
-.pilot.next-era h2{font-size:clamp(22px,2.2vw,24px);font-weight:600;line-height:1.25}
-.pilot.next-era h3{font-size:18px;font-weight:600;line-height:1.3}
+.pilot.next-era :is(h1,h2,h3,h4,.brand,.metric>strong,.metric h4,.task h4,.orbit-core,.lesson-art span){font-family:inherit}
+.pilot.next-era h1{font-size:clamp(32px,3.6vw,46px);font-weight:900;letter-spacing:-.035em;line-height:1.06}
+.pilot.next-era h2{font-size:clamp(22px,2.2vw,28px);font-weight:800;letter-spacing:-.025em;line-height:1.2}
+.pilot.next-era h3{font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
 .pilot.next-era p{font-size:15px;line-height:1.6}
 .pilot.next-era small{font-size:13px}
-.pilot.next-era .eyebrow,:root[data-theme=light] .pilot.next-era .eyebrow,.pilot.next-era .cyber-hero .eyebrow,:root[data-theme=light] .pilot.next-era .cyber-hero .eyebrow{color:var(--accent);font-size:12px;font-weight:600;letter-spacing:.06em}
-.pilot.next-era .badge,:root:not([data-theme=light]) .pilot.next-era .badge{color:var(--accent);background:var(--tint);border-color:transparent;font-size:12px;font-weight:500;letter-spacing:0;border-radius:6px;padding:3px 8px}
+.pilot.next-era .eyebrow,:root[data-theme=light] .pilot.next-era .eyebrow,.pilot.next-era :is(.cyber-hero,.section-hero,.entry-choice) .eyebrow,:root[data-theme=light] .pilot.next-era :is(.cyber-hero,.section-hero,.entry-choice) .eyebrow{color:var(--accent-2);font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.pilot.next-era .badge,:root:not([data-theme=light]) .pilot.next-era .badge{color:var(--accent);background:var(--tint);border-color:transparent;font-size:12px;font-weight:600;letter-spacing:0;border-radius:999px;padding:3px 10px}
 .pilot.next-era .field{font-size:14px;font-weight:500}
 .pilot.next-era footer{font-size:13px}
-.pilot.next-era em{background:none;color:var(--accent)}
+.pilot.next-era em{font-style:normal;background:none;color:var(--accent)}
+/* Palabra destacada en títulos: degradado verde→lila, oscurecido en modo claro para leerse. */
+.pilot.next-era :is(h1,h2) em{background:var(--text-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
 .pilot.next-era .fellowship-kpis strong{background:none;-webkit-text-fill-color:currentColor;color:var(--text)}
 
-/* Fondos planos: sin escenas animadas, rejillas ni brillos. */
+/* Superficies */
 .ambient-scene,.pilot.next-era .cyber-hero .cyber-grid,.pilot.next-era .pilot-detail:before,.pilot.next-era .nav-note{display:none}
-.pilot.next-era :is(.panel,.pilot-box,.feed-card,.pilot-card,.section-hero,.community-hero,.studio,.interactive-story,.metrics-dashboard,.metric-columns-panel,.metric-orbit-card,.home-section-card,.visual-records,.member-monthly,.fellowship-insights .panel,.admin-analytics .visual-records),:root:not([data-theme=light]) .pilot.next-era :is(.panel,.pilot-card){background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:none}
-.pilot.next-era :is(.pilot-box,.metric-card,.metrics-figure,.fellowship-kpis article,.story-stage){background:var(--surface2);border-color:var(--border);border-radius:12px;box-shadow:none}
+.pilot.next-era :is(.panel,.pilot-box,.feed-card,.pilot-card,.studio,.interactive-story,.metrics-dashboard,.metric-columns-panel,.metric-orbit-card,.home-section-card,.visual-records,.member-monthly,.fellowship-insights .panel,.admin-analytics .visual-records),:root:not([data-theme=light]) .pilot.next-era :is(.panel,.pilot-card){background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:none}
+.pilot.next-era :is(.pilot-box,.metric-card,.metrics-figure,.fellowship-kpis article,.story-stage){background:var(--surface2);border-color:var(--border);border-radius:14px;box-shadow:none}
 .pilot.next-era .fellowship-kpis article:nth-child(n){background:var(--surface2)}
-.pilot.next-era .section-hero{padding:28px;margin-bottom:20px}
-.pilot.next-era .pilot-detail{border-radius:14px}
-.pilot.next-era .pilot-detail>h1{font-size:clamp(30px,3.4vw,42px);font-weight:800}
+.pilot.next-era .pilot-detail{border-radius:18px}
+.pilot.next-era .pilot-detail>h1{font-size:clamp(30px,3.4vw,44px)}
 .pilot.next-era .pilot-card{padding:20px}
-.pilot.next-era .pilot-card h2{font-size:20px;font-weight:600;line-height:1.3}
+.pilot.next-era .pilot-card h2{font-size:20px;font-weight:800;line-height:1.25}
 .pilot.next-era .pilot-card p{font-size:14px;line-height:1.55}
 
-/* Portada */
-.pilot.next-era .cyber-hero{position:relative;border:1px solid var(--border);border-radius:14px;background:var(--surface);box-shadow:none;overflow:hidden}
-.pilot.next-era .cyber-hero:before{content:'';position:absolute;inset:0 0 auto;height:3px;background:var(--brand-gradient)}
-.pilot.next-era .cyber-hero h1{color:var(--text);text-shadow:none;font-size:clamp(32px,4vw,42px);font-weight:800}
-.pilot.next-era .cyber-hero .home-lead{color:var(--muted);font-size:16px!important;line-height:1.6!important}
-.pilot.next-era .cyber-stats button{background:var(--surface2);border:1px solid var(--border);border-radius:10px;box-shadow:none}
-.pilot.next-era .cyber-stats button:is(:hover,:focus-visible){border-color:var(--accent);box-shadow:none;transform:none}
-.pilot.next-era .cyber-stats strong{color:var(--text);font-weight:700}
+/* Portadas de sección como la guía: negro con dibujos de línea en oscuro; versión clara con el
+   mismo dibujo sobre blanco y un velo lila/verde. El texto usa siempre los colores del tema. */
+.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice),:root[data-theme=light] .pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice){position:relative;isolation:isolate;overflow:hidden;background:var(--hero-bg);color:var(--text);border:1px solid var(--border);border-radius:24px;box-shadow:none;padding-inline:clamp(24px,6vw,76px)}
+.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice)::before{content:'';position:absolute;inset:0;height:auto;z-index:-1;background:var(--hero-glow);pointer-events:none}
+.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice)::after{content:'';display:block;position:absolute;inset:-4% -10px;width:auto;height:auto;border:0;border-radius:0;z-index:-1;background:url('/brand/doodles-side.webp') left top/auto 340px repeat-y,url('/brand/doodles-side.webp') right top/auto 340px repeat-y;opacity:var(--doodle-opacity);pointer-events:none;animation:mk-drift 16s ease-in-out infinite alternate}
+.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice) :is(h1,h2,h3){color:var(--text);text-shadow:none}
+.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice) :is(p,.home-lead,details){color:var(--muted)}
+/* design.css fija el relleno con !important; aquí se deja espacio a los dibujos laterales. */
+.pilot.next-era .section-hero{padding:32px clamp(28px,6vw,80px)!important;margin-bottom:22px}
+.pilot.next-era .cyber-hero h1{font-size:clamp(36px,5vw,64px);line-height:1.02}
+.pilot.next-era .cyber-hero .home-lead{font-size:17px!important;line-height:1.6!important}
+.pilot.next-era .community-orbits{border-color:var(--border);background:var(--surface2);color:var(--accent)}
+.pilot.next-era .cyber-stats button{background:color-mix(in srgb,var(--surface) 75%,transparent);border:1px solid var(--border);border-radius:14px;box-shadow:none;backdrop-filter:blur(6px);transition:transform .2s,border-color .2s}
+.pilot.next-era .cyber-stats button:is(:hover,:focus-visible){border-color:var(--accent-fill);box-shadow:none;transform:translateY(-2px)}
+.pilot.next-era .cyber-stats strong{color:var(--text);font-weight:900}
 .pilot.next-era .cyber-stats small{color:var(--muted)}
-.pilot.next-era.pilot :is(.section-shortcut,.news-item),.pilot.next-era .cyber-home :is(.section-shortcut,.news-item){background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:none;transition:border-color .15s,background .15s}
-.pilot.next-era .cyber-home :is(.section-shortcut,.news-item):is(:hover,:focus-visible){border-color:var(--accent);background:var(--surface2);box-shadow:none;transform:none}
-.pilot.next-era .cyber-home .section-shortcut::before{display:none}
-.pilot.next-era .section-shortcut svg{color:var(--accent)}
 
 /* Controles */
-.pilot.next-era :is(.primary,.secondary){min-height:42px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:none;transition:background-color .15s,border-color .15s,color .15s}
-.pilot.next-era .primary,:root:not([data-theme=light]) .pilot.next-era .primary,:root[data-theme=light] .pilot.next-era .primary{background:var(--accent);border:1px solid var(--accent);color:var(--on-accent);font-weight:600}
-.pilot.next-era .primary:hover:not(:disabled),:root:not([data-theme=light]) .pilot.next-era .primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 88%,var(--text));box-shadow:none;transform:none;filter:none}
-.pilot.next-era .primary:hover svg{transform:none}
+.pilot.next-era :is(.primary,.secondary){min-height:42px;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:700;box-shadow:none;transition:background .2s,border-color .2s,color .2s,transform .2s,box-shadow .2s}
+.pilot.next-era .primary,:root:not([data-theme=light]) .pilot.next-era .primary,:root[data-theme=light] .pilot.next-era .primary{background:var(--accent-fill);border:1px solid transparent;color:var(--on-accent)}
+.pilot.next-era .primary:hover:not(:disabled),:root:not([data-theme=light]) .pilot.next-era .primary:hover:not(:disabled){background:var(--brand-gradient);box-shadow:0 10px 26px var(--card-glow);transform:translateY(-1px);filter:none}
+.pilot.next-era .primary:hover svg{transform:translate(2px,-2px)}
 .pilot.next-era .secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
-.pilot.next-era .secondary:hover:not(:disabled){border-color:var(--accent);background:var(--tint)}
+.pilot.next-era .secondary:hover:not(:disabled){border-color:var(--accent-fill);background:var(--tint)}
+/* interactive.css fija este botón en rosa con !important; aquí recupera un rojo legible en cada tema. */
+.pilot.next-era .delete-content,.pilot.next-era .secondary.delete-content{color:var(--danger)!important;border-color:color-mix(in srgb,var(--danger) 45%,transparent)!important}
 .pilot.next-era :is(button,a,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.pilot.next-era .field :is(input,textarea,select),.pilot.next-era .search-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text)}
-.pilot.next-era .field :is(input,textarea,select):focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
-.pilot.next-era .text-button{color:var(--accent);font-size:14px;font-weight:500}
+.pilot.next-era .field :is(input,textarea,select),.pilot.next-era .search-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);transition:border-color .2s,box-shadow .2s}
+.pilot.next-era .field :is(input,textarea,select):focus{outline:none;border-color:var(--accent-fill);box-shadow:0 0 0 3px var(--tint)}
+.pilot.next-era .text-button{color:var(--accent);font-size:14px;font-weight:600}
+.pilot.next-era summary{cursor:pointer;font-weight:600}
 
 /* Cabecera y logos: se muestra solo la versión del tema activo. */
-.next-era .pilot-header{height:72px;padding:0 24px;gap:16px;background:color-mix(in srgb,var(--bg) 92%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+.next-era .pilot-header{height:72px;padding:0 24px;gap:16px;background:color-mix(in srgb,var(--bg) 90%,transparent);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
 .next-era .pilot-nav{top:72px;height:calc(100dvh - 72px);background:var(--sidebar);border-right:1px solid var(--border)}
 .pilot.next-era .brand{display:block;padding:4px;border-radius:8px;background:none;color:var(--text)}
 .pilot.next-era .pilot-header .brand img{background:none;border-radius:0}
@@ -81,50 +93,104 @@
 :root[data-theme=light] .theme-toggle .theme-moon{display:none}
 
 /* Navegación lateral */
-.next-era .pilot-nav nav button{padding:9px 12px;font-size:14px;border-radius:8px;border:0;color:var(--muted)}
+.next-era .pilot-nav nav button{padding:9px 12px;font-size:14px;border-radius:10px;border:0;color:var(--muted);transition:background .2s,color .2s}
 .next-era .pilot-nav nav button:hover{background:var(--surface2);color:var(--text)}
-.next-era .pilot-nav nav button.active{background:var(--tint);color:var(--accent);box-shadow:inset 3px 0 0 var(--accent);font-weight:600}
-.nav-section-label{font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.next-era .pilot-nav nav button:hover svg{color:var(--accent)}
+.next-era .pilot-nav nav button.active{background:var(--tint);color:var(--text);box-shadow:inset 3px 0 0 var(--accent-fill);font-weight:700}
+.next-era .pilot-nav nav button.active svg{color:var(--accent)}
+.nav-section-label{font-size:12px;letter-spacing:.09em;color:var(--muted)}
 .nav-counter{font-size:12px;color:var(--muted);background:var(--surface2)}
 
-/* Tarjetas: sin inclinación 3D; el foco y el paso del cursor solo marcan el borde. */
-.lift-surface,.pilot.next-era .lift-surface{transform:none;transition:border-color .15s}
+/* Tarjetas: se elevan, marcan el borde lila y muestran la línea del degradado. */
+.lift-surface,.pilot.next-era .lift-surface{transform:none}
 .lift-surface:before{display:none}
-.lift-surface:is(:hover,:focus-within,.is-selected){border-color:var(--accent)!important;box-shadow:none}
+.pilot.next-era :is(.pilot-card,.mentorship-card,.benefit-card,.section-shortcut,.news-item,.home-upcoming>button){position:relative;transition:transform .22s ease,border-color .22s,box-shadow .22s,background .22s}
+.pilot.next-era :is(.pilot-card,.mentorship-card,.benefit-card,.section-shortcut,.news-item,.home-upcoming>button):is(:hover,:focus-within),.lift-surface.is-selected{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent-fill) 70%,transparent)!important;box-shadow:0 16px 36px var(--card-glow)}
+.pilot.next-era :is(.pilot-card,.benefit-card)::after{content:'';position:absolute;inset:0 0 auto;height:3px;background:var(--brand-gradient);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;pointer-events:none}
+.pilot.next-era :is(.pilot-card,.benefit-card):is(:hover,:focus-within)::after{transform:scaleX(1)}
+.pilot.next-era.pilot :is(.section-shortcut,.news-item),.pilot.next-era .cyber-home :is(.section-shortcut,.news-item){background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:none}
+.pilot.next-era .cyber-home .section-shortcut::before{display:none}
+/* Íconos con la paleta del kit: lila, verde, rosa y amarillo, en rotación. */
+.pilot.next-era .section-shortcut svg{color:var(--accent)}
+.pilot.next-era .shortcut-grid>:nth-child(4n+2) svg{color:var(--accent-2)}
+.pilot.next-era .shortcut-grid>:nth-child(4n+3) svg{color:var(--pink-ink)}
+.pilot.next-era .shortcut-grid>:nth-child(4n) svg{color:var(--yellow-ink)}
 .tone-0,.tone-1,.tone-2,.tone-3,:root .next-era{--tone-color:var(--accent);--tone-soft:var(--tint)}
 .pilot.next-era .pilot-nav,.pilot.next-era .pilot-header{--tone-color:var(--accent)}
-.pilot.next-era :is(.card-cover,.kind-event .card-cover,.kind-webinar .card-cover,.kind-resource .card-cover,.kind-project .card-cover){background:var(--surface2);border-radius:10px;box-shadow:none;height:160px;margin-bottom:16px}
+.pilot.next-era :is(.card-cover,.kind-event .card-cover,.kind-webinar .card-cover,.kind-resource .card-cover,.kind-project .card-cover){background:var(--surface2);border-radius:12px;box-shadow:none;height:160px;margin-bottom:16px}
 .pilot.next-era .card-cover::before,.pilot.next-era .cover-orbit{display:none}
 .pilot.next-era .card-cover>svg{color:var(--accent);transform:none}
 .pilot.next-era .card-cover>span{color:var(--muted);font-size:12px;letter-spacing:.04em}
 .pilot.next-era .project-grid{grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))}
-.pilot.next-era .content-cover{background:var(--surface2);border-radius:10px}
-.pilot.next-era .cover-fallback,.pilot.next-era [class*=cover-tone-] .cover-fallback{background:var(--surface2);color:var(--text)}
-.pilot.next-era .cover-fallback svg{color:var(--accent)}
-.pilot.next-era .cover-fallback span{font-size:clamp(15px,1.6vw,18px);font-weight:600}
-.pilot.next-era .section-hero:after{display:none}
-.pilot.next-era .community-orbits{border-color:var(--border);background:var(--surface2);color:var(--accent)}
+/* Portadas sin imagen: colores puros del kit, con texto negro de marca que se lee en todos. */
+.pilot.next-era .content-cover{background:var(--surface2);border-radius:14px;overflow:hidden}
+.pilot.next-era .content-cover img{transition:transform .5s ease}
+.pilot.next-era :is(.pilot-card,.mentorship-card):hover .content-cover img{transform:scale(1.04)}
+.pilot.next-era .cover-fallback{color:#07071a;background:linear-gradient(135deg,#8896f5,#5fcd9e)}
+.pilot.next-era .cover-tone-1 .cover-fallback{background:linear-gradient(135deg,#5fcd9e,#8896f5)}
+.pilot.next-era .cover-tone-2 .cover-fallback{background:linear-gradient(135deg,#8896f5,#eea2f3)}
+.pilot.next-era .cover-tone-3 .cover-fallback{background:linear-gradient(135deg,#fcc368,#eea2f3)}
+.pilot.next-era .cover-tone-4 .cover-fallback{background:linear-gradient(135deg,#5fcd9e,#fcc368)}
+.pilot.next-era .cover-tone-5 .cover-fallback{background:#8896f5}
+.pilot.next-era .cover-fallback::after{content:'';position:absolute;inset:-6% -6px -6% auto;width:42%;background:url('/brand/doodles-side.webp') right center/auto 112% no-repeat;opacity:.35;mix-blend-mode:multiply;pointer-events:none}
+.pilot.next-era .cover-fallback svg{color:#07071a;position:relative}
+.pilot.next-era .cover-fallback span{position:relative;font-size:clamp(15px,1.6vw,19px);font-weight:800;letter-spacing:-.01em}
 .person-art{background:var(--surface2);height:150px}
 .person-ring,.person-spark{display:none}
 .person-monogram,.person-card:is(:hover,:focus-within,.is-selected) .person-monogram{transform:none;background:var(--surface);border-color:var(--border);box-shadow:none;color:var(--accent);border-radius:50%;width:88px;height:88px;letter-spacing:0}
-.pilot.next-era .directory-card.person-card{border-radius:14px}
+.pilot.next-era .directory-card.person-card{border-radius:18px}
+
+/* Pestañas: subrayado lila de marca. */
+.pilot.next-era :is(.tabs,.mentorship-tabs) button[aria-pressed=true],.pilot.next-era .tabs button.active{color:var(--text);border-bottom:2px solid var(--accent-fill)}
 
 /* Datos: color de marca en lugar de degradados de neón. */
-.pilot.next-era .bar-track span{background:var(--accent)}
-.pilot.next-era .metric-orbit-card,.pilot.next-era .orbit-cyan,.pilot.next-era .orbit-coral{--ring-color:var(--accent);background:var(--surface)}
+.pilot.next-era .bar-track span{background:var(--brand-gradient)}
+.pilot.next-era .metric-orbit-card,.pilot.next-era .orbit-cyan,.pilot.next-era .orbit-coral{--ring-color:var(--accent-fill);background:var(--surface)}
 .pilot.next-era .metric-donut{box-shadow:none;transform:none}
-.column-volume{background:var(--accent);box-shadow:none;border-radius:6px 6px 0 0}
+.column-volume{background:var(--brand-gradient);box-shadow:none;border-radius:6px 6px 0 0}
 .column-volume:before,.column-space>i{display:none}
-.analytics-timeline button i{background:var(--accent)}
+.analytics-timeline button i{background:var(--accent-fill)}
 .analytics-timeline button.selected{outline-color:var(--accent)}
-.metric-bar progress,.pilot.next-era .metrics-figure progress{accent-color:var(--accent)}
-.metric-bar progress::-webkit-progress-value{background:var(--accent)}
-.metric-bar progress::-moz-progress-bar{background:var(--accent)}
-.metrics-jump-trigger{background:var(--accent)!important;color:var(--on-accent)!important;border-radius:10px!important}
+.metric-bar progress,.pilot.next-era .metrics-figure progress{accent-color:var(--accent-fill)}
+.metric-bar progress::-webkit-progress-value{background:var(--accent-fill)}
+.metric-bar progress::-moz-progress-bar{background:var(--accent-fill)}
+.metrics-jump-trigger{background:var(--accent-fill)!important;color:var(--on-accent)!important;border-radius:12px!important}
 .metrics-jump nav{border-color:var(--border)}
-.view-switch button[aria-pressed=true]{background:var(--tint);border-color:var(--accent)}
+.view-switch button[aria-pressed=true]{background:var(--tint);border-color:var(--accent-fill)}
 .prism-bar>div{background:var(--ring-track)}
 .pilot .compact-helper{border-color:var(--border)}
+.pilot.next-era .mx-table thead th{background:var(--surface2)}
+.pilot.next-era .mx-sort{color:var(--text)}
+.pilot.next-era .mx-ok{color:var(--success)}
+.pilot.next-era .member-avatar{background:var(--tint);border-color:var(--border);color:var(--accent)}
+/* Anillo de satisfacción: centro con la superficie del tema y trazo de marca. */
+.pilot.next-era .fellowship-ring{background:conic-gradient(var(--accent-fill) var(--score),var(--ring-track) 0)}
+.pilot.next-era .fellowship-ring:before{background:var(--surface)}
+.pilot.next-era .fellowship-ring strong{color:var(--text)}
+.pilot.next-era .fellowship-ring small{color:var(--muted)}
+
+/* Progreso: pista suave del tema y valor con el degradado de marca. */
+.pilot.next-era progress{appearance:none;-webkit-appearance:none;height:10px;border:0;border-radius:999px;background:var(--ring-track);overflow:hidden;accent-color:var(--accent-fill)}
+.pilot.next-era progress::-webkit-progress-bar{background:var(--ring-track);border-radius:999px}
+.pilot.next-era progress::-webkit-progress-value{background:var(--brand-gradient);border-radius:999px}
+.pilot.next-era progress::-moz-progress-bar{background:var(--brand-gradient);border-radius:999px}
+/* Selector de archivo (CV y portadas) con el botón de la plataforma. */
+.pilot.next-era input[type=file]{cursor:pointer;color:var(--muted)}
+.pilot.next-era input[type=file]::file-selector-button{margin-right:12px;padding:9px 16px;border:0;border-radius:10px;background:var(--accent-fill);color:var(--on-accent);font:inherit;font-weight:700;cursor:pointer;transition:background .2s}
+.pilot.next-era input[type=file]:hover::file-selector-button{background:var(--brand-gradient)}
+.pilot.next-era .entry-pending{padding-block:36px}
+
+/* Movimiento: entrada suave del contenido y dibujos que flotan. Se apaga con movimiento reducido. */
+@keyframes mk-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes mk-drift{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.pilot.next-era .pilot-main>*{animation:mk-enter .5s cubic-bezier(.2,.7,.2,1) both}
+.pilot.next-era .pilot-main>:nth-child(2){animation-delay:.06s}
+.pilot.next-era .pilot-main>:nth-child(3){animation-delay:.12s}
+.pilot.next-era .pilot-main>:nth-child(n+4){animation-delay:.18s}
+@media(prefers-reduced-motion:reduce){
+ .pilot.next-era .pilot-main>*,.pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice)::after{animation:none}
+ .pilot.next-era :is(.pilot-card,.mentorship-card,.benefit-card,.section-shortcut,.news-item,.home-upcoming>button,.primary,.cyber-stats button):is(:hover,:focus-within,:focus-visible){transform:none}
+}
 
 /* Pantallas estrechas */
 @media(max-width:760px){
@@ -139,10 +205,13 @@
  .pilot.next-era .brand{flex:0 0 auto}
  .pilot.next-era .pilot-header .actions{flex:0 0 auto;flex-wrap:nowrap;margin-left:auto!important}
  .next-era .pilot-nav{top:64px;height:calc(100dvh - 64px)}
+ /* En móvil, un solo dibujo a la derecha para no competir con el texto. */
+ .pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice)::after{background:url('/brand/doodles-side.webp') right -26px top/auto 300px repeat-y;opacity:calc(var(--doodle-opacity) * .45)}
+ .pilot.next-era :is(.cyber-hero,.section-hero,.community-hero,.entry-choice){padding-inline:22px}
+ .pilot.next-era .section-hero{padding:24px 22px!important}
 }
 @media(max-width:600px){
  .pilot.next-era .pilot-header .secondary{font-size:13px;min-height:40px;padding:8px 12px}
- .pilot.next-era .section-hero{padding:20px}
  .pilot.next-era :is(.primary,.secondary){white-space:normal}
 }
 @media(max-width:480px){
