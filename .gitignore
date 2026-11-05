@@ -4,3 +4,7 @@ dist/
 !.env.example
 artifacts/
 *.tsbuildinfo
+.vercel/
+.pnpm-store/
+coverage/
+supabase/.temp/

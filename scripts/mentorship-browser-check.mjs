@@ -57,7 +57,7 @@ try{
  const b=await context(maker),mp=await b.newPage();mp.on('pageerror',e=>errors.push(e.message));mp.on('dialog',d=>d.accept());
  await mp.goto('http://127.0.0.1:4173/?page=mentorship');await mp.getByRole('heading',{name:'Sesión a punto de empezar'}).first().waitFor();
  await mp.goto('http://127.0.0.1:4173/?page=mentorship&content='+created);await button(mp,'Inscribirme').click();await button(mp,'Confirmar participación').click();await mp.getByRole('heading',{name:'Participación confirmada'}).waitFor();
- assert.equal(await button(mp,'Entrar a la sesión').isDisabled(),true,'el acceso espera a la ventana de entrada');await button(mp,'Añadir al calendario').waitFor();
+ assert.equal(await button(mp,'Entrar a la sesión').isDisabled(),true,'el acceso espera a la ventana de entrada');await mp.getByRole('group',{name:'Añadir a mi calendario'}).getByRole('link',{name:'Google Calendar'}).waitFor();
  await button(mp,'Cancelar inscripción').click();await button(mp,'Inscribirme').waitFor();
  await mp.goto('http://127.0.0.1:4173/?page=mentorship&content='+nearId);await button(mp,'Inscribirme').click();await button(mp,'Entrar a la sesión').click();await mp.getByRole('link',{name:'Abrir Google Meet de nuevo'}).waitFor();
  assert.ok((await db.query('select joined_at from public.registrations where content_id=$1 and user_id=$2',[nearId,maker])).rows[0].joined_at);

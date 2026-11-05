@@ -1,0 +1,62 @@
+/* Kit visual de indicadores. Tonos de Makers en orden fijo, validados (lightness band, CVD ΔE ≥ 10, contraste ≥ 3:1)
+   contra la superficie de cada tema: claro #5361d8 #17784f #a1399f #875b00 · oscuro #7380ec #38a877 #bd68c3 #c08422. */
+:root,:root:not([data-theme=light]) .pilot.next-era{--viz-1:#7380ec;--viz-2:#38a877;--viz-3:#bd68c3;--viz-4:#c08422;--viz-other:#6b6b80;--viz-tile-1:#8896f5;--viz-tile-2:#5fcd9e;--viz-tile-3:#eea2f3;--viz-tile-4:#fcc368}
+:root[data-theme=light],:root[data-theme=light] .pilot.next-era{--viz-1:#5361d8;--viz-2:#17784f;--viz-3:#a1399f;--viz-4:#875b00;--viz-other:#8a8aa0;--viz-tile-1:#5361d8;--viz-tile-2:#17784f;--viz-tile-3:#a1399f;--viz-tile-4:#875b00}
+.tone-1{--tone:var(--viz-1);--tile:var(--viz-tile-1)}.tone-2{--tone:var(--viz-2);--tile:var(--viz-tile-2)}.tone-3{--tone:var(--viz-3);--tile:var(--viz-tile-3)}.tone-4{--tone:var(--viz-4);--tile:var(--viz-tile-4)}.tone-other{--tone:var(--viz-other)}
+.viz-board{display:grid;gap:18px;margin:18px 0}
+.viz-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:16px}
+.viz-grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px}
+.viz-grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px}
+.viz-card{padding:20px;border:1px solid var(--border);border-radius:22px;background:var(--surface);min-width:0;position:relative;overflow:hidden}
+.viz-card>h3,.viz-card>header h3{margin:0 0 4px;font-size:1.05rem}.viz-card>p,.viz-card header p{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.viz-card.wide{grid-column:1/-1}
+/* KPI: tarjeta con tinte del color de marca, número grande y mini tendencia. */
+.viz-kpi{position:relative;display:flex;flex-direction:column;gap:6px;padding:20px 20px 14px;border-radius:22px;min-width:0;overflow:hidden;border:1px solid color-mix(in srgb,var(--tile) 45%,transparent);
+ background:linear-gradient(140deg,color-mix(in srgb,var(--tile) 26%,var(--surface)),color-mix(in srgb,var(--tile) 6%,var(--surface)) 70%);box-shadow:0 14px 34px color-mix(in srgb,var(--tile) 18%,transparent);transition:transform .2s,box-shadow .2s}
+.viz-kpi:hover{transform:translateY(-2px);box-shadow:0 18px 40px color-mix(in srgb,var(--tile) 28%,transparent)}
+.viz-kpi header{display:flex;align-items:center;gap:10px}.viz-kpi small{font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--text)}
+.viz-kpi-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--tile);color:#07071a;flex:none}
+.viz-kpi strong{font-size:clamp(1.9rem,3.2vw,2.5rem);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--text)}
+.viz-kpi strong.is-text{font-size:clamp(1.25rem,2vw,1.6rem)}
+.viz-kpi p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.4}
+.viz-spark{display:block;width:100%;height:38px;margin-top:6px;color:var(--tone)}
+.viz-kpi .mx-trend{font-size:.82rem}
+/* Medidor circular. */
+.viz-gauge{position:relative;display:grid;justify-items:center;margin:0;text-align:center}.viz-gauge svg{width:min(150px,100%);aspect-ratio:1}
+.viz-track{fill:none;stroke:var(--ring-track);stroke-width:9}.viz-arc{fill:none;stroke:var(--tone);stroke-width:9;stroke-linecap:round;transition:stroke-dasharray .8s ease}
+.viz-gauge-center{position:absolute;top:0;width:min(150px,100%);aspect-ratio:1;display:grid;place-items:center}.viz-gauge-center strong{font-size:1.5rem;font-weight:900}
+.viz-gauge figcaption{display:grid;gap:3px;margin-top:8px}.viz-gauge figcaption small{color:var(--muted);font-size:.82rem}
+/* Dona. */
+.viz-donut{margin:0}.viz-donut figcaption,.viz-bars figcaption,.viz-columns figcaption,.viz-funnel figcaption,.viz-area figcaption{font-weight:800;margin-bottom:12px}
+.viz-donut-body{position:relative;width:min(190px,70%);margin:0 auto}.viz-donut-body svg{display:block;width:100%;aspect-ratio:1}
+.viz-slice{fill:none;stroke:var(--tone);stroke-width:14;cursor:pointer;transition:stroke-width .15s,opacity .15s;outline:none}.viz-donut-body svg:hover .viz-slice:not(.is-active),.viz-donut-body svg:focus-within .viz-slice:not(.is-active){opacity:.45}.viz-slice.is-active{stroke-width:17}
+.viz-donut-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}.viz-donut-center strong{font-size:1.6rem;font-weight:900}.viz-donut-center small{color:var(--muted);max-width:110px;font-size:.8rem}
+.viz-legend{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px}.viz-legend li{display:grid;grid-template-columns:12px 1fr auto auto;gap:8px;align-items:center;padding:4px 6px;border-radius:8px;font-size:.88rem}.viz-legend li.is-active{background:var(--tint)}
+.viz-legend i{width:12px;height:12px;border-radius:4px;background:var(--tone)}.viz-legend small{color:var(--muted);min-width:34px;text-align:right}
+.viz-legend.inline{display:flex;flex-wrap:wrap;gap:14px;margin:-4px 0 8px}.viz-legend.inline li{display:flex;padding:0}
+/* Barras horizontales. */
+.viz-bars{margin:0}.viz-bars ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.viz-bars li{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:10px;align-items:center;font-size:.9rem}
+.viz-bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viz-bar-label small{display:block;color:var(--muted);font-size:.76rem}
+.viz-bar-track{height:12px;border-radius:999px;background:var(--ring-track);overflow:hidden}.viz-bar-track i{display:block;height:100%;border-radius:999px;background:var(--tone);transition:width .6s ease}
+.viz-bars b{min-width:36px;text-align:right}
+/* Columnas. */
+.viz-columns{margin:0}.viz-columns-plot{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;align-items:end;height:170px}
+.viz-col{display:grid;grid-template-rows:auto 1fr auto;gap:6px;height:100%;text-align:center;font-size:.85rem}.viz-col span{display:flex;align-items:flex-end;border-radius:10px;background:var(--ring-track)}
+.viz-col i{display:block;width:100%;border-radius:10px 10px 4px 4px;background:var(--tone);transition:height .6s ease}.viz-col small{color:var(--muted)}
+.viz-note{color:var(--muted);font-size:.84rem;margin:10px 0 0}
+/* Embudo. */
+.viz-funnel{margin:0}.viz-funnel ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.viz-funnel li{display:grid;grid-template-columns:1fr minmax(110px,40%);gap:12px;align-items:center;font-size:.9rem}.viz-funnel li small{display:block;color:var(--muted);font-size:.78rem}
+.viz-funnel-bar{display:flex;align-items:center;justify-content:flex-end;min-height:30px;padding:0 10px;border-radius:10px;background:linear-gradient(90deg,color-mix(in srgb,var(--tone) 35%,transparent),var(--tone));color:#fff;transition:width .6s ease}
+:root[data-theme=light] .viz-funnel-bar{color:#fff}.viz-funnel-bar b{text-shadow:0 1px 2px #0006}
+/* Área con línea guía. */
+.viz-area{margin:0}.viz-area-plot{position:relative}.viz-area svg{display:block;width:100%;height:190px;outline:none;touch-action:pan-y}.viz-area svg:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:8px}
+.viz-area .tone-1,.viz-area .tone-2{color:var(--tone)}.viz-grid{stroke:var(--border);stroke-width:1}.viz-cross{stroke:var(--text);stroke-opacity:.45;stroke-width:1;stroke-dasharray:3 3}
+.viz-tip{position:absolute;top:4px;transform:translateX(-50%);display:grid;gap:3px;padding:8px 12px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);box-shadow:var(--shadow);font-size:.82rem;pointer-events:none;white-space:nowrap}
+.viz-tip span{display:flex;gap:6px;align-items:center}.viz-tip i{width:9px;height:9px;border-radius:3px;background:var(--tone)}
+.viz-axis{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-top:2px}
+.viz-empty{padding:28px;text-align:center;border:1px dashed var(--border);border-radius:18px;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.viz-kpi,.viz-arc,.viz-bar-track i,.viz-col i,.viz-funnel-bar{transition:none}}
+@media(forced-colors:active){.viz-bar-track i,.viz-col i,.viz-funnel-bar,.viz-legend i{background:CanvasText}.viz-arc,.viz-slice{stroke:CanvasText}}
+:root[data-theme=light] .viz-kpi-icon{color:#fff}
