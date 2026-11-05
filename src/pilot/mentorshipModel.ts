@@ -1,10 +1,10 @@
 import type {Content,Profile} from './types';
-export type MentorshipInfo={content_id:string;audience:'makers'|'makers_subscribers';modality:'zoom'|'meet';has_recording:boolean;mentor:Profile;seats_left:number;materials:number;mine:{status:'registered'|'attended';confirmed_at:string|null}|null;can_manage:boolean};
+export type MentorshipInfo={content_id:string;audience:'makers'|'peers'|'makers_subscribers';modality:'zoom'|'meet';has_recording:boolean;mentor:Profile;seats_left:number;materials:number;mine:{status:'registered'|'attended';confirmed_at:string|null}|null;can_manage:boolean};
 export type Session={item:Content;info:MentorshipInfo};
 export type Step='ended'|'join'|'confirm'|'confirmed'|'register'|'full';
 export type Filters={topic:string;range:''|'7'|'30';availability:''|'open'};
 const JOIN_WINDOW=5*60000;
-export const audienceLabel={makers:'Solo makers',makers_subscribers:'Makers + suscriptores'};
+export const audienceLabel={makers:'Solo makers',peers:'Solo peers',makers_subscribers:'Makers + peers'};
 export const modalityLabel={zoom:'Zoom',meet:'Google Meet'};
 export const when=(iso:string)=>new Intl.DateTimeFormat('es-CO',{dateStyle:'long',timeStyle:'short'}).format(new Date(iso));
 export const timeZone=(iso:string)=>new Intl.DateTimeFormat('es-CO',{timeZoneName:'long'}).formatToParts(new Date(iso)).find(p=>p.type==='timeZoneName')?.value||'';

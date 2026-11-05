@@ -1,5 +1,5 @@
 import {useEffect,useState} from 'react';
-import {CalendarPlus,Video} from 'lucide-react';
+import {Video} from 'lucide-react';
 import AttendancePanel from './AttendancePanel';
 import ContentCover from './ContentCover';
 import ContentStory from './ContentStory';
@@ -7,7 +7,7 @@ import InteractiveSlot from './InteractiveSlot';
 import ProfileAvatar from './ProfileAvatar';
 import Recording from './Recording';
 import {rpc} from './backend';
-import {downloadCalendar} from './calendar';
+import CalendarLinks from './CalendarLinks';
 import {audienceLabel,duration,modalityLabel,seatsLabel,specialty,step,timeZone,when,type Session} from './mentorshipModel';
 import {youtubeId} from './youtube';
 import type {Content,Profile} from './types';
@@ -54,8 +54,8 @@ export default function MentorshipDetail({session,profile,items,busy,act,open,ed
  {state==='confirmed'&&<button className="primary" disabled>Entrar a la sesión</button>}
  {state==='join'&&<button className="primary" disabled={busy} onClick={enter}><Video size={17}/> Entrar a la sesión</button>}
  {link&&<a className="secondary" href={link} target="_blank" rel="noopener noreferrer">Abrir {modalityLabel[info.modality]} de nuevo</a>}
- {state!=='ended'&&<button className="secondary" onClick={()=>downloadCalendar(item)}><CalendarPlus size={17}/> Añadir al calendario</button>}
- {info.mine&&state!=='ended'&&<button className="text-button" disabled={busy} onClick={cancel}>Cancelar inscripción</button>}</section>
+ 
+ {info.mine&&state!=='ended'&&<button className="text-button" disabled={busy} onClick={cancel}>Cancelar inscripción</button>}{state!=='ended'&&<CalendarLinks item={item} highlight={!!info.mine}/>}</section>
  <section className="panel"><h2>Cuándo y dónde</h2><dl className="mentorship-data"><div><dt>Fecha y hora</dt><dd>{when(item.starts_at!)}</dd></div><div><dt>Zona horaria</dt><dd>{timeZone(item.starts_at!)}</dd></div><div><dt>Duración</dt><dd>{duration(item.starts_at!,item.ends_at!)}</dd></div><div><dt>Modalidad</dt><dd>En línea por {modalityLabel[info.modality]}</dd></div></dl></section>
  <section className="panel"><h2>Participación</h2><dl className="mentorship-data"><div><dt>Cupos</dt><dd>{state==='ended'?`${item.capacity} en total`:seatsLabel(info.seats_left)}</dd></div><div><dt>Audiencia autorizada</dt><dd>{audienceLabel[info.audience]}</dd></div><div><dt>Condiciones</dt><dd>Inscríbete y confirma. Si no puedes asistir, cancela para liberar tu cupo. Después de la sesión responde la encuesta de satisfacción.</dd></div></dl></section></aside></div></div>;
 }

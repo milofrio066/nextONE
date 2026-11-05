@@ -9,3 +9,16 @@ export function calendarText(item:Content){
  return lines.map(line=>{let out='',bytes=0;for(const c of line){const size=new TextEncoder().encode(c).length;if(bytes+size>75){out+='\r\n ';bytes=1;}out+=c;bytes+=size;}return out;}).join('\r\n')+'\r\n';
 }
 export function downloadCalendar(item:Content){const url=URL.createObjectURL(new Blob([calendarText(item)],{type:'text/calendar;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='nextone-actividad.ics';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+const stamp=(s:string)=>utc(s);
+/** Enlace para añadir la actividad a Google Calendar. Solo lleva título, horario y el enlace a la plataforma. */
+export function googleCalendarUrl(item:Content){
+ if(!item.starts_at||!item.ends_at)throw new Error('La actividad necesita inicio y fin.');
+ const q=new URLSearchParams({action:'TEMPLATE',text:item.title,dates:`${stamp(item.starts_at)}/${stamp(item.ends_at)}`,details:`Actividad de Makers. Entra desde la plataforma: ${destination(item.kind,item.id)}`,location:String(destination(item.kind,item.id))});
+ return 'https://calendar.google.com/calendar/render?'+q.toString();
+}
+/** Enlace para Outlook en la web (cuentas personales y de trabajo). */
+export function outlookCalendarUrl(item:Content,work=false){
+ if(!item.starts_at||!item.ends_at)throw new Error('La actividad necesita inicio y fin.');
+ const q=new URLSearchParams({path:'/calendar/action/compose',rru:'addevent',subject:item.title,startdt:new Date(item.starts_at).toISOString(),enddt:new Date(item.ends_at).toISOString(),body:`Actividad de Makers: ${destination(item.kind,item.id)}`,location:String(destination(item.kind,item.id))});
+ return `https://outlook.${work?'office':'live'}.com/calendar/0/deeplink/compose?`+q.toString();
+}
