@@ -1,0 +1,20 @@
+/* 1.9 · Selector de acceso y tarjetas bloqueadas. Tokens de brand.css. */
+.access-picker{display:grid;gap:10px;margin-bottom:6px}.access-picker .field{margin:0}
+.access-preview{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.access-group{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:16px;border:1px solid var(--border);background:var(--surface2)}
+.access-group strong{display:block}.access-group small{color:var(--muted)}
+.access-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;flex:none}
+.access-group.is-enter{border-color:color-mix(in srgb,var(--accent-2) 55%,transparent)}.access-group.is-enter .access-icon{background:var(--accent-2);color:#07071a}
+.access-group.is-see{border-color:color-mix(in srgb,var(--yellow-ink) 55%,transparent)}.access-group.is-see .access-icon{background:var(--yellow-ink);color:#07071a}
+.access-group.is-none{opacity:.75}.access-group.is-none .access-icon{background:var(--ring-track);color:var(--muted)}
+.access-note{display:flex;gap:6px;align-items:flex-start;margin:0;color:var(--muted);font-size:.86rem}
+/* Tarjetas bloqueadas */
+.locked-section{margin-top:28px}.locked-section>header{display:flex;gap:10px;align-items:center;margin-bottom:12px}.locked-section>header h2{margin:0;font-size:1.2rem}.locked-section>header p{margin:0;color:var(--muted)}
+.locked-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
+.locked-card{position:relative;display:grid;gap:8px;align-content:start;padding:18px;border-radius:22px;border:1px dashed color-mix(in srgb,var(--yellow-ink) 50%,var(--border));background:repeating-linear-gradient(135deg,transparent 0 14px,color-mix(in srgb,var(--yellow-ink) 5%,transparent) 14px 28px),var(--surface);overflow:hidden}
+.locked-card .locked-cover{height:110px;border-radius:14px;background:var(--hero-glow),var(--brand-gradient);opacity:.35;filter:saturate(.6)}
+.locked-card h3{margin:0;font-size:1.05rem}.locked-card p{margin:0;color:var(--muted);font-size:.9rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.locked-badge{display:inline-flex;gap:6px;align-items:center;width:max-content;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--yellow-ink) 20%,transparent);border:1px solid color-mix(in srgb,var(--yellow-ink) 55%,transparent);font-size:.8rem;font-weight:800}
+.locked-meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:.84rem}.locked-meta span{display:inline-flex;gap:4px;align-items:center}
+.locked-card button[disabled]{cursor:not-allowed}
+@media(max-width:520px){.access-preview{grid-template-columns:1fr}}

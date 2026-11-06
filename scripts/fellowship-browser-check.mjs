@@ -35,9 +35,9 @@ try{
  await m.getByLabel('País',{exact:true}).selectOption('CO');await m.getByLabel('Región o departamento').fill('Antioquia');await m.getByLabel('Ciudad',{exact:true}).fill('Medellín');await m.getByRole('button',{name:'Guardar y continuar'}).click();
  await m.getByRole('heading',{name:'Completa tu ubicación para continuar'}).waitFor({state:'detached'});
  const eid=(await as(admin,"select public.save_content(null,'webinar','Sesión Makers','Encuentro de prueba',null,null,now()+interval '1 hour',now()+interval '2 hours',100,true,'https://meet.google.com/abc-defg-hij') value"))[0].value;
- await as(member,'select public.register_event($1,false)',[eid]);
- await serialized(()=>db.query("update public.content set starts_at=now()-interval '2 hours',ends_at=now()-interval '1 hour' where id=$1",[eid]));await serialized(()=>db.exec("update public.fellowship_settings set started_at=now()-interval '1 day'"));
- await m.reload();await m.getByRole('heading',{name:'¿Cómo fue tu experiencia?'}).waitFor();await m.setViewportSize({width:390,height:900});await m.screenshot({path:'artifacts/fellowship-survey-mobile.png',fullPage:true});
- await m.getByLabel('¿Asististe?').selectOption('no');await m.getByRole('button',{name:'Enviar y continuar'}).click();await m.getByRole('heading',{name:'¿Cómo fue tu experiencia?'}).waitFor({state:'detached'});
+ await as(member,'select public.register_event($1,false)',[eid]);await as(member,'select public.confirm_event($1)',[eid]);
+ await serialized(()=>db.query("update public.content set starts_at=now()-interval '5 hours',ends_at=now()-interval '4 hours' where id=$1",[eid]));await serialized(()=>db.exec("update public.fellowship_settings set started_at=now()-interval '1 day'"));
+ await m.reload();await m.getByRole('heading',{name:'¿Cómo te fue?'}).waitFor();await m.setViewportSize({width:390,height:900});await m.screenshot({path:'artifacts/fellowship-survey-mobile.png',fullPage:true});
+ await m.getByRole('button',{name:'No pude asistir'}).click();await m.getByRole('button',{name:'Enviar y continuar'}).click();await m.getByRole('heading',{name:'¿Cómo te fue?'}).waitFor({state:'detached'});
  await a.goto('http://127.0.0.1:4173/');await a.locator('.cyber-hero').waitFor();await a.locator('.cyber-hero').screenshot({path:'artifacts/makers-gradient-home.png'});assert.deepEqual(errors,[]);console.log('PASS Fellowship browser: admin charts at 320/390/768/1440, private timeline, mandatory existing-member location, post-event blocking survey and no-attendance exit.');
 }finally{await browser.close();await db.close();}

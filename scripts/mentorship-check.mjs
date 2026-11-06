@@ -77,7 +77,10 @@ await denied(maker,'select public.mark_attendance($1,$2,true)',[shared,subscribe
 await denied(maker,'select public.mentorship_report($1)',[shared],/responsable/);
 // Encuesta: bloquea igual que en eventos y el informe no identifica a quien comenta
 await db.exec("update public.fellowship_settings set started_at=now()-interval '1 day'");
+// 1.9: la encuesta aparece 3 horas después del final y solo para quien confirmó o asistió.
 await db.query("update public.content set starts_at=now()-interval '2 hours',ends_at=now()-interval '1 hour' where id=$1",[shared]);
+assert.equal(await one(subscriber,'select public.participant()'),true,'antes de 3 horas no bloquea');
+await db.query("update public.content set starts_at=now()-interval '5 hours',ends_at=now()-interval '4 hours' where id=$1",[shared]);
 assert.equal(await one(subscriber,'select public.participant()'),false);
 assert.equal(await catalog(subscriber).then(r=>r.length),0);
 await as(subscriber,"select public.submit_event_survey($1,true,5,10,'Muy útil')",[shared]);

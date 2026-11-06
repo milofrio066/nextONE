@@ -47,6 +47,9 @@ try{
  assert.equal(await call(subscriber,'can_read_content',[makerEvent]),false);assert.equal(await call(subscriber,'can_read_content',[shared]),true);
  await assert.rejects(()=>call(subscriber,'register_event',[makerEvent,false]));await call(subscriber,'register_event',[shared,false]);await call(subscriber,'set_feedback',[shared,1,5]);
  assert.equal((await as(subscriber,'select * from public.content where id=$1',[makerEvent])).length,0);
+ // 1.9: «solo makers» queda oculto; la vista bloqueada para peers es una opción explícita (teaser).
+ assert.deepEqual(await call(subscriber,'locked_event_catalog'),[]);
+ await db.query('update public.content set teaser=true where id=$1',[makerEvent]);
  assert.equal((await call(subscriber,'locked_event_catalog'))[0].title,'Exclusivo makers');
 
  const page={p_id:null,p_kind:'post',p_title:'Audiencia atómica',p_body:'Datos válidos de publicación.',p_url:null,p_parent:null,p_start:null,p_end:null,p_capacity:null,p_published:true,p_join_url:null,p_template:'blank',p_data:{v:1,accent:'#8896f5',blocks:[{id:'hero-1',type:'hero',props:{title:'Hola'}}]},p_topics:[],p_methodology:'',p_audience:'',p_project_config:null};
