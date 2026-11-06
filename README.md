@@ -1,6 +1,10 @@
-# Entrega actual: nextONE 1.8
+# Entrega actual: nextONE 1.9
 
-Empieza por [docs/LEER_PRIMERO_1.8.md](docs/LEER_PRIMERO_1.8.md): audiencias makers/peers, seguimiento y segmentos, encuestas, indicadores visuales, avatar y calendario. Incluye la migración 024. Antes: [docs/LEER_PRIMERO_1.7.md](docs/LEER_PRIMERO_1.7.md) y [docs/LEER_PRIMERO_1.6.md](docs/LEER_PRIMERO_1.6.md). Las guías de versiones anteriores están en [docs/historial/](docs/historial/) y describen el estado de su momento.
+Empieza por [docs/LEER_PRIMERO_1.9.md](docs/LEER_PRIMERO_1.9.md): quién ve y quién entra (vista bloqueada makers/peers), panel del organizador, encuesta de satisfacción 3 h después y feedback definitivo privado. Incluye la migración 025.
+
+# nextONE 1.8
+
+Ver [docs/LEER_PRIMERO_1.8.md](docs/LEER_PRIMERO_1.8.md): audiencias makers/peers, seguimiento y segmentos, encuestas, indicadores visuales, avatar y calendario. Incluye la migración 024. Antes: [docs/LEER_PRIMERO_1.7.md](docs/LEER_PRIMERO_1.7.md) y [docs/LEER_PRIMERO_1.6.md](docs/LEER_PRIMERO_1.6.md). Las guías de versiones anteriores están en [docs/historial/](docs/historial/) y describen el estado de su momento.
 
 # nextONE 1.6
 

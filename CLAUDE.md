@@ -1,7 +1,7 @@
 # makers x nextONE · entorno de desarrollo
 
 ## Base y arquitectura verificadas
-Makers Fellowship by nextONE 1.8.0 (sobre la 1.7 de nextONE-main, zip del 5 de noviembre de 2026). Lee docs/LEER_PRIMERO_1.8.md (migración 024: audiencias makers/peers, seguimiento, encuestas y avatar v4), luego 1.7 y 1.6; las guías antiguas están en docs/historial/. No incluye .git ni archivos privados de entorno.
+Makers Fellowship by nextONE 1.9.0. Repositorio: github.com/milofrio066/nextONE. Lee docs/LEER_PRIMERO_1.9.md (migración 025: vista bloqueada, encuesta 3 h, feedback privado, panel del organizador) y docs/LEER_PRIMERO_1.8.md (024), luego 1.7 y 1.6; las guías antiguas están en docs/historial/. No incluye .git ni archivos privados de entorno.
 React 19 + TypeScript + Vite 6; NO es Next.js. Entrada src/main.tsx; aplicación src/pilot/PilotApp.tsx; componentes, modelos, pruebas y CSS en src/pilot/; contenido interactivo en src/pilot/interactive/. Cliente Supabase y RPC en src/pilot/backend.ts; endpoints servidor en api/; SQL en supabase/; automatización en scripts/ y setup/.
 
 ## Trabajo y límites
